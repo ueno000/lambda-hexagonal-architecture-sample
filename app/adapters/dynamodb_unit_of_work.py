@@ -13,6 +13,7 @@ class DBPrefix(enum.Enum):
     PRODUCT_VERSION = "PRODUCTVERSION"
 
 
+
 class DynamoDBProductsRepository(
     dynamodb_base.DynamoDBRepository, unit_of_work.ProductsRepository
 ):

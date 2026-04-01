@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Simple CRUD API with Lambda and API Gateway
+
+Globals:
+  Function:
+    Runtime: python3.14
+    Timeout: 30
+    MemorySize: 256
+    Tracing: Active
+
+Resources:
+  ProductsApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: dev
+
+  DynamoTestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.entrypoints.api.handler.handler
+      Runtime: python3.14
+      Environment:
+        Variables:
+          AWS_DEFAULT_REGION: us-east-1
+          TABLE_NAME: ProductsTable
+          DYNAMODB_ENDPOINT: http://host.docker.internal:8000
+      Events:
+        ListProducts:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ProductsApi
+            Path: /products
+            Method: GET
+
+        GetProduct:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ProductsApi
+            Path: /products/{id}
+            Method: GET
+
+Outputs:
+    ProductsApi:
+      Description: "API Gateway endpoint URL for Prod environment for Function"
+      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/hello"
+
+    DynamoTestFunction:
+      Description: "DynamoTest Lambda Function ARN"
+      Value: !GetAtt DynamoTestFunction.Arn

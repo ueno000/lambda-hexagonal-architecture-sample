@@ -1,0 +1,5 @@
+aws-lambda-powertools
+pydantic
+boto3
+mypy-boto3-dynamodb
+aws_xray_sdk
