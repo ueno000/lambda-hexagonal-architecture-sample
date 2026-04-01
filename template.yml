@@ -14,6 +14,10 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: dev
+      Cors:
+        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
 
   DynamoTestFunction:
     Type: AWS::Serverless::Function
@@ -26,6 +30,7 @@ Resources:
           AWS_DEFAULT_REGION: us-east-1
           TABLE_NAME: ProductsTable
           DYNAMODB_ENDPOINT: http://host.docker.internal:8000
+          API_BASE_PATH: ""
       Events:
         ListProducts:
           Type: Api
@@ -34,6 +39,13 @@ Resources:
             Path: /products
             Method: GET
 
+        CreateProduct:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ProductsApi
+            Path: /products
+            Method: POST
+
         GetProduct:
           Type: Api
           Properties:
@@ -41,11 +53,38 @@ Resources:
             Path: /products/{id}
             Method: GET
 
-Outputs:
-    ProductsApi:
-      Description: "API Gateway endpoint URL for Prod environment for Function"
-      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/Prod/hello"
+        UpdateProduct:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ProductsApi
+            Path: /products/{id}
+            Method: PUT
 
-    DynamoTestFunction:
-      Description: "DynamoTest Lambda Function ARN"
-      Value: !GetAtt DynamoTestFunction.Arn
+        DeleteProduct:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ProductsApi
+            Path: /products/{id}
+            Method: DELETE
+
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - Statement:
+            - Effect: Allow
+              Action:
+                - dynamodb:GetItem
+                - dynamodb:Scan
+                - dynamodb:PutItem
+                - dynamodb:UpdateItem
+                - dynamodb:DeleteItem
+                - dynamodb:TransactWriteItems
+              Resource: "*"
+
+Outputs:
+  ProductsApiUrl:
+    Description: API Gateway endpoint URL for dev stage
+    Value: !Sub "https://${ProductsApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/dev"
+
+  DynamoTestFunctionArn:
+    Description: DynamoTest Lambda Function ARN
+    Value: !GetAtt DynamoTestFunction.Arn

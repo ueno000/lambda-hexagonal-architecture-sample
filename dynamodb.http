@@ -1,0 +1,12 @@
+### get
+GET http://127.0.0.1:3000/products?pageSize=10
+### get
+GET http://127.0.0.1:3000/products/c6455ca6-c3c9-4ae1-a7d3-e15aa3211e97
+###post
+POST http://127.0.0.1:3000/products
+Content-Type: application/json
+
+{
+    "name": "test name",
+    "description": "test description."
+}
