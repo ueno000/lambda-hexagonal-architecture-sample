@@ -1,0 +1,14 @@
+# 最上位の設定ファイルであることを宣言
+root = true
+
+# 全てのファイルに対する基本設定
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Pythonファイル専用の設定 (PEP 8準拠)
+[*.py]
+indent_style = space
+indent_size = 4
