@@ -19,6 +19,27 @@ Resources:
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
         AllowOrigin: "'*'"
 
+  ReceivedMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.entrypoints.line.handler.handler
+      Runtime: python3.14
+      Architectures:
+      - x86_64
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          TABLE_NAME_LINE:
+          DYNAMODB_ENDPOINT:
+          LINE_CHANNEL_SECRET:
+          LINE_CHANNEL_ACCESS_TOKEN:
+      Events:
+        Webhook:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /line/receive-message
+            Method: post
+
   DynamoTestFunction:
     Type: AWS::Serverless::Function
     Properties:
