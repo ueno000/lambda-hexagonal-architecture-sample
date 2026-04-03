@@ -242,3 +242,4 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/osx,linux,python,windows,pycharm,visualstudiocode
 .aws-sam/
+local-data/shared-local-instance.db
