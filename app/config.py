@@ -16,12 +16,17 @@ class AppConfig(BaseModel):
         return os.environ.get("AWS_DEFAULT_REGION")
 
     @staticmethod
-    def get_table_name() -> str:
+    def get_table_name_line() -> str:
         return os.environ.get("TABLE_NAME_LINE", "")
 
     @staticmethod
     def get_line_channel_secret() -> str:
         return os.environ.get("LINE_CHANNEL_SECRET", "")
+
+    @staticmethod
+    def get_dynamodb_endpoint_url() -> typing.Optional[str]:
+        # ローカル DynamoDB のエンドポイントを返す。None なら本番の DynamoDB に接続される。
+        return os.environ.get("DYNAMODB_ENDPOINT_URL")
 
 
 

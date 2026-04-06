@@ -5,7 +5,7 @@ import aws_cdk.aws_iam as aws_iam
 import aws_cdk.aws_lambda as aws_lambda
 import constructs
 
-from infra.app_constructs import app_project_function
+from infrastructure.app_constructs import app_project_function
 
 
 # ========== データクラス定義 ==========

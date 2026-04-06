@@ -3,7 +3,7 @@ from typing import Callable, Mapping, Optional, Sequence
 import cdk_nag
 import aws_cdk.aws_iam as aws_iam
 from aws_cdk import BundlingOptions, aws_lambda, Stack
-from constructs import Construct
+from infrastructure.app_constructs import Construct
 
 
 class AppProjectFunction(Construct):

@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from aws_cdk import aws_lambda, aws_lambda_python_alpha
-from constructs import Construct
+from infrastructure.app_constructs import Construct
 
 
 class SharedLayer(Construct):

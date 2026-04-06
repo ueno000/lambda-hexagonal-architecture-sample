@@ -6,15 +6,8 @@ import json
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
 
-from app.adapters import dynamodb_query_service, dynamodb_unit_of_work
-from app.domain.command_handlers import (
-    create_line_message_processor_command_handler,
-)
-from app.domain.commands import (
-    create_line_message_processor_command,
-)
 
-from app import config
+from app.entrypoints.line import config
 from app.domain.model.line.line_messaging_webhook_event import LINEMessagingWebhookEvent
 from app.entrypoints.line.signature import validate_signature
 
@@ -33,16 +26,16 @@ dynamodb_client = boto3.resource(
 )
 # Unit of Work パターン：複数の変更をトランザクションで管理
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-    config.AppConfig.get_table_name_line(), dynamodb_client.meta.client
+    config.AppConfig.get_table_name(), dynamodb_client.meta.client
 )
 # CQRS パターン：読み取り専用のクエリサービス
 products_query_service = dynamodb_query_service.DynamoDBProductsQueryService(
-    config.AppConfig.get_table_name_line(), dynamodb_client.meta.client
+    config.AppConfig.get_table_name(), dynamodb_client.meta.client
 )
 
 
 @app.post("/line/receive-message")
-def receive_message():
+def assign_received_message():
     try:
         event = app.current_event
 
