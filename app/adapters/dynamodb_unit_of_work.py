@@ -124,13 +124,13 @@ class DynamoDBLINEUsersRepository(
     def add(self, line_user: line_user.LINEUser) -> None:
         """Adds a LINE user to the DynamoDB table."""
         self.add_generic_item(
-            item=line_user.dict(), key=self.generate_line_user_key(line_user.line_id)
+            item=line_user.dict(), key=self.generate_line_user_key(line_user.id)
         )
 
     def put(self, line_user: line_user.LINEUser) -> None:
         """Puts a LINE user into the DynamoDB table (upsert)."""
         self.put_generic_item(
-            item=line_user.dict(), key=self.generate_line_user_key(line_user.line_id)
+            item=line_user.dict(), key=self.generate_line_user_key(line_user.id)
         )
 
     def update(self, line_user: line_user.LINEUser) -> None:
@@ -138,7 +138,7 @@ class DynamoDBLINEUsersRepository(
         update_fields = {
             k: v
             for k, v in line_user.dict().items()
-            if k not in {"line_id"}
+            if k not in {"id"}
         }
         update_expression_setters = [f"{key}=:{key}" for key in update_fields.keys()]
         update_values = {f":{key}": value for key, value in update_fields.items()}
@@ -149,7 +149,7 @@ class DynamoDBLINEUsersRepository(
                 "ExpressionAttributeValues": update_values,
                 "ConditionExpression": "(attribute_exists(PK) AND attribute_exists(SK))",
             },
-            key=self.generate_line_user_key(line_user.line_id),
+            key=self.generate_line_user_key(line_user.id),
         )
 
     def get(self, user_id: str) -> typing.Optional[line_user.LINEUser]:
@@ -164,11 +164,10 @@ class DynamoDBLINEUsersRepository(
         )
 
     @staticmethod
-    def generate_line_user_key(line_id: str) -> dict:
+    def generate_line_user_key(id: str) -> dict:
         """Generates primary key for LINE user entity."""
         return {
-            "PK": f"{DBPrefix.LINE_USER.value}#{line_id}",
-            "SK": f"{DBPrefix.LINE_USER.value}#{line_id}",
+            "id": f"{DBPrefix.LINE_USER.value}#{id}",
         }
 
 
@@ -240,9 +239,15 @@ class DynamoDBUnitOfWork(unit_of_work.UnitOfWork):
     line_users: DynamoDBLINEUsersRepository
     line_message_processors: DynamoDBLINEMessageProcessorsRepository
 
-    def __init__(self, table_name: str, dynamodb_client: client.DynamoDBClient):
+    def __init__(
+        self,
+        line_table_name: str,
+        line_user_table_name: str,
+        dynamodb_client: client.DynamoDBClient,
+    ):
         self._dynamo_db_client = dynamodb_client
-        self._table_name = table_name
+        self._line_table_name = line_table_name
+        self._line_user_table_name = line_user_table_name
         self._context: typing.Optional[dynamodb_base.DynamoDBContext] = None
 
     def commit(self) -> None:
@@ -255,18 +260,17 @@ class DynamoDBUnitOfWork(unit_of_work.UnitOfWork):
             dynamodb_client=self._dynamo_db_client
         )
         self.products = DynamoDBProductsRepository(
-            table_name=self._table_name, context=self._context
+            table_name=self._line_table_name, context=self._context
         )
         self.product_versions = DynamoDBProductVersionsRepository(
-            table_name=self._table_name, context=self._context
+            table_name=self._line_table_name, context=self._context
         )
         self.line_users = DynamoDBLINEUsersRepository(
-            table_name=self._table_name, context=self._context
+            table_name=self._line_user_table_name, context=self._context
         )
         self.line_message_processors = DynamoDBLINEMessageProcessorsRepository(
-            table_name=self._table_name, context=self._context
+            table_name=self._line_table_name, context=self._context
         )
-
         return self
 
     def __exit__(self, *args) -> None:

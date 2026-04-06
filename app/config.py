@@ -20,6 +20,10 @@ class AppConfig(BaseModel):
         return os.environ.get("TABLE_NAME_LINE", "")
 
     @staticmethod
+    def get_table_name_line_user() -> str:
+        return os.environ.get("TABLE_NAME_LINE_USER", "")
+
+    @staticmethod
     def get_line_channel_secret() -> str:
         return os.environ.get("LINE_CHANNEL_SECRET", "")
 
