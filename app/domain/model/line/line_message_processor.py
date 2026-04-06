@@ -1,9 +1,12 @@
 from app.domain.model.line.line_messaging_webhook_event import LINEMessageEvent
+from app.domain.model.line.line_user import LINEUser
 from pydantic import BaseModel, Field
+from datetime import datetime, timezone
 
 
 class LINEMessageProcessor(BaseModel):
     id: str = Field(..., title="Id")
-    messageEvents: LINEMessageEvent = Field(..., title="MessageEvents")
-    createDate: str = Field(..., title="CreateDate")
-    lastUpdateDate: str = Field(..., title="LastUpdateDate")
+    message_event: LINEMessageEvent = Field(..., title="MessageEvent")
+    line_user: LINEUser = Field(..., title="LINEUser")
+    create_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), title="CreateDate")
+    last_update_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), title="LastUpdateDate")

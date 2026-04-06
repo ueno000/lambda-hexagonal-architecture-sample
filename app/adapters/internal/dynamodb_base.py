@@ -53,6 +53,15 @@ class DynamoDBRepository:
             item=self._create_put_modifier(obj=item, key=key)
         )
 
+    def put_generic_item(self, item: dict, key: dict) -> None:
+        """
+        指定されたデータを DynamoDB の Put 操作形式に変換し、
+        既存アイテムの上書きを許可してトランザクション用の保留リストに追加する。
+        """
+        self._context.add_generic_item(
+            item=self._create_put_modifier_allow_replace(obj=item, key=key)
+        )
+
     def update_generic_item(self, expression: dict, key: dict) -> None:
         """
         指定された更新内容を DynamoDB の Update 操作形式に変換し、
@@ -79,6 +88,18 @@ class DynamoDBRepository:
                 "TableName": self._table_name,
                 "Item": {**obj, **key},
                 "ConditionExpression": "(attribute_not_exists(PK) AND attribute_not_exists(SK))",
+            }
+        }
+
+    def _create_put_modifier_allow_replace(self, obj: dict, key: dict) -> dict:
+        """
+        Put 操作用のリクエストを生成する。
+        既存アイテムが存在する場合は上書きする。
+        """
+        return {
+            "Put": {
+                "TableName": self._table_name,
+                "Item": {**obj, **key},
             }
         }
 
