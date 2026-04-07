@@ -1,19 +1,9 @@
-from datetime import datetime, timezone
-
-import boto3
 import json
 
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
 
-from app.adapters import dynamodb_query_service, dynamodb_unit_of_work
-from app.application.line.assign_received_message import assign_received_message
-from app.domain.command_handlers import (
-    create_line_message_processor_command_handler,
-)
-from app.domain.commands import (
-    create_line_message_processor_command,
-)
+from app.application.line.event_type_switcher import event_type_switcher
 
 from app import config
 from app.domain.model.line.line_messaging_webhook_event import LINEMessagingWebhookEvent
@@ -24,19 +14,6 @@ app_config = config.AppConfig(**config.config)
 app = api_gateway.ApiGatewayResolver()
 logger = Logger()
 tracer = Tracer()
-
-# # ========== DynamoDB クライアント初期化 ==========
-# # DynamoDBクライアントを指定リージョンで作成
-# dynamodb_client = boto3.resource(
-#     "dynamodb",
-#     region_name=config.AppConfig.get_default_region(),
-#     endpoint_url="http://host.docker.internal:8000",
-# )
-# # Unit of Work パターン：複数の変更をトランザクションで管理
-# unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-#     config.AppConfig.get_table_name_line(), dynamodb_client.meta.client
-# )
-
 
 @app.post("/line/receive-message")
 def receive_message():
@@ -73,7 +50,7 @@ def receive_message():
         # )
 
         # Assign the received message
-        assign_received_message(webhook_event)
+        event_type_switcher(webhook_event)
 
 
         return {}

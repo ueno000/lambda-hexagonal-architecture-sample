@@ -147,7 +147,7 @@ class DynamoDBLINEUsersRepository(
             expression={
                 "UpdateExpression": f"set {', '.join(update_expression_setters)}",
                 "ExpressionAttributeValues": update_values,
-                "ConditionExpression": "(attribute_exists(PK) AND attribute_exists(SK))",
+                "ConditionExpression": "attribute_exists(PK)",
             },
             key=self.generate_line_user_key(line_user.id),
         )
@@ -206,7 +206,7 @@ class DynamoDBLINEMessageProcessorsRepository(
             expression={
                 "UpdateExpression": f"set {', '.join(update_expression_setters)}",
                 "ExpressionAttributeValues": update_values,
-                "ConditionExpression": "(attribute_exists(PK) AND attribute_exists(SK))",
+                "ConditionExpression": "attribute_exists(PK)",
             },
             key=self.generate_line_message_processor_key(line_message_processor.id),
         )
@@ -227,7 +227,6 @@ class DynamoDBLINEMessageProcessorsRepository(
         """Generates primary key for LINE message processor entity."""
         return {
             "PK": f"{DBPrefix.LINE_MESSAGE_PROCESSOR.value}#{processor_id}",
-            "SK": f"{DBPrefix.LINE_MESSAGE_PROCESSOR.value}#{processor_id}",
         }
 
 

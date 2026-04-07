@@ -75,9 +75,18 @@ def assign_received_message(messaging_webhook_event: LINEMessagingWebhookEvent) 
             line_user = create_line_user(user_id)
 
         # Save the LINE message processor
-        processor_id = insert_line_message_processor(messaging_webhook_event)
+        line_message_processor = insert_line_message_processor(messaging_webhook_event)
         logger.info("Message processed successfully")
-        return processor_id
+
+        # ここで、update_line_message_processorをする。lineuserを付与する
+        line_message_processor.line_user = LINEUser.parse_obj(
+            line_user.dict()
+        )
+        line_message_processor.last_update_date = datetime.now(timezone.utc).isoformat()
+
+        with unit_of_work:
+            unit_of_work.line_message_processors.put(line_message_processor)
+            unit_of_work.commit()
 
     except Exception as e:
         logger.error(f"Error processing message: {str(e)}")
@@ -85,7 +94,7 @@ def assign_received_message(messaging_webhook_event: LINEMessagingWebhookEvent) 
 
 
 @tracer.capture_method
-def insert_line_message_processor(messaging_webhook_event: LINEMessagingWebhookEvent):
+def insert_line_message_processor(messaging_webhook_event: LINEMessagingWebhookEvent) -> str:
     """
     LINEMessageProcessor のインスタンスを作成して登録する。
 
@@ -112,8 +121,7 @@ def insert_line_message_processor(messaging_webhook_event: LINEMessagingWebhookE
             unit_of_work.commit()
 
         logger.info(f"Inserted LINE message processor with ID: {processor_id}")
-
-
+        return line_message_processor
 
     except Exception as e:
         logger.error(f"Error inserting LINE message processor: {str(e)}")
@@ -141,3 +149,4 @@ def create_line_user(line_id: str) -> LINEUser:
         unit_of_work.commit()
     logger.info(f"Created new LINE user with ID: {new_user.id}")
     return new_user
+
