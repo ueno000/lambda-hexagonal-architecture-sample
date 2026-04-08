@@ -15,7 +15,7 @@ SUPPORTED_MESSAGE_TYPES = {"text", "sticker"}
 def event_type_switcher(webhook_event: LINEMessagingWebhookEvent):
     """_summary_
 
-    受信したLINEのWebhookイベントのタイプを判別し、対応する処理を呼び出す関数。
+    受信したLINEのWebhookイベントのタイプを判別し、対応する処理を呼び出す
 
     Args:
         webhook_event (LINEMessagingWebhookEvent): _description_
@@ -36,10 +36,10 @@ def event_type_switcher(webhook_event: LINEMessagingWebhookEvent):
             logger.warning("Message type '%s' is not handled", message_type)
             print(f"DEBUG Unsupported message type: {message_type}")
 
-    elif event_type =="follow":
+    elif event_type == "follow":
         logger.info("Unsupported event type: %s", event_type)
 
-    elif event_type =="unfollow":
+    elif event_type == "unfollow":
         logger.info("Unsupported event type: %s", event_type)
 
     else:
