@@ -24,7 +24,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::176355978867:user/prototype-ueno
+          role-to-assume: arn:aws:iam::176355978867:role/github-deploy-role
           aws-region: ap-northeast-1
 
       - name: Package template
