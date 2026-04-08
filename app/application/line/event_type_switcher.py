@@ -29,7 +29,7 @@ def event_type_switcher(webhook_event: LINEMessagingWebhookEvent):
 
         if message_type in SUPPORTED_MESSAGE_TYPES:
             logger.info("Processing LINEMessageEvent")
-            # 受信したメッセージを処理する関数を呼び出す
+            # 受信したメッセージを処理
             assign_received_message(webhook_event)
 
         else:
