@@ -43,5 +43,5 @@ jobs:
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --parameter-overrides \
               LINEChannelSecret=${{ secrets.LINE_CHANNEL_SECRET }} \
-              LINEChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
+              LINEChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
             --no-fail-on-empty-changeset
