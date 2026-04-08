@@ -65,4 +65,13 @@ def receive_message():
 @tracer.capture_lambda_handler
 @logger.inject_lambda_context(log_event=True)
 def handler(event, context):
+    """_summary_
+
+    Args:
+        event (_type_): _description_
+        context (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     return app.resolve(event, context)
