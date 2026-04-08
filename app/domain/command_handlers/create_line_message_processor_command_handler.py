@@ -32,7 +32,7 @@ def handle_create_line_messaging_processor_command(
     )
 
     with unit_of_work:
-        unit_of_work.products.add(line_messaging_processor_obj)
+        unit_of_work.line_message_processors.add(line_messaging_processor_obj)
         unit_of_work.commit()
 
     return id

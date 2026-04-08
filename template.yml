@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Simple CRUD API with Lambda and API Gateway
+Description: LINE webhook API with Lambda, API Gateway, DynamoDB, and Secrets Manager
 
 Globals:
   Function:
@@ -9,104 +9,120 @@ Globals:
     MemorySize: 256
     Tracing: Active
 
+Parameters:
+  LINEChannelSecret:
+    Type: String
+    NoEcho: true
+
+  LINEChannelAccessToken:
+    Type: String
+    NoEcho: true
+
 Resources:
-  ProductsApi:
-    Type: AWS::Serverless::Api
+  LINEMessageProcessorDB:
+    Type: AWS::DynamoDB::Table
     Properties:
-      StageName: dev
-      Cors:
-        AllowMethods: "'GET,POST,PUT,DELETE,OPTIONS'"
-        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-        AllowOrigin: "'*'"
+      TableName: LINEMessageProcessor
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  LINEUserDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: LINEUser
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  LINESecrets:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: line/app
+      Description: LINE credentials
+      SecretString: !Sub |
+        {
+          "LINE_CHANNEL_SECRET": "${LINEChannelSecret}",
+          "LINE_CHANNEL_ACCESS_TOKEN": "${LINEChannelAccessToken}"
+        }
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: LambdaDynamoDBPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                Resource:
+                          - !GetAtt LINEMessageProcessorDB.Arn
+                          - !GetAtt LINEUserDB.Arn
+                          - !Sub "${LINEUserDB.Arn}/index/line_id-index"
+        - PolicyName: LambdaSecretsManagerPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref LINESecrets
 
   ReceivedMessageFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
       Handler: app.entrypoints.line.handler.handler
-      Runtime: python3.14
+      Role: !GetAtt LambdaExecutionRole.Arn
       Architectures:
-      - x86_64
-      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        - x86_64
+      Environment:
         Variables:
-          TABLE_NAME_LINE:
-          TABLE_NAME_LINE_USER:
-          DYNAMODB_ENDPOINT:
-          LINE_CHANNEL_SECRET:
-          LINE_CHANNEL_ACCESS_TOKEN:
+          TABLE_NAME_LINE: !Ref LINEMessageProcessorDB
+          TABLE_NAME_LINE_USER: !Ref LINEUserDB
+          LINE_SECRET_ARN: !Ref LINESecrets
+          DYNAMODB_ENDPOINT_URL: ""
+          ENV: ""
       Events:
         Webhook:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Type: Api
           Properties:
             Path: /line/receive-message
             Method: post
 
-  DynamoTestFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: .
-      Handler: app.entrypoints.api.handler.handler
-      Runtime: python3.14
-      Environment:
-        Variables:
-          AWS_DEFAULT_REGION: us-east-1
-          TABLE_NAME: ProductsTable
-          DYNAMODB_ENDPOINT: http://host.docker.internal:8000
-          API_BASE_PATH: ""
-      Events:
-        ListProducts:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ProductsApi
-            Path: /products
-            Method: GET
-
-        CreateProduct:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ProductsApi
-            Path: /products
-            Method: POST
-
-        GetProduct:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ProductsApi
-            Path: /products/{id}
-            Method: GET
-
-        UpdateProduct:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ProductsApi
-            Path: /products/{id}
-            Method: PUT
-
-        DeleteProduct:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ProductsApi
-            Path: /products/{id}
-            Method: DELETE
-
-      Policies:
-        - AWSLambdaBasicExecutionRole
-        - Statement:
-            - Effect: Allow
-              Action:
-                - dynamodb:GetItem
-                - dynamodb:Scan
-                - dynamodb:PutItem
-                - dynamodb:UpdateItem
-                - dynamodb:DeleteItem
-                - dynamodb:TransactWriteItems
-              Resource: "*"
-
 Outputs:
-  ProductsApiUrl:
-    Description: API Gateway endpoint URL for dev stage
-    Value: !Sub "https://${ProductsApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/dev"
+  ReceivedMessageFunctionArn:
+    Description: ReceivedMessageFunction ARN
+    Value: !GetAtt ReceivedMessageFunction.Arn
 
-  DynamoTestFunctionArn:
-    Description: DynamoTest Lambda Function ARN
-    Value: !GetAtt DynamoTestFunction.Arn
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/line/receive-message"
+
+  LINESecretsArn:
+    Description: Secrets Manager secret ARN
+    Value: !Ref LINESecrets

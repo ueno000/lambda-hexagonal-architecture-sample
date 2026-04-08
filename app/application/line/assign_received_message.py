@@ -9,9 +9,13 @@ from aws_lambda_powertools.event_handler import api_gateway
 from app import config
 from app.domain.model.line.line_messaging_webhook_event import LINEMessagingWebhookEvent
 from app.domain.model.line.line_user import LINEUser
-from app.domain.model.line.line_message_processor import LINEMessageProcessor
+from app.domain.model.line.line_message_processor import (
+    LINEMessageProcessor,
+    MessageStatus,
+)
 from app.entrypoints.line.signature import validate_signature
 from app.adapters import dynamodb_unit_of_work, dynamodb_query_service
+from app.application.line.send_message import send_message
 
 app_config = config.AppConfig(**config.config)
 
@@ -21,31 +25,34 @@ tracer = Tracer()
 
 # ========== DynamoDB クライアント初期化 ==========
 # DynamoDBクライアントを指定リージョンで作成
+endpoint = config.AppConfig.get_dynamodb_endpoint_url()
+
 dynamodb_client = boto3.resource(
     "dynamodb",
     region_name=config.AppConfig.get_default_region(),
-    endpoint_url="http://host.docker.internal:8000",
+    endpoint_url=endpoint,
 )
+
 # Unit of Work パターン：複数の変更をトランザクションで管理
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     config.AppConfig.get_table_name_line(),
     config.AppConfig.get_table_name_line_user(),
-    dynamodb_client.meta.client
+    dynamodb_client.meta.client,
 )
 # CQRS パターン：読み取り専用のクエリサービス
 line_query_service = dynamodb_query_service.DynamoDBLINEMessageProcessorsQueryService(
-    config.AppConfig.get_table_name_line(),
-    dynamodb_client.meta.client
+    config.AppConfig.get_table_name_line(), dynamodb_client.meta.client
 )
 
 line_users_query_service = dynamodb_query_service.DynamoDBLINEUsersQueryService(
-    config.AppConfig.get_table_name_line_user(),
-    dynamodb_client.meta.client
+    config.AppConfig.get_table_name_line_user(), dynamodb_client.meta.client
 )
 
 
 @tracer.capture_method
-def assign_received_message(messaging_webhook_event: LINEMessagingWebhookEvent) -> str | None:
+def assign_received_message(
+    messaging_webhook_event: LINEMessagingWebhookEvent,
+) -> str | None:
     """
     LINE の Webhook イベントから受信メッセージを割り当てる。
     受信したメッセージを処理し、ユーザーを取得または作成し、メッセージを保存する。
@@ -79,14 +86,18 @@ def assign_received_message(messaging_webhook_event: LINEMessagingWebhookEvent) 
         logger.info("Message processed successfully")
 
         # ここで、update_line_message_processorをする。lineuserを付与する
-        line_message_processor.line_user = LINEUser.parse_obj(
-            line_user.dict()
-        )
+        line_message_processor.processing_status = MessageStatus.AwaitingChatResponse
+        line_message_processor.line_user = LINEUser.parse_obj(line_user.dict())
         line_message_processor.last_update_date = datetime.now(timezone.utc).isoformat()
 
         with unit_of_work:
             unit_of_work.line_message_processors.put(line_message_processor)
             unit_of_work.commit()
+
+        send_message(
+            reply_token=first_event["replyToken"],
+            message="メッセージを受け取りました！返信をお待ちください。",
+        )
 
     except Exception as e:
         logger.error(f"Error processing message: {str(e)}")
@@ -94,7 +105,9 @@ def assign_received_message(messaging_webhook_event: LINEMessagingWebhookEvent) 
 
 
 @tracer.capture_method
-def insert_line_message_processor(messaging_webhook_event: LINEMessagingWebhookEvent) -> str:
+def insert_line_message_processor(
+    messaging_webhook_event: LINEMessagingWebhookEvent,
+) -> str:
     """
     LINEMessageProcessor のインスタンスを作成して登録する。
 
@@ -111,8 +124,7 @@ def insert_line_message_processor(messaging_webhook_event: LINEMessagingWebhookE
     try:
         processor_id = str(uuid.uuid4())
         line_message_processor = LINEMessageProcessor(
-            id=processor_id,
-            message_event=messaging_webhook_event.events[0]
+            id=processor_id, message_event=messaging_webhook_event.events[0]
         )
 
         # Insert using unit of work
@@ -149,4 +161,3 @@ def create_line_user(line_id: str) -> LINEUser:
         unit_of_work.commit()
     logger.info(f"Created new LINE user with ID: {new_user.id}")
     return new_user
-

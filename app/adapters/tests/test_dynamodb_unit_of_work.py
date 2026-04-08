@@ -7,7 +7,6 @@ import moto
 import pytest
 
 from app.adapters import dynamodb_unit_of_work
-from app.domain.model import product
 
 TEST_TABLE_NAME = "test-table"
 

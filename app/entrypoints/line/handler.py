@@ -15,6 +15,7 @@ app = api_gateway.ApiGatewayResolver()
 logger = Logger()
 tracer = Tracer()
 
+
 @app.post("/line/receive-message")
 def receive_message():
     """
@@ -51,7 +52,6 @@ def receive_message():
 
         # Assign the received message
         event_type_switcher(webhook_event)
-
 
         return {}
 
