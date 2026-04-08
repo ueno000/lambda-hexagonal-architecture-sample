@@ -20,7 +20,6 @@ tracer = Tracer()
 def receive_message():
     """
     LINE Webhookメッセージ受信処理
-    署名の検証を行い、Webhookイベントを処理し、受信したメッセージを割り当てる
     """
     try:
         event = app.current_event
