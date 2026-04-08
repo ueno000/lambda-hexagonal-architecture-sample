@@ -19,8 +19,8 @@ tracer = Tracer()
 @app.post("/line/receive-message")
 def receive_message():
     """
-    Handle LINE webhook message reception.
-    Validates signature, processes the webhook event, and assigns the received message.
+    LINE Webhookメッセージ受信処理
+    署名の検証を行い、Webhookイベントを処理し、受信したメッセージを割り当てる
     """
     try:
         event = app.current_event
