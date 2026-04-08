@@ -5,9 +5,9 @@ on:
     branches:
       - main
     paths:
-      - "template.yaml"
+      - "template.yml"
       - "app/**"
-      - ".github/workflows/deploy.yml"
+      - ".github/workflows/deploy.yaml"
 
 permissions:
   id-token: write
