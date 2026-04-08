@@ -65,7 +65,4 @@ def receive_message():
 @tracer.capture_lambda_handler
 @logger.inject_lambda_context(log_event=True)
 def handler(event, context):
-    """
-    AWS Lambda handler for LINE webhook events.
-    """
     return app.resolve(event, context)

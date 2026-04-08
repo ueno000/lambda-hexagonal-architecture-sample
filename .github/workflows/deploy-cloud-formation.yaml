@@ -16,6 +16,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: prototype
 
     steps:
       - name: Checkout
@@ -30,7 +31,7 @@ jobs:
       - name: Package template
         run: |
           aws cloudformation package \
-            --template-file template.yaml \
+            --template-file template.yml \
             --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-vkuzfrstta1e  \
             --output-template-file packaged-template.yaml
 
@@ -40,4 +41,7 @@ jobs:
             --template-file packaged-template.yaml \
             --stack-name lambda-hexagonal-architecture-sample \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --parameter-overrides \
+              LINEChannelSecret=${{ secrets.LINE_CHANNEL_SECRET }} \
+              LINEChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
             --no-fail-on-empty-changeset
