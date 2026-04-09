@@ -36,18 +36,26 @@ class DynamoDBQueryServiceTests(unittest.TestCase):
         class DummyClient:
             def query(self, **kwargs):
                 captured.update(kwargs)
-                return {"Items": [{"id": "user-1", "line_id": "line-user-1"}]}
+                return {
+                    "Items": [
+                        {
+                            "id": f"LINEUSER#user-1",
+                            "line_id": "line-user-1",
+                        }
+                    ]
+                }
 
         query_service = DynamoDBLINEUsersQueryService(
             "user-table",
             DummyClient(),
         )
 
-        query_service.get_line_user_by_line_id("line-user-1")
+        user = query_service.get_line_user_by_line_id("line-user-1")
 
         self.assertEqual("user-table", captured["TableName"])
         self.assertEqual("line_id-index", captured["IndexName"])
         self.assertEqual({":v": "line-user-1"}, captured["ExpressionAttributeValues"])
+        self.assertEqual("user-1", user.id)
 
 
 if __name__ == "__main__":

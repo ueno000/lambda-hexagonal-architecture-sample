@@ -15,7 +15,7 @@ class DynamoDBUnitOfWorkTests(unittest.TestCase):
     def test_generate_line_user_key_uses_id_prefix(self):
         key = DynamoDBLINEUsersRepository.generate_line_user_key("user-1")
 
-        self.assertEqual({"id": f"{DBPrefix.LINE_USER.value}#user-1"}, key)
+        self.assertEqual({"id": "user-1"}, key)
 
     def test_generate_line_message_processor_key_uses_pk_prefix(self):
         key = DynamoDBLINEMessageProcessorsRepository.generate_line_message_processor_key(

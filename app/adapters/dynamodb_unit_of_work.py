@@ -59,7 +59,7 @@ class DynamoDBLINEUsersRepository(dynamodb_base.DynamoDBRepository):
     def generate_line_user_key(id: str) -> dict:
         """Generates primary key for LINE user entity."""
         return {
-            "id": f"{DBPrefix.LINE_USER.value}#{id}",
+            "id": id,
         }
 
 

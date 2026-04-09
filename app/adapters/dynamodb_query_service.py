@@ -32,7 +32,7 @@ class DynamoDBLINEUsersQueryService(line_query_service.LINEUsersQueryService):
         if not items:
             return None
 
-        return line_user.LINEUser.parse_obj(items[0])
+        return line_user.LINEUser.parse_obj(_normalize_line_user_item(items[0]))
 
 
 class DynamoDBLINEMessageProcessorsQueryService(
@@ -61,3 +61,12 @@ class DynamoDBLINEMessageProcessorsQueryService(
             if processor_response.get("Item")
             else None
         )
+
+
+def _normalize_line_user_item(item: dict) -> dict:
+    normalized_item = dict(item)
+    user_id = normalized_item.get("id")
+    prefix = f"{DBPrefix.LINE_USER.value}#"
+    if isinstance(user_id, str) and user_id.startswith(prefix):
+        normalized_item["id"] = user_id[len(prefix) :]
+    return normalized_item
