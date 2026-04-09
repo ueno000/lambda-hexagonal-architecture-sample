@@ -22,7 +22,7 @@ def handle_create_line_messaging_processor_command(
     current_time = datetime.now(timezone.utc).isoformat()
     id = str(uuid.uuid4())
 
-    first_event = command.event.events[0]
+    first_event = command.message_event.events[0]
 
     line_messaging_processor_obj = LINEMessageProcessor(
         id=id,

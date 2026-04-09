@@ -3,6 +3,10 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
+from app.tests.support import install_test_stubs
+
+install_test_stubs()
+
 from app.entrypoints.line import handler
 
 

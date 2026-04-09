@@ -3,6 +3,10 @@ from dataclasses import dataclass
 import unittest
 from unittest.mock import patch
 
+from app.tests.support import install_test_stubs
+
+install_test_stubs()
+
 from app.domain.model.line.line_message_processor import MessageStatus
 from app.entrypoints.reply import handler
 

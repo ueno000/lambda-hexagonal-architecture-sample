@@ -1,169 +1,32 @@
-import datetime
-import uuid
+import unittest
 
-import assertpy
-import boto3
-import moto
-import pytest
+from app.tests.support import install_test_stubs
 
-from app.adapters import dynamodb_unit_of_work
+install_test_stubs()
 
-TEST_TABLE_NAME = "test-table"
-
-
-@pytest.fixture
-def mock_dynamodb():
-    with moto.mock_dynamodb():
-        yield boto3.resource("dynamodb", region_name="eu-central-1")
+from app.adapters.dynamodb_unit_of_work import (
+    DBPrefix,
+    DynamoDBLINEMessageProcessorsRepository,
+    DynamoDBLINEUsersRepository,
+)
 
 
-@pytest.fixture(autouse=True)
-def app_registry_dynamodb_table(mock_dynamodb):
-    table = mock_dynamodb.create_table(
-        TableName="test-table",
-        KeySchema=[
-            {"AttributeName": "PK", "KeyType": "HASH"},
-            {"AttributeName": "SK", "KeyType": "RANGE"},
-        ],
-        AttributeDefinitions=[
-            {"AttributeName": "PK", "AttributeType": "S"},
-            {"AttributeName": "SK", "AttributeType": "S"},
-        ],
-        BillingMode="PAY_PER_REQUEST",
-    )
+class DynamoDBUnitOfWorkTests(unittest.TestCase):
+    def test_generate_line_user_key_uses_id_prefix(self):
+        key = DynamoDBLINEUsersRepository.generate_line_user_key("user-1")
 
-    table.meta.client.get_waiter("table_exists").wait(TableName="test-table")
-    return table
+        self.assertEqual({"id": f"{DBPrefix.LINE_USER.value}#user-1"}, key)
 
-
-def test_add_and_commit_should_store_product(mock_dynamodb):
-    # Arrange
-    unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-        table_name=TEST_TABLE_NAME, dynamodb_client=mock_dynamodb.meta.client
-    )
-    unit_of_work_readonly = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-        table_name=TEST_TABLE_NAME, dynamodb_client=mock_dynamodb.meta.client
-    )
-    current_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-
-    new_product_id = str(uuid.uuid4())
-    new_product = product.Product(
-        id=new_product_id,
-        name="test-name",
-        description="test-description",
-        createDate=current_time,
-        lastUpdateDate=current_time,
-    )
-
-    # Act
-    with unit_of_work:
-        unit_of_work.products.add(new_product)
-        unit_of_work.commit()
-
-    # Assert
-    with unit_of_work_readonly:
-        product_from_db = unit_of_work_readonly.products.get(new_product_id)
-
-    assertpy.assert_that(product_from_db).is_not_none()
-    assertpy.assert_that(product_from_db.dict()).is_equal_to(
-        {
-            "id": new_product_id,
-            "name": "test-name",
-            "description": "test-description",
-            "createDate": current_time,
-            "lastUpdateDate": current_time,
-        }
-    )
-
-
-def test_get_product_when_does_not_exist_should_throw(mock_dynamodb):
-    # Arrange
-    unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-        table_name=TEST_TABLE_NAME, dynamodb_client=mock_dynamodb.meta.client
-    )
-
-    # Act
-    with unit_of_work:
-        product = unit_of_work.products.get("does-not-exist")
-
-    # Assert
-    assertpy.assert_that(product).is_none()
-
-
-def test_update_attribute_should_only_update_specified_property(mock_dynamodb):
-    # Arrange
-    unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-        table_name=TEST_TABLE_NAME, dynamodb_client=mock_dynamodb.meta.client
-    )
-    unit_of_work_readonly = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-        table_name=TEST_TABLE_NAME, dynamodb_client=mock_dynamodb.meta.client
-    )
-    current_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-
-    new_product_id = str(uuid.uuid4())
-    new_product = product.Product(
-        id=new_product_id,
-        name="test-name",
-        description="test-description",
-        createDate=current_time,
-        lastUpdateDate=current_time,
-    )
-    with unit_of_work:
-        unit_of_work.products.add(new_product)
-        unit_of_work.commit()
-
-    # Act
-    with unit_of_work:
-        unit_of_work.products.update_attributes(
-            new_product_id, description="new-description"
+    def test_generate_line_message_processor_key_uses_pk_prefix(self):
+        key = DynamoDBLINEMessageProcessorsRepository.generate_line_message_processor_key(
+            "processor-1"
         )
-        unit_of_work.commit()
 
-    # Assert
-    with unit_of_work_readonly:
-        product_from_db = unit_of_work_readonly.products.get(new_product_id)
-
-    assertpy.assert_that(product_from_db).is_not_none()
-    assertpy.assert_that(product_from_db.dict()).is_equal_to(
-        {
-            "id": new_product_id,
-            "name": "test-name",
-            "description": "new-description",
-            "createDate": current_time,
-            "lastUpdateDate": current_time,
-        }
-    )
+        self.assertEqual(
+            {"PK": f"{DBPrefix.LINE_MESSAGE_PROCESSOR.value}#processor-1"},
+            key,
+        )
 
 
-def test_delete_and_commit_should_delete_product(mock_dynamodb):
-    # Arrange
-    unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-        table_name=TEST_TABLE_NAME, dynamodb_client=mock_dynamodb.meta.client
-    )
-    unit_of_work_readonly = dynamodb_unit_of_work.DynamoDBUnitOfWork(
-        table_name=TEST_TABLE_NAME, dynamodb_client=mock_dynamodb.meta.client
-    )
-    current_time = datetime.datetime.now(datetime.timezone.utc).isoformat()
-
-    new_product_id = str(uuid.uuid4())
-    new_product = product.Product(
-        id=new_product_id,
-        name="test-name",
-        description="test-description",
-        createDate=current_time,
-        lastUpdateDate=current_time,
-    )
-    with unit_of_work:
-        unit_of_work.products.add(new_product)
-        unit_of_work.commit()
-
-    # Act
-    with unit_of_work:
-        unit_of_work.products.delete(new_product_id)
-        unit_of_work.commit()
-
-    # Assert
-    with unit_of_work_readonly:
-        product_from_db = unit_of_work_readonly.products.get(new_product_id)
-
-    assertpy.assert_that(product_from_db).is_none()
+if __name__ == "__main__":
+    unittest.main()

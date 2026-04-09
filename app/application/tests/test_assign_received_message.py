@@ -3,6 +3,10 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 
+from app.tests.support import install_test_stubs
+
+install_test_stubs()
+
 from app.application.line import assign_received_message
 from app.domain.model.line.line_message_processor import MessageStatus
 from app.domain.model.line.line_user import LINEUser

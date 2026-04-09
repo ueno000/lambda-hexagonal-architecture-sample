@@ -1,98 +1,54 @@
 import unittest
-import uuid
+from types import SimpleNamespace
+from unittest.mock import Mock
 
-import assertpy
+from app.tests.support import install_test_stubs
 
-from app.domain.command_handlers import (
-    create_product_command_handler,
-    delete_product_command_handler,
-    update_product_command_handler,
+install_test_stubs()
+
+from app.domain.command_handlers import create_line_message_processor_command_handler
+from app.domain.commands.create_line_message_processor_command import (
+    CreateLINEMessagingProcessorCommand,
 )
-from app.domain.commands import (
-    create_product_command,
-    delete_product_command,
-    update_product_command,
-)
-from app.domain.ports import unit_of_work
 
 
-def test_create_product_should_store_in_repository():
-    # Arrange
-    mock_unit_of_work = unittest.mock.create_autospec(
-        spec=unit_of_work.UnitOfWork, instance=True
-    )
-    mock_unit_of_work.products = unittest.mock.create_autospec(
-        spec=unit_of_work.ProductsRepository, instance=True
-    )
+class DummyUnitOfWork:
+    def __init__(self):
+        self.line_message_processors = SimpleNamespace(add=Mock())
+        self.committed = False
 
-    command = create_product_command.CreateProductCommand(
-        name="Test Product",
-        description="Test Description",
-    )
+    def __enter__(self):
+        return self
 
-    # Act
-    create_product_command_handler.handle_create_product_command(
-        command=command, unit_of_work=mock_unit_of_work
-    )
+    def __exit__(self, exc_type, exc, tb):
+        return False
 
-    # Assert
-    mock_unit_of_work.commit.assert_called_once()
-    product = mock_unit_of_work.products.add.call_args.args[0]
-
-    assertpy.assert_that(product.name).is_equal_to("Test Product")
-    assertpy.assert_that(product.description).is_equal_to("Test Description")
+    def commit(self):
+        self.committed = True
 
 
-def test_update_product_should_only_update_specified_property():
-    # Arrange
-    mock_unit_of_work = unittest.mock.create_autospec(
-        spec=unit_of_work.UnitOfWork, instance=True
-    )
-    mock_unit_of_work.products = unittest.mock.create_autospec(
-        spec=unit_of_work.ProductsRepository, instance=True
-    )
+class CommandHandlerTests(unittest.TestCase):
+    def test_create_line_message_processor_command_stores_first_event(self):
+        command = CreateLINEMessagingProcessorCommand(
+            message_event=SimpleNamespace(
+                events=[
+                    SimpleNamespace(
+                        replyToken="reply-token",
+                    )
+                ]
+            )
+        )
+        unit_of_work = DummyUnitOfWork()
 
-    # Update only the description
-    product_id = str(uuid.uuid4())
-    new_description = "New Description"
-    command = update_product_command.UpdateProductCommand(
-        id=product_id, description=new_description
-    )
+        processor_id = (
+            create_line_message_processor_command_handler.handle_create_line_messaging_processor_command(
+                command=command,
+                unit_of_work=unit_of_work,
+            )
+        )
 
-    # Act
-    update_product_command_handler.handle_update_product_command(
-        command=command, unit_of_work=mock_unit_of_work
-    )
-
-    # Assert
-    mock_unit_of_work.commit.assert_called_once()
-    updated_attributes = mock_unit_of_work.products.update_attributes.call_args.kwargs
-
-    assertpy.assert_that(updated_attributes["product_id"]).is_equal_to(product_id)
-    assertpy.assert_that(updated_attributes["description"]).is_equal_to(new_description)
-
-
-def test_delete_product_should_delete_from_repository():
-    # Arrange
-    mock_unit_of_work = unittest.mock.create_autospec(
-        spec=unit_of_work.UnitOfWork, instance=True
-    )
-    mock_unit_of_work.products = unittest.mock.create_autospec(
-        spec=unit_of_work.ProductsRepository, instance=True
-    )
-
-    product_id = str(uuid.uuid4())
-    command = delete_product_command.DeleteProductCommand(id=product_id)
-
-    # Act
-    delete_product_command_handler.handle_delete_product_command(
-        command=command, unit_of_work=mock_unit_of_work
-    )
-
-    # Assert
-    mock_unit_of_work.commit.assert_called_once()
-    deleted_product_id = mock_unit_of_work.products.delete.call_args.kwargs[
-        "product_id"
-    ]
-
-    assertpy.assert_that(deleted_product_id).is_equal_to(product_id)
+        self.assertTrue(processor_id)
+        self.assertTrue(unit_of_work.committed)
+        saved_processor = unit_of_work.line_message_processors.add.call_args.args[0]
+        self.assertEqual(processor_id, saved_processor.id)
+        self.assertEqual("reply-token", saved_processor.message_event.replyToken)

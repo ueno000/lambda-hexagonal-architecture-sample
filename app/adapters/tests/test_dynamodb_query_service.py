@@ -1,36 +1,54 @@
-import datetime
-import uuid
+import unittest
+from types import SimpleNamespace
 
-import assertpy
-import boto3
-import moto
-import pytest
+from app.tests.support import install_test_stubs
 
-from app.adapters import dynamodb_query_service, dynamodb_unit_of_work
+install_test_stubs()
 
-TEST_TABLE_NAME = "test-table"
-
-
-@pytest.fixture
-def mock_dynamodb():
-    with moto.mock_dynamodb():
-        yield boto3.resource("dynamodb", region_name="eu-central-1")
+from app.adapters.dynamodb_query_service import (
+    DynamoDBLINEMessageProcessorsQueryService,
+    DynamoDBLINEUsersQueryService,
+)
 
 
-@pytest.fixture(autouse=True)
-def backend_app_dynamodb_table(mock_dynamodb):
-    table = mock_dynamodb.create_table(
-        TableName=TEST_TABLE_NAME,
-        KeySchema=[
-            {"AttributeName": "PK", "KeyType": "HASH"},
-            {"AttributeName": "SK", "KeyType": "RANGE"},
-        ],
-        AttributeDefinitions=[
-            {"AttributeName": "PK", "AttributeType": "S"},
-            {"AttributeName": "SK", "AttributeType": "S"},
-        ],
-        BillingMode="PAY_PER_REQUEST",
-    )
+class DynamoDBQueryServiceTests(unittest.TestCase):
+    def test_get_line_message_processor_by_id_uses_id_key(self):
+        captured = {}
 
-    table.meta.client.get_waiter("table_exists").wait(TableName=TEST_TABLE_NAME)
-    return table
+        class DummyClient:
+            def get_item(self, **kwargs):
+                captured.update(kwargs)
+                return {"Item": {"id": "processor-1", "message_event": {"replyToken": "r"}}}
+
+        query_service = DynamoDBLINEMessageProcessorsQueryService(
+            "line-table",
+            DummyClient(),
+        )
+
+        query_service.get_line_message_processor_by_id("processor-1")
+
+        self.assertEqual("line-table", captured["TableName"])
+        self.assertEqual({"id": "processor-1"}, captured["Key"])
+
+    def test_get_line_user_by_line_id_queries_index(self):
+        captured = {}
+
+        class DummyClient:
+            def query(self, **kwargs):
+                captured.update(kwargs)
+                return {"Items": [{"id": "user-1", "line_id": "line-user-1"}]}
+
+        query_service = DynamoDBLINEUsersQueryService(
+            "user-table",
+            DummyClient(),
+        )
+
+        query_service.get_line_user_by_line_id("line-user-1")
+
+        self.assertEqual("user-table", captured["TableName"])
+        self.assertEqual("line_id-index", captured["IndexName"])
+        self.assertEqual({":v": "line-user-1"}, captured["ExpressionAttributeValues"])
+
+
+if __name__ == "__main__":
+    unittest.main()
