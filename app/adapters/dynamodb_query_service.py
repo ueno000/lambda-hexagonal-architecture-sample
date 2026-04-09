@@ -51,9 +51,7 @@ class DynamoDBLINEMessageProcessorsQueryService(
 
         processor_response = self._dynamodb_client.get_item(
             TableName=self._table_name,
-            Key=DynamoDBLINEMessageProcessorsRepository.generate_line_message_processor_key(
-                processor_id
-            ),
+            Key={"id": processor_id},
         )
 
         return (
