@@ -48,5 +48,5 @@ def process_record(record: dict) -> None:
         )
         return
 
-    reply_token = line_message_processor.message_event["replyToken"]
+    reply_token = line_message_processor.message_event.replyToken
     reply_message(line_message_processor.processing_status, reply_token)
