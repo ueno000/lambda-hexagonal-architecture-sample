@@ -35,6 +35,10 @@ class AppConfig(BaseModel):
         return os.environ.get("TABLE_NAME_LINE_USER", "")
 
     @staticmethod
+    def get_chat_queue_url() -> str:
+        return os.environ.get("CHAT_QUEUE_URL", "")
+
+    @staticmethod
     def get_line_channel_secret() -> str:
         return load_line_secrets().get("LINE_CHANNEL_SECRET", "")
 

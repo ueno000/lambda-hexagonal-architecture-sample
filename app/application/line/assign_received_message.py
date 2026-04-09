@@ -1,10 +1,10 @@
 from datetime import datetime, timezone
+import json
 import uuid
 
 import boto3
 
 from aws_lambda_powertools import Logger, Tracer
-from aws_lambda_powertools.event_handler import api_gateway
 
 from app import config
 from app.domain.model.line.line_messaging_webhook_event import LINEMessagingWebhookEvent
@@ -13,13 +13,9 @@ from app.domain.model.line.line_message_processor import (
     LINEMessageProcessor,
     MessageStatus,
 )
-from app.entrypoints.line.signature import validate_signature
 from app.adapters import dynamodb_unit_of_work, dynamodb_query_service
-from app.application.line.send_message import send_message
 
 app_config = config.AppConfig(**config.config)
-
-app = api_gateway.ApiGatewayResolver()
 logger = Logger()
 tracer = Tracer()
 
@@ -46,6 +42,11 @@ line_query_service = dynamodb_query_service.DynamoDBLINEMessageProcessorsQuerySe
 
 line_users_query_service = dynamodb_query_service.DynamoDBLINEUsersQueryService(
     config.AppConfig.get_table_name_line_user(), dynamodb_client.meta.client
+)
+
+sqs_client = boto3.client(
+    "sqs",
+    region_name=config.AppConfig.get_default_region(),
 )
 
 
@@ -94,10 +95,13 @@ def assign_received_message(
             unit_of_work.line_message_processors.put(line_message_processor)
             unit_of_work.commit()
 
-        send_message(
-            reply_token=first_event["replyToken"],
-            message="メッセージを受け取りました！返信をお待ちください。",
+        enqueue_chat_request(line_message_processor.id)
+        logger.info(
+            "Enqueued chat request for LINE message processor ID: %s",
+            line_message_processor.id,
         )
+
+        return line_message_processor.id
 
     except Exception as e:
         logger.error(f"Error processing message: {str(e)}")
@@ -161,3 +165,26 @@ def create_line_user(line_id: str) -> LINEUser:
         unit_of_work.commit()
     logger.info(f"Created new LINE user with ID: {new_user.id}")
     return new_user
+
+
+def enqueue_chat_request(line_message_processor_id: str) -> None:
+    """_summary_
+    LINEMessageProcessor の ID を SQS キューに送信
+
+    Args:
+        line_message_processor_id (str): _description_
+
+    Raises:
+        RuntimeError: _description_
+    """
+    queue_url = config.AppConfig.get_chat_queue_url()
+    if not queue_url:
+        raise RuntimeError("CHAT_QUEUE_URL is not set")
+
+    sqs_client.send_message(
+        QueueUrl=queue_url,
+        MessageBody=json.dumps(
+            {"line_message_processor_id": line_message_processor_id},
+            ensure_ascii=False,
+        ),
+    )

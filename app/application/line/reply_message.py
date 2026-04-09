@@ -1,18 +1,16 @@
 import logging
 
 from app.application.line.send_message import send_message
-from app.domain.model.line.line_message_processor import (
-    LINEMessageProcessor,
-    MessageStatus,
-
-)
+from app.domain.model.line.line_message_processor import MessageStatus
 
 logger = logging.getLogger(__name__)
 
 
-def reply_message(line_message_processor_status:MessageStatus, reply_token:str) -> None:
-
-    if line_message_processor_status != 1:
+def reply_message(
+    line_message_processor_status: MessageStatus, reply_token: str
+) -> None:
+    # 返信可能な状態か確認
+    if line_message_processor_status != MessageStatus.AwaitingChatResponse.value:
         logger.warning(
             "Message is not ready for reply. Current status: %s",
             line_message_processor_status,
@@ -23,7 +21,7 @@ def reply_message(line_message_processor_status:MessageStatus, reply_token:str) 
 
     response = send_message(
         reply_token,
-        "answer from lambda",
+        "これは返信メッセージです。",
     )
 
     if response.status_code == 200:

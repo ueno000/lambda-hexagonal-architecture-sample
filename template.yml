@@ -43,6 +43,11 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
+  ChatQueueSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ChatQueueSQS
+
   LINESecrets:
     Type: AWS::SecretsManager::Secret
     Properties:
@@ -91,6 +96,17 @@ Resources:
                 Action:
                   - secretsmanager:GetSecretValue
                 Resource: !Ref LINESecrets
+        - PolicyName: LambdaSQSSendMessagePolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource: !GetAtt ChatQueueSQS.Arn
 
   ReceivedMessageFunction:
     Type: AWS::Serverless::Function
@@ -105,6 +121,7 @@ Resources:
           TABLE_NAME_LINE: !Ref LINEMessageProcessorDB
           TABLE_NAME_LINE_USER: !Ref LINEUserDB
           LINE_SECRET_ARN: !Ref LINESecrets
+          CHAT_QUEUE_URL: !Ref ChatQueueSQS
           DYNAMODB_ENDPOINT_URL: ""
           ENV: ""
       Events:
@@ -114,10 +131,37 @@ Resources:
             Path: /line/receive-message
             Method: post
 
+  ReplyMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.entrypoints.reply.handler.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME_LINE: !Ref LINEMessageProcessorDB
+          TABLE_NAME_LINE_USER: !Ref LINEUserDB
+          LINE_SECRET_ARN: !Ref LINESecrets
+          CHAT_QUEUE_URL: !Ref ChatQueueSQS
+          DYNAMODB_ENDPOINT_URL: ""
+          ENV: ""
+      Events:
+        ChatQueueEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt ChatQueueSQS.Arn
+            BatchSize: 1
+
 Outputs:
   ReceivedMessageFunctionArn:
     Description: ReceivedMessageFunction ARN
     Value: !GetAtt ReceivedMessageFunction.Arn
+
+  ReplyMessageFunctionArn:
+    Description: ReplyMessageFunction ARN
+    Value: !GetAtt ReplyMessageFunction.Arn
 
   ApiUrl:
     Description: API Gateway endpoint URL
@@ -126,3 +170,7 @@ Outputs:
   LINESecretsArn:
     Description: Secrets Manager secret ARN
     Value: !Ref LINESecrets
+
+  ChatQueueSQSUrl:
+    Description: ChatQueueSQS URL
+    Value: !Ref ChatQueueSQS

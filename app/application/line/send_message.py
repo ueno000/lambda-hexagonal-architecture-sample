@@ -41,3 +41,4 @@ def send_message(reply_token: str, message: str):
     )
 
     logger.info("LINE response status=%s body=%s", response.status_code, response.text)
+    return response
