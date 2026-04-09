@@ -14,6 +14,8 @@ from app.domain.model.line.line_message_processor import (
     MessageStatus,
 )
 from app.adapters import dynamodb_unit_of_work, dynamodb_query_service
+from app.application.line.create_line_user import create_line_user
+from app.application.line.send_message import send_message
 
 app_config = config.AppConfig(**config.config)
 logger = Logger()
@@ -77,10 +79,15 @@ def assign_received_message(
 
         # Find or create LINE user
         line_user = line_users_query_service.get_line_user_by_line_id(user_id)
-        print("DEBUG line_user =", line_user)
         if not line_user:
             logger.info(f"User {user_id} not found, creating new user")
             line_user = create_line_user(user_id)
+            send_message(
+                reply_token=first_event["replyToken"],
+                message="はじめまして。メッセージありがとうございます。",
+            )
+            logger.info("Sent first message greeting to user: %s", user_id)
+            return None
 
         # Save the LINE message processor
         line_message_processor = insert_line_message_processor(messaging_webhook_event)
@@ -95,6 +102,7 @@ def assign_received_message(
             unit_of_work.line_message_processors.put(line_message_processor)
             unit_of_work.commit()
 
+        # LINEMessageProcessorのIdをSQSキューに送信
         enqueue_chat_request(line_message_processor.id)
         logger.info(
             "Enqueued chat request for LINE message processor ID: %s",
@@ -143,28 +151,6 @@ def insert_line_message_processor(
         logger.error(f"Error inserting LINE message processor: {str(e)}")
         unit_of_work.rollback()
         raise
-
-
-def create_line_user(line_id: str) -> LINEUser:
-    """
-    LINE ユーザーが存在しない場合に新規作成する。
-
-    Args:
-        line_id: LINE のユーザー ID
-
-    Returns:
-        作成された LINE ユーザー
-    """
-    new_user = LINEUser(
-        id=str(uuid.uuid4()),
-        line_id=line_id,
-        created_at=datetime.now(timezone.utc).isoformat(),
-    )
-    with unit_of_work:
-        unit_of_work.line_users.add(new_user)
-        unit_of_work.commit()
-    logger.info(f"Created new LINE user with ID: {new_user.id}")
-    return new_user
 
 
 def enqueue_chat_request(line_message_processor_id: str) -> None:

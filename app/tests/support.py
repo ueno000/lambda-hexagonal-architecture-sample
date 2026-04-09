@@ -168,6 +168,9 @@ def _install_requests_stub() -> None:
     module.post = lambda *args, **kwargs: types.SimpleNamespace(
         status_code=200, text="ok"
     )
+    module.get = lambda *args, **kwargs: types.SimpleNamespace(
+        status_code=200, text="ok", json=lambda: {"displayName": "Stub User"}
+    )
     sys.modules["requests"] = module
 
 
@@ -179,4 +182,3 @@ def _install_mypy_boto3_dynamodb_stub() -> None:
     module.client = types.SimpleNamespace(DynamoDBClient=object)
     module.type_defs = types.SimpleNamespace(TransactWriteItemTypeDef=dict)
     sys.modules["mypy_boto3_dynamodb"] = module
-
