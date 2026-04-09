@@ -7,7 +7,7 @@ on:
     paths:
       - "template.yml"
       - "app/**"
-      - ".github/workflows/deploy.yaml"
+      - ".github/workflows/deploy-cloud-formation.yaml"
 
 permissions:
   id-token: write
@@ -28,20 +28,25 @@ jobs:
           role-to-assume: arn:aws:iam::176355978867:role/github-deploy-role
           aws-region: ap-northeast-1
 
-      - name: Package template
+      - name: Setup SAM CLI
         run: |
-          aws cloudformation package \
-            --template-file template.yml \
-            --s3-bucket aws-sam-cli-managed-default-samclisourcebucket-vkuzfrstta1e  \
-            --output-template-file packaged-template.yaml
+          python -m pip install --upgrade pip
+          pip install aws-sam-cli
+
+      - name: Build application
+        run: |
+          sam build --template-file template.yml
 
       - name: Deploy stack
         run: |
-          aws cloudformation deploy \
-            --template-file packaged-template.yaml \
+          sam deploy \
+            --template-file .aws-sam/build/template.yaml \
             --stack-name lambda-hexagonal-architecture-sample \
             --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
             --parameter-overrides \
               LINEChannelSecret=${{ secrets.LINE_CHANNEL_SECRET }} \
               LINEChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
+            --resolve-s3 \
+            --region ap-northeast-1 \
+            --no-confirm-changeset \
             --no-fail-on-empty-changeset
