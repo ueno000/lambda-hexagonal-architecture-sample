@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from typing import Any, Optional
 from enum import Enum
 
+
 class MessageStatus(Enum):
     Initial = 0
     AwaitingChatResponse = 1
@@ -12,13 +13,23 @@ class MessageStatus(Enum):
     Completed = 3
     Failed = 4
 
+
 class LINEMessageProcessor(BaseModel):
     id: str = Field(..., title="Id")
-    processing_status: MessageStatus = Field(default=MessageStatus.Initial, title="ProcessingStatus")
+    processing_status: MessageStatus = Field(
+        default=MessageStatus.Initial, title="ProcessingStatus"
+    )
     message_event: LINEMessageEvent = Field(..., title="MessageEvent")
     line_user: Optional[LINEUser] = None
-    create_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), title="CreateDate")
-    last_update_date: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat(), title="LastUpdateDate")
+    reply_message: Optional[str] = None
+    create_date: str = Field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
+        title="CreateDate",
+    )
+    last_update_date: str = Field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat(),
+        title="LastUpdateDate",
+    )
 
     class Config:
         use_enum_values = True
