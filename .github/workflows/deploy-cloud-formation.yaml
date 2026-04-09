@@ -35,7 +35,7 @@ jobs:
 
       - name: Build application
         run: |
-          sam build --template-file template.yml
+          sam build --template-file template.yml --use-container
 
       - name: Deploy stack
         run: |
