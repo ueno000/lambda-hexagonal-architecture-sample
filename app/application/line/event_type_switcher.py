@@ -2,45 +2,48 @@ from aws_lambda_powertools import Logger, Tracer
 from app.application.line.assign_received_message import assign_received_message
 from app.domain.model.line.line_messaging_webhook_event import (
     LINEMessagingWebhookEvent,
-    LINEMessageEvent,
 )
 
 logger = Logger()
 tracer = Tracer()
 
 SUPPORTED_MESSAGE_TYPES = {"text", "sticker"}
+MESSAGE_EVENT_TYPE = "message"
+
+
+def _process_message_event(webhook_event: LINEMessagingWebhookEvent) -> None:
+    try:
+        assign_received_message(webhook_event)
+    except Exception:
+        logger.exception(
+            "Failed to process LINE message event, but returning webhook response"
+        )
 
 
 @tracer.capture_method
 def event_type_switcher(webhook_event: LINEMessagingWebhookEvent):
-    """_summary_
-
-    受信したLINEのWebhookイベントのタイプを判別し、対応する処理を呼び出す
+    """
+    受信したLINEのWebhookイベントのタイプを判別し、適切な処理を呼び出す。
 
     Args:
         webhook_event (LINEMessagingWebhookEvent): _description_
     """
-
-    event = webhook_event.events[0]
-    event_type = event.get("type")
-
-    if event_type == "message":
+    try:
+        event = webhook_event.events[0]
+        event_type = event.get("type")
         message_type = event.get("message", {}).get("type")
 
-        if message_type in SUPPORTED_MESSAGE_TYPES:
+        if event_type == MESSAGE_EVENT_TYPE and message_type in SUPPORTED_MESSAGE_TYPES:
             logger.info("Processing LINEMessageEvent")
-            # 受信したメッセージを処理するための関数を呼び出す
-            assign_received_message(webhook_event)
+            _process_message_event(webhook_event)
+            return
 
-        else:
+        if event_type == MESSAGE_EVENT_TYPE:
             logger.warning("Message type '%s' is not handled", message_type)
-            print(f"DEBUG Unsupported message type: {message_type}")
+            return
 
-    elif event_type == "follow":
         logger.info("Unsupported event type: %s", event_type)
-
-    elif event_type == "unfollow":
-        logger.info("Unsupported event type: %s", event_type)
-
-    else:
-        logger.info("Unsupported event type: %s", event_type)
+    except Exception:
+        logger.exception(
+            "Unexpected error in event_type_switcher, but returning webhook response"
+        )
