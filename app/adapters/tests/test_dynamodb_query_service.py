@@ -6,6 +6,7 @@ from app.tests.support import install_test_stubs
 install_test_stubs()
 
 from app.adapters.dynamodb_query_service import (
+    DynamoDBAIUserProfilesQueryService,
     DynamoDBLINEMessageProcessorsQueryService,
     DynamoDBLINEUsersQueryService,
 )
@@ -56,6 +57,52 @@ class DynamoDBQueryServiceTests(unittest.TestCase):
         self.assertEqual("line_id-index", captured["IndexName"])
         self.assertEqual({":v": "line-user-1"}, captured["ExpressionAttributeValues"])
         self.assertEqual("user-1", user.id)
+
+    def test_get_ai_user_profile_by_line_user_id_queries_index(self):
+        captured = {}
+
+        class DummyClient:
+            def query(self, **kwargs):
+                captured.update(kwargs)
+                return {
+                    "Items": [
+                        {
+                            "id": "profile-1",
+                            "line_user_id": "user-1",
+                        }
+                    ]
+                }
+
+        query_service = DynamoDBAIUserProfilesQueryService(
+            "ai-user-profile-table",
+            DummyClient(),
+        )
+
+        profile = query_service.get_ai_user_profile_by_line_user_id("user-1")
+
+        self.assertEqual("ai-user-profile-table", captured["TableName"])
+        self.assertEqual("line_user_id-index", captured["IndexName"])
+        self.assertEqual({":v": "user-1"}, captured["ExpressionAttributeValues"])
+        self.assertEqual("profile-1", profile["id"])
+
+    def test_get_ai_user_profile_by_id_uses_id_key(self):
+        captured = {}
+
+        class DummyClient:
+            def get_item(self, **kwargs):
+                captured.update(kwargs)
+                return {"Item": {"id": "profile-1", "line_user_id": "user-1"}}
+
+        query_service = DynamoDBAIUserProfilesQueryService(
+            "ai-user-profile-table",
+            DummyClient(),
+        )
+
+        profile = query_service.get_ai_user_profile_by_id("profile-1")
+
+        self.assertEqual("ai-user-profile-table", captured["TableName"])
+        self.assertEqual({"id": "profile-1"}, captured["Key"])
+        self.assertEqual("profile-1", profile["id"])
 
 
 if __name__ == "__main__":

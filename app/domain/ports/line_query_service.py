@@ -16,3 +16,13 @@ class LINEMessageProcessorsQueryService(ABC):
         self, processor_id: str
     ) -> Optional[line_message_processor.LINEMessageProcessor]:
         ...
+
+
+class AIUserProfilesQueryService(ABC):
+    @abstractmethod
+    def get_ai_user_profile_by_line_user_id(self, line_user_id: str) -> Optional[dict]:
+        ...
+
+    @abstractmethod
+    def get_ai_user_profile_by_id(self, ai_user_profile_id: str) -> Optional[dict]:
+        ...

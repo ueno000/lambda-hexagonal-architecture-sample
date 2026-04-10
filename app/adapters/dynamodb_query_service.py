@@ -63,6 +63,31 @@ class DynamoDBLINEMessageProcessorsQueryService(
         )
 
 
+class DynamoDBAIUserProfilesQueryService(line_query_service.AIUserProfilesQueryService):
+    def __init__(self, table_name: str, dynamodb_client: client.DynamoDBClient):
+        self._table_name = table_name
+        self._dynamodb_client = dynamodb_client
+
+    def get_ai_user_profile_by_line_user_id(self, line_user_id: str) -> Optional[dict]:
+        response = self._dynamodb_client.query(
+            TableName=self._table_name,
+            IndexName="line_user_id-index",
+            KeyConditionExpression="line_user_id = :v",
+            ExpressionAttributeValues={":v": line_user_id},
+            Limit=1,
+        )
+
+        items = response.get("Items", [])
+        return items[0] if items else None
+
+    def get_ai_user_profile_by_id(self, ai_user_profile_id: str) -> Optional[dict]:
+        response = self._dynamodb_client.get_item(
+            TableName=self._table_name,
+            Key={"id": ai_user_profile_id},
+        )
+        return response.get("Item")
+
+
 def _normalize_line_user_item(item: dict) -> dict:
     normalized_item = dict(item)
     user_id = normalized_item.get("id")

@@ -43,10 +43,36 @@ Resources:
           KeyType: HASH
       BillingMode: PAY_PER_REQUEST
 
-  ChatQueueSQS:
+  AIUserProfileDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: AIUserProfile
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: line_user_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: line_user_id-index
+          KeySchema:
+            - AttributeName: line_user_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+
+  AIChatQueueSQS:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: ChatQueueSQS
+      QueueName: AIChatQueueSQS
+
+  ReplyQueueSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ReplyQueueSQS
 
   LINESecrets:
     Type: AWS::SecretsManager::Secret
@@ -87,7 +113,9 @@ Resources:
                 Resource:
                           - !GetAtt LINEMessageProcessorDB.Arn
                           - !GetAtt LINEUserDB.Arn
+                          - !GetAtt AIUserProfileDB.Arn
                           - !Sub "${LINEUserDB.Arn}/index/line_id-index"
+                          - !Sub "${AIUserProfileDB.Arn}/index/line_user_id-index"
         - PolicyName: LambdaSecretsManagerPolicy
           PolicyDocument:
             Version: "2012-10-17"
@@ -106,7 +134,9 @@ Resources:
                   - sqs:ReceiveMessage
                   - sqs:DeleteMessage
                   - sqs:GetQueueAttributes
-                Resource: !GetAtt ChatQueueSQS.Arn
+                Resource:
+                  - !GetAtt AIChatQueueSQS.Arn
+                  - !GetAtt ReplyQueueSQS.Arn
 
   ReceivedMessageFunction:
     Type: AWS::Serverless::Function
@@ -120,8 +150,10 @@ Resources:
         Variables:
           TABLE_NAME_LINE: !Ref LINEMessageProcessorDB
           TABLE_NAME_LINE_USER: !Ref LINEUserDB
+          TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileDB
           LINE_SECRET_ARN: !Ref LINESecrets
-          CHAT_QUEUE_URL: !Ref ChatQueueSQS
+          AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
+          REPLY_QUEUE_URL: !Ref ReplyQueueSQS
           DYNAMODB_ENDPOINT_URL: ""
           ENV: ""
       Events:
@@ -130,6 +162,31 @@ Resources:
           Properties:
             Path: /line/receive-message
             Method: post
+
+  AIChatFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.entrypoints.ai_chat.handler.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME_LINE: !Ref LINEMessageProcessorDB
+          TABLE_NAME_LINE_USER: !Ref LINEUserDB
+          TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileDB
+          LINE_SECRET_ARN: !Ref LINESecrets
+          AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
+          REPLY_QUEUE_URL: !Ref ReplyQueueSQS
+          DYNAMODB_ENDPOINT_URL: ""
+          ENV: ""
+      Events:
+        AIChatQueueEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt AIChatQueueSQS.Arn
+            BatchSize: 1
 
   ReplyMessageFunction:
     Type: AWS::Serverless::Function
@@ -143,15 +200,17 @@ Resources:
         Variables:
           TABLE_NAME_LINE: !Ref LINEMessageProcessorDB
           TABLE_NAME_LINE_USER: !Ref LINEUserDB
+          TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileDB
           LINE_SECRET_ARN: !Ref LINESecrets
-          CHAT_QUEUE_URL: !Ref ChatQueueSQS
+          AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
+          REPLY_QUEUE_URL: !Ref ReplyQueueSQS
           DYNAMODB_ENDPOINT_URL: ""
           ENV: ""
       Events:
-        ChatQueueEvent:
+        ReplyQueueEvent:
           Type: SQS
           Properties:
-            Queue: !GetAtt ChatQueueSQS.Arn
+            Queue: !GetAtt ReplyQueueSQS.Arn
             BatchSize: 1
 
 Outputs:
@@ -163,6 +222,10 @@ Outputs:
     Description: ReplyMessageFunction ARN
     Value: !GetAtt ReplyMessageFunction.Arn
 
+  AIChatFunctionArn:
+    Description: AIChatFunction ARN
+    Value: !GetAtt AIChatFunction.Arn
+
   ApiUrl:
     Description: API Gateway endpoint URL
     Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/line/receive-message"
@@ -171,6 +234,10 @@ Outputs:
     Description: Secrets Manager secret ARN
     Value: !Ref LINESecrets
 
-  ChatQueueSQSUrl:
-    Description: ChatQueueSQS URL
-    Value: !Ref ChatQueueSQS
+  AIChatQueueSQSUrl:
+    Description: AIChatQueueSQS URL
+    Value: !Ref AIChatQueueSQS
+
+  ReplyQueueSQSUrl:
+    Description: ReplyQueueSQS URL
+    Value: !Ref ReplyQueueSQS

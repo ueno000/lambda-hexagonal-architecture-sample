@@ -35,8 +35,16 @@ class AppConfig(BaseModel):
         return os.environ.get("TABLE_NAME_LINE_USER", "")
 
     @staticmethod
-    def get_chat_queue_url() -> str:
-        return os.environ.get("CHAT_QUEUE_URL", "")
+    def get_table_name_ai_user_profile() -> str:
+        return os.environ.get("TABLE_NAME_AI_USER_PROFILE", "")
+
+    @staticmethod
+    def get_ai_chat_queue_url() -> str:
+        return os.environ.get("AI_CHAT_QUEUE_URL", "")
+
+    @staticmethod
+    def get_reply_queue_url() -> str:
+        return os.environ.get("REPLY_QUEUE_URL", "")
 
     @staticmethod
     def get_line_channel_secret() -> str:
@@ -45,6 +53,15 @@ class AppConfig(BaseModel):
     @staticmethod
     def get_line_channel_access_token() -> str:
         return load_line_secrets().get("LINE_CHANNEL_ACCESS_TOKEN", "")
+
+    @staticmethod
+    def get_gemini_api_key() -> str:
+        secrets = load_line_secrets()
+        return (
+            secrets.get("gemini_api_key", "")
+            or secrets.get("GEMINI_API_KEY", "")
+            or os.environ.get("GEMINI_API_KEY", "")
+        )
 
     @staticmethod
     def get_dynamodb_endpoint_url() -> typing.Optional[str]:
