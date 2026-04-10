@@ -66,21 +66,4 @@ def receive_message():
 @tracer.capture_lambda_handler
 @logger.inject_lambda_context(log_event=True)
 def handler(event, context):
-    """_summary_
-
-    Args:
-        event (_type_): _description_
-        context (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    # FIXME:後で消しても良い
-    if event.get("isBase64Encoded", False):
-        try:
-            event["body"] = base64.b64decode(event["body"]).decode("utf-8")
-            event["isBase64Encoded"] = False
-        except Exception as e:
-            logger.error(f"Failed to decode base64 body: {str(e)}")
-
     return app.resolve(event, context)
