@@ -37,10 +37,7 @@ class ReplyHandlerTests(unittest.TestCase):
         ), patch.object(handler, "reply_message") as mock_reply_message:
             handler.process_record(record)
 
-        mock_reply_message.assert_called_once_with(
-            MessageStatus.AwaitingChatResponse.value,
-            "reply-token",
-        )
+        mock_reply_message.assert_called_once_with(message_processor)
 
     def test_process_record_returns_when_processor_not_found(self):
         record = {"body": json.dumps({"line_message_processor_id": "missing"})}
