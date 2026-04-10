@@ -1,6 +1,6 @@
-from datetime import datetime, timezone
 import json
 import uuid
+from datetime import datetime, timezone
 
 import boto3
 
@@ -44,6 +44,12 @@ line_query_service = dynamodb_query_service.DynamoDBLINEMessageProcessorsQuerySe
 
 line_users_query_service = dynamodb_query_service.DynamoDBLINEUsersQueryService(
     config.AppConfig.get_table_name_line_user(), dynamodb_client.meta.client
+)
+ai_user_profiles_query_service = (
+    dynamodb_query_service.DynamoDBAIUserProfilesQueryService(
+        config.AppConfig.get_table_name_ai_user_profile(),
+        dynamodb_client.meta.client,
+    )
 )
 
 sqs_client = boto3.client(
@@ -103,17 +109,49 @@ def assign_received_message(
             unit_of_work.commit()
 
         # LINEMessageProcessorのIdをSQSキューに送信
-        enqueue_chat_request(line_message_processor.id)
-        logger.info(
-            "Enqueued chat request for LINE message processor ID: %s",
-            line_message_processor.id,
-        )
+        if is_today_guide_command(messaging_webhook_event):
+            ai_user_profile = ai_user_profiles_query_service.get_ai_user_profile_by_line_user_id(
+                line_user.id
+            )
+            if not ai_user_profile:
+                send_message(
+                    reply_token=first_event["replyToken"],
+                    message="設定からプロフィール設定をしてください",
+                )
+                logger.info(
+                    "AI user profile not found. Sent profile setup guidance. line_user_id=%s",
+                    line_user.id,
+                )
+                return line_message_processor.id
+
+            enqueue_ai_chat_request(
+                line_message_processor.id,
+                ai_user_profile["id"],
+            )
+            logger.info(
+                "Enqueued ai-chat request for LINE message processor ID: %s",
+                line_message_processor.id,
+            )
+        else:
+            enqueue_reply_request(line_message_processor.id)
+            logger.info(
+                "Enqueued reply request for LINE message processor ID: %s",
+                line_message_processor.id,
+            )
 
         return line_message_processor.id
 
     except Exception as e:
         logger.error(f"Error processing message: {str(e)}")
         raise
+
+
+def is_today_guide_command(
+    messaging_webhook_event: LINEMessagingWebhookEvent,
+) -> bool:
+    first_event = messaging_webhook_event.events[0]
+    message = first_event.get("message", {})
+    return message.get("type") == "text" and message.get("text") == "/本日の案内"
 
 
 @tracer.capture_method
@@ -153,19 +191,46 @@ def insert_line_message_processor(
         raise
 
 
-def enqueue_chat_request(line_message_processor_id: str) -> None:
-    """_summary_
-    LINEMessageProcessor の ID を SQS キューに送信
+def enqueue_ai_chat_request(
+    line_message_processor_id: str, ai_user_profile_id: str
+) -> None:
+    """LINEMessageProcessor の ID を ai-chat SQS キューに送信する。
 
     Args:
-        line_message_processor_id (str): _description_
+        line_message_processor_id (str): LINEMessageProcessor の ID
+        ai_user_profile_id (str): AIUserProfile の ID
 
     Raises:
-        RuntimeError: _description_
+        RuntimeError: AI_CHAT_QUEUE_URL が未設定の場合
     """
-    queue_url = config.AppConfig.get_chat_queue_url()
+    queue_url = config.AppConfig.get_ai_chat_queue_url()
     if not queue_url:
-        raise RuntimeError("CHAT_QUEUE_URL is not set")
+        raise RuntimeError("AI_CHAT_QUEUE_URL is not set")
+
+    sqs_client.send_message(
+        QueueUrl=queue_url,
+        MessageBody=json.dumps(
+            {
+                "line_message_processor_id": line_message_processor_id,
+                "ai_user_profile_id": ai_user_profile_id,
+            },
+            ensure_ascii=False,
+        ),
+    )
+
+
+def enqueue_reply_request(line_message_processor_id: str) -> None:
+    """LINEMessageProcessor の ID を reply SQS キューに送信する。
+
+    Args:
+        line_message_processor_id (str): LINEMessageProcessor の ID
+
+    Raises:
+        RuntimeError: REPLY_QUEUE_URL が未設定の場合
+    """
+    queue_url = config.AppConfig.get_reply_queue_url()
+    if not queue_url:
+        raise RuntimeError("REPLY_QUEUE_URL is not set")
 
     sqs_client.send_message(
         QueueUrl=queue_url,
