@@ -1,5 +1,5 @@
-import json
 import base64
+import json
 
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
@@ -15,6 +15,42 @@ app_config = config.AppConfig(**config.config)
 app = api_gateway.ApiGatewayResolver()
 logger = Logger()
 tracer = Tracer()
+
+
+def _is_base64_encoded(event) -> bool:
+    if getattr(event, "is_base64_encoded", False):
+        return True
+    if getattr(event, "isBase64Encoded", False):
+        return True
+
+    raw_event = getattr(event, "raw_event", None)
+    if isinstance(raw_event, dict):
+        return bool(raw_event.get("isBase64Encoded"))
+
+    return False
+
+
+def _parse_request_payload(request_body: str, is_base64_encoded: bool = False) -> dict:
+    normalized_body = request_body.decode("utf-8") if isinstance(request_body, bytes) else request_body
+    parse_errors = []
+
+    bodies_to_try = [normalized_body]
+    if is_base64_encoded:
+        bodies_to_try.insert(
+            0,
+            base64.b64decode(normalized_body).decode("utf-8"),
+        )
+
+    for body in bodies_to_try:
+        try:
+            payload = json.loads(body)
+            if isinstance(payload, str):
+                payload = json.loads(payload)
+            return payload
+        except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
+            parse_errors.append(exc)
+
+    raise parse_errors[-1]
 
 
 @app.post("/line/receive-message")
@@ -45,7 +81,10 @@ def receive_message():
             logger.warning("Signature validation failed")
             return {"error": "Invalid signature"}, 400
 
-        payload = json.loads(request_body)
+        payload = _parse_request_payload(
+            request_body,
+            is_base64_encoded=_is_base64_encoded(event),
+        )
         webhook_event = LINEMessagingWebhookEvent(**payload)
 
         # Process the message using command handler

@@ -1,4 +1,5 @@
 import json
+import base64
 from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
@@ -61,6 +62,63 @@ class LineHandlerTests(unittest.TestCase):
             response = handler.receive_message()
 
         self.assertEqual(({"error": "Invalid JSON"}, 400), response)
+
+    def test_receive_message_accepts_double_encoded_json_payload(self):
+        payload = {
+            "destination": "destination",
+            "events": [
+                {
+                    "type": "message",
+                    "replyToken": "reply-token",
+                    "message": {"type": "sticker"},
+                    "source": {"userId": "user-1"},
+                }
+            ],
+        }
+        handler.app.current_event = SimpleNamespace(headers={}, body="not-used")
+
+        with patch.object(
+            handler,
+            "validate_signature",
+            return_value=(False, json.dumps(json.dumps(payload))),
+        ), patch.object(handler, "event_type_switcher") as mock_event_type_switcher:
+            response = handler.receive_message()
+
+        self.assertEqual({}, response)
+        mock_event_type_switcher.assert_called_once()
+        webhook_event = mock_event_type_switcher.call_args.args[0]
+        self.assertEqual("sticker", webhook_event.events[0]["message"]["type"])
+
+    def test_receive_message_accepts_base64_encoded_payload(self):
+        payload = {
+            "destination": "destination",
+            "events": [
+                {
+                    "type": "message",
+                    "replyToken": "reply-token",
+                    "message": {"type": "sticker"},
+                    "source": {"userId": "user-1"},
+                }
+            ],
+        }
+        encoded_body = base64.b64encode(json.dumps(payload).encode("utf-8")).decode(
+            "utf-8"
+        )
+        handler.app.current_event = SimpleNamespace(
+            headers={}, body=encoded_body, is_base64_encoded=True
+        )
+
+        with patch.object(
+            handler,
+            "validate_signature",
+            return_value=(False, encoded_body),
+        ), patch.object(handler, "event_type_switcher") as mock_event_type_switcher:
+            response = handler.receive_message()
+
+        self.assertEqual({}, response)
+        mock_event_type_switcher.assert_called_once()
+        webhook_event = mock_event_type_switcher.call_args.args[0]
+        self.assertEqual("sticker", webhook_event.events[0]["message"]["type"])
 
 
 if __name__ == "__main__":
