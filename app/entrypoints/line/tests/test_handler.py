@@ -148,6 +148,23 @@ class LineHandlerTests(unittest.TestCase):
         self.assertEqual({}, response)
         mock_event_type_switcher.assert_called_once()
 
+    def test_receive_message_sanitizes_control_characters_before_json_parse(self):
+        corrupted_payload = (
+            '{"destination":"destination","events":[{"type":"message","replyToken":"reply-token",'
+            '"message":{"type":"sticker","markAsReadToken":"abc\x0bdef"},"source":{"userId":"user-1"}}]}'
+        )
+        handler.app.current_event = SimpleNamespace(headers={}, body=corrupted_payload)
+
+        with patch.object(
+            handler,
+            "validate_signature",
+            return_value=(False, corrupted_payload),
+        ), patch.object(handler, "event_type_switcher") as mock_event_type_switcher:
+            response = handler.receive_message()
+
+        self.assertEqual({}, response)
+        mock_event_type_switcher.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()

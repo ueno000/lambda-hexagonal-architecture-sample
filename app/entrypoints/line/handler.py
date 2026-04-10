@@ -1,5 +1,6 @@
 import base64
 import json
+import re
 
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
@@ -15,6 +16,7 @@ app_config = config.AppConfig(**config.config)
 app = api_gateway.ApiGatewayResolver()
 logger = Logger()
 tracer = Tracer()
+CONTROL_CHAR_PATTERN = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
 
 
 def _is_base64_encoded(event) -> bool:
@@ -58,7 +60,30 @@ def _parse_request_payload(request_body: str, is_base64_encoded: bool = False) -
         except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
             parse_errors.append(exc)
 
+        sanitized_body = CONTROL_CHAR_PATTERN.sub("", body)
+        if sanitized_body == body:
+            continue
+
+        try:
+            payload = json.loads(sanitized_body)
+            if isinstance(payload, str):
+                payload = json.loads(payload)
+            logger.warning("LINE webhook body contained raw control characters and was sanitized before parsing")
+            return payload
+        except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
+            parse_errors.append(exc)
+
     raise parse_errors[-1]
+
+
+def _excerpt_around_error(value: str | bytes | None, position: int, radius: int = 80) -> str:
+    if value is None:
+        return ""
+
+    text = value.decode("utf-8", errors="replace") if isinstance(value, bytes) else str(value)
+    start = max(position - radius, 0)
+    end = min(position + radius, len(text))
+    return repr(text[start:end])
 
 
 @app.post("/line/receive-message")
@@ -126,6 +151,10 @@ def receive_message():
                 if isinstance(preview_source, str)
                 else str(preview_source)[:400]
             ),
+        )
+        logger.error(
+            "Failed to parse LINE webhook JSON near error. excerpt=%s",
+            _excerpt_around_error(preview_source, e.pos),
         )
         logger.error(f"Invalid JSON payload: {str(e)}")
         return {"error": "Invalid JSON"}, 400
