@@ -62,7 +62,7 @@ def execute(line_message_processor, ai_user_profile_id: str) -> None:
 
 
 def init_chat_request(line_message_processor, ai_user_profile: Dict[str, Any]) -> str:
-    return build_daily_guide_prompt(line_message_processor, ai_user_profile)
+    return build_daily_guide_prompt(ai_user_profile)
 
 
 def request_chat(prompt: str) -> str:
@@ -87,7 +87,7 @@ def request_chat(prompt: str) -> str:
                 }
             ]
         },
-        timeout=60,
+        timeout=30,
     )
     response.raise_for_status()
     payload = response.json()

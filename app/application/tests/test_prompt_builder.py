@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-from datetime import datetime
 
 from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 from app.application.ai_chat.prompt_builder import (
