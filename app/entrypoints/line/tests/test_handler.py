@@ -120,6 +120,34 @@ class LineHandlerTests(unittest.TestCase):
         webhook_event = mock_event_type_switcher.call_args.args[0]
         self.assertEqual("sticker", webhook_event.events[0]["message"]["type"])
 
+    def test_receive_message_prefers_raw_event_body(self):
+        payload = {
+            "destination": "destination",
+            "events": [
+                {
+                    "type": "message",
+                    "replyToken": "reply-token",
+                    "message": {"type": "text", "text": "hello"},
+                    "source": {"userId": "user-1"},
+                }
+            ],
+        }
+        handler.app.current_event = SimpleNamespace(
+            headers={},
+            body="{broken",
+            raw_event={"body": json.dumps(payload), "isBase64Encoded": False},
+        )
+
+        with patch.object(
+            handler,
+            "validate_signature",
+            return_value=(False, json.dumps(payload)),
+        ), patch.object(handler, "event_type_switcher") as mock_event_type_switcher:
+            response = handler.receive_message()
+
+        self.assertEqual({}, response)
+        mock_event_type_switcher.assert_called_once()
+
 
 if __name__ == "__main__":
     unittest.main()

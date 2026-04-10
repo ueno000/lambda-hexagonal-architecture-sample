@@ -30,6 +30,14 @@ def _is_base64_encoded(event) -> bool:
     return False
 
 
+def _get_request_body(event) -> str | bytes:
+    raw_event = getattr(event, "raw_event", None)
+    if isinstance(raw_event, dict) and raw_event.get("body") is not None:
+        return raw_event["body"]
+
+    return event.body or ""
+
+
 def _parse_request_payload(request_body: str, is_base64_encoded: bool = False) -> dict:
     normalized_body = request_body.decode("utf-8") if isinstance(request_body, bytes) else request_body
     parse_errors = []
@@ -62,7 +70,7 @@ def receive_message():
         event = app.current_event
 
         headers = event.headers or {}
-        body = event.body or ""
+        body = _get_request_body(event)
 
         logger.info(
             "===========Received LINE webhook event. headers=%s body=%s", headers, body
@@ -75,7 +83,12 @@ def receive_message():
             channel_secret=config.AppConfig.get_line_channel_secret(),
         )
 
-        logger.info("===========request_body=%s", request_body)
+        logger.info(
+            "===========request_body metadata type=%s is_base64_encoded=%s length=%s",
+            type(request_body).__name__,
+            _is_base64_encoded(event),
+            len(request_body) if request_body is not None else 0,
+        )
 
         if error:
             logger.warning("Signature validation failed")
@@ -101,6 +114,11 @@ def receive_message():
         return {}
 
     except json.JSONDecodeError as e:
+        logger.error(
+            "Failed to parse LINE webhook JSON. error_pos=%s body_preview=%s",
+            e.pos,
+            (request_body[:400] if isinstance(request_body, str) else str(request_body)[:400]),
+        )
         logger.error(f"Invalid JSON payload: {str(e)}")
         return {"error": "Invalid JSON"}, 400
     except Exception as e:
