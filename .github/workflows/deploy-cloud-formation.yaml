@@ -60,6 +60,7 @@ jobs:
             --parameter-overrides \
               LINEChannelSecret=${{ secrets.LINE_CHANNEL_SECRET }} \
               LINEChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
+              GeminiAPIKey=${{ secrets.GEMINI_API_KEY }} \
             --resolve-s3 \
             --region ap-northeast-1 \
             --no-confirm-changeset \

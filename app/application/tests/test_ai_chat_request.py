@@ -6,6 +6,7 @@ from app.tests.support import install_test_stubs
 install_test_stubs()
 
 from app.application.ai_chat import ai_chat_request
+from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 from app.domain.model.line.line_message_processor import LINEMessageProcessor
 from app.domain.model.line.line_message_processor import MessageStatus
 from app.domain.model.line.line_user import LINEUser
@@ -40,15 +41,16 @@ def make_processor():
 class AIChatRequestTests(unittest.TestCase):
     def test_init_chat_request_builds_prompt_from_ai_user_profile(self):
         processor = make_processor()
-        ai_user_profile = {
-            "id": "profile-1",
-            "name": "太郎",
-            "gender": "男性",
-            "birth_year": 1990,
-            "interest_topics": ["グルメ", "イベント"],
-            "residence": "東京都",
-            "lines": ["山手線", "中央線"],
-        }
+        ai_user_profile = AIUserProfile(
+            id="profile-1",
+            line_user_id="user-1",
+            name="太郎",
+            gender="男性",
+            birth_year=1990,
+            interest_topics=["グルメ", "イベント"],
+            residence="東京都",
+            lines=["山手線", "中央線"],
+        )
 
         prompt = ai_chat_request.init_chat_request(processor, ai_user_profile)
 

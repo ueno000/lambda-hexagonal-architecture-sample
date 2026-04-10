@@ -18,6 +18,10 @@ Parameters:
     Type: String
     NoEcho: true
 
+  GeminiAPIKey:
+    Type: String
+    NoEcho: true
+
 Resources:
   LINEMessageProcessorDB:
     Type: AWS::DynamoDB::Table
@@ -83,6 +87,7 @@ Resources:
         {
           "LINE_CHANNEL_SECRET": "${LINEChannelSecret}",
           "LINE_CHANNEL_ACCESS_TOKEN": "${LINEChannelAccessToken}"
+          "GEMINI_API_KEY": "${GeminiAPIKey}"
         }
 
   LambdaExecutionRole:

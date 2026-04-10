@@ -56,12 +56,7 @@ class AppConfig(BaseModel):
 
     @staticmethod
     def get_gemini_api_key() -> str:
-        secrets = load_line_secrets()
-        return (
-            secrets.get("gemini_api_key", "")
-            or secrets.get("GEMINI_API_KEY", "")
-            or os.environ.get("GEMINI_API_KEY", "")
-        )
+        return load_line_secrets().get("GEMINI_API_KEY", "")
 
     @staticmethod
     def get_dynamodb_endpoint_url() -> typing.Optional[str]:
