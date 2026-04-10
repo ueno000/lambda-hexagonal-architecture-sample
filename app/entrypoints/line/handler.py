@@ -66,6 +66,9 @@ def receive_message():
     """
     LINE Webhookメッセージ受信処理
     """
+    request_body = None
+    body = ""
+
     try:
         event = app.current_event
 
@@ -114,10 +117,15 @@ def receive_message():
         return {}
 
     except json.JSONDecodeError as e:
+        preview_source = request_body if request_body is not None else body
         logger.error(
             "Failed to parse LINE webhook JSON. error_pos=%s body_preview=%s",
             e.pos,
-            (request_body[:400] if isinstance(request_body, str) else str(request_body)[:400]),
+            (
+                preview_source[:400]
+                if isinstance(preview_source, str)
+                else str(preview_source)[:400]
+            ),
         )
         logger.error(f"Invalid JSON payload: {str(e)}")
         return {"error": "Invalid JSON"}, 400
