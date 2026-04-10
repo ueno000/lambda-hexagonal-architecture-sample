@@ -1,4 +1,5 @@
 import json
+import base64
 
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
@@ -74,4 +75,12 @@ def handler(event, context):
     Returns:
         _type_: _description_
     """
+    # FIXME:後で消しても良い
+    if event.get("isBase64Encoded", False):
+        try:
+            event["body"] = base64.b64decode(event["body"]).decode("utf-8")
+            event["isBase64Encoded"] = False
+        except Exception as e:
+            logger.error(f"Failed to decode base64 body: {str(e)}")
+
     return app.resolve(event, context)
