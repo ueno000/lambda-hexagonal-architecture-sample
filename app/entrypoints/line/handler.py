@@ -28,12 +28,18 @@ def receive_message():
         headers = event.headers or {}
         body = event.body or ""
 
+        logger.info(
+            "===========Received LINE webhook event. headers=%s body=%s", headers, body
+        )
+
         # Validate LINE signature
         error, request_body = validate_signature(
             headers=headers,
             body=body,
             channel_secret=config.AppConfig.get_line_channel_secret(),
         )
+
+        logger.info("===========request_body=%s", request_body)
 
         if error:
             logger.warning("Signature validation failed")
