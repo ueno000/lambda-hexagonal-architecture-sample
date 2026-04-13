@@ -45,6 +45,10 @@ def receive_message():
             logger.warning("Signature validation failed")
             return {"error": "Invalid signature"}, 400
 
+        logger.info("repr(request_body)=%r", request_body)
+        logger.info("type=%s", type(request_body))
+        logger.info("around error=%r", request_body[e.pos - 20 : e.pos + 20])
+
         payload = json.loads(request_body)
         webhook_event = LINEMessagingWebhookEvent(**payload)
 
@@ -62,20 +66,14 @@ def receive_message():
         return {}
 
     except json.JSONDecodeError as e:
-        body_preview = (locals().get("body", "") or "")[:512]
-        logger.error(
-            "Failed to parse LINE webhook JSON. error_pos=%s body_preview=%s",
-            e.pos,
-            body_preview,
-        )
+        failed_body = locals().get("request_body", "")
 
-        excerpt_start = max(e.pos - 80, 0)
-        excerpt_end = e.pos + 80
-        logger.error(
-            "Failed to parse LINE webhook JSON near error. excerpt=%r",
-            body_preview[excerpt_start:excerpt_end],
-        )
+        logger.error("JSON decode failed at pos=%s", e.pos)
+        logger.error("request_body repr=%r", failed_body)
+        logger.error("around error=%r", failed_body[max(e.pos - 40, 0) : e.pos + 40])
+
         return {"error": "Invalid JSON"}, 400
+
     except Exception as e:
         logger.exception("Error occurred while processing LINE message")
         return {"error": "Internal server error"}, 500
