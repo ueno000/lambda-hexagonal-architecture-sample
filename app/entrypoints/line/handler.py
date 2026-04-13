@@ -26,7 +26,13 @@ def receive_message():
         event = app.current_event
 
         headers = event.headers or {}
+
+        logger.info("before _normalize_request_body")
+
         body = _normalize_request_body(event)
+
+        logger.info("after _normalize_request_body")
+
         channel_secret = app_config.get_line_channel_secret()
 
         if not channel_secret:
@@ -90,6 +96,8 @@ def _normalize_request_body(event) -> str:
     elif not isinstance(body, str):
         body = json.dumps(body, ensure_ascii=False)
 
+    logger.info("=========Normalized request body: %s", body)
+
     raw_event = getattr(event, "raw_event", {}) or {}
     is_base64_encoded = getattr(event, "is_base64_encoded", None)
     if is_base64_encoded is None:
@@ -97,6 +105,8 @@ def _normalize_request_body(event) -> str:
 
     if is_base64_encoded:
         body = base64.b64decode(body).decode("utf-8")
+
+    logger.info("===========Decoded request body: %s", body)
 
     return body
 
