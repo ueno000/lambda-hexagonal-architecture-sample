@@ -59,8 +59,10 @@ class ReceiveMessageTests(unittest.TestCase):
         ) as mock_event_type_switcher:
             response = handler.receive_message()
 
-        self.assertEqual(({"error": "Internal server error"}, 500), response)
-        mock_event_type_switcher.assert_not_called()
+        self.assertEqual({}, response)
+        webhook_event = mock_event_type_switcher.call_args.args[0]
+        self.assertEqual("dest", webhook_event.destination)
+        self.assertEqual("sticker", webhook_event.events[0]["message"]["type"])
 
 
 if __name__ == "__main__":
