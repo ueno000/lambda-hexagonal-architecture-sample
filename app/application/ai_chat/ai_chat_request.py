@@ -87,9 +87,12 @@ def request_chat(prompt: str) -> str:
         },
         timeout=30,
     )
-    response.raise_for_status()
     payload = response.json()
-    return _extract_chat_text(payload)
+    try:
+        response.raise_for_status()
+        return _extract_chat_text(payload)
+    except Exception:
+        return _stringify_error_payload(payload)
 
 
 def response_chat(line_message_processor, ai_user_profile_id: str, chat_response: str):
@@ -135,6 +138,22 @@ def _extract_chat_text(payload: Dict[str, Any]) -> str:
         raise RuntimeError("Gemini response does not contain text")
 
     return text
+
+
+def _stringify_error_payload(payload: Dict[str, Any]) -> str:
+    error = payload.get("error")
+    if error is None:
+        return json.dumps(payload, ensure_ascii=False)
+
+    if isinstance(error, str):
+        return error
+
+    if isinstance(error, dict):
+        message = error.get("message")
+        if message:
+            return str(message)
+
+    return json.dumps(error, ensure_ascii=False)
 
 
 def enqueue_reply_request(line_message_processor_id: str) -> None:
