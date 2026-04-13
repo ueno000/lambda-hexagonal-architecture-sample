@@ -45,11 +45,11 @@ def receive_message():
             logger.warning("Signature validation failed")
             return {"error": "Invalid signature"}, 400
 
-        logger.info("repr(request_body)=%r", request_body)
-        logger.info("type=%s", type(request_body))
-
         payload = json.loads(request_body)
+        logger.info("json.loads success")
+
         webhook_event = LINEMessagingWebhookEvent(**payload)
+        logger.info("pydantic success")
 
         # Process the message using command handler
         # processor_id = create_line_message_processor_command_handler.handle_create_line_messaging_processor_command(
