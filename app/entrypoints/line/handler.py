@@ -27,17 +27,14 @@ def receive_message():
 
         headers = event.headers or {}
 
-        logger.info("before _normalize_request_body")
-
         body = _normalize_request_body(event)
 
-        logger.info("after _normalize_request_body")
-
+        logger.info("before GET_LINE_CHANNEL_SECRET")
         channel_secret = app_config.get_line_channel_secret()
-
-        if not channel_secret:
-            logger.error("LINE channel secret is not configured")
-            return {"error": "Server configuration error"}, 500
+        logger.info(
+            "after GET_LINE_CHANNEL_SECRET channel_secret exists=%s",
+            bool(channel_secret),
+        )
 
         logger.info("before validate_signature")
 
