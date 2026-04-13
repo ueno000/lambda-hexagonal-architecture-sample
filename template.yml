@@ -68,10 +68,10 @@ Resources:
             ProjectionType: ALL
       BillingMode: PAY_PER_REQUEST
 
-  AIChatQueueSQS:
-    Type: AWS::SQS::Queue
-    Properties:
-      QueueName: AIChatQueueSQS
+  # AIChatQueueSQS:
+  #   Type: AWS::SQS::Queue
+  #   Properties:
+  #     QueueName: AIChatQueueSQS
 
   ReplyQueueSQS:
     Type: AWS::SQS::Queue
@@ -140,7 +140,7 @@ Resources:
                   - sqs:DeleteMessage
                   - sqs:GetQueueAttributes
                 Resource:
-                  - !GetAtt AIChatQueueSQS.Arn
+                  # - !GetAtt AIChatQueueSQS.Arn
                   - !GetAtt ReplyQueueSQS.Arn
 
   ReceivedMessageFunction:
@@ -157,7 +157,7 @@ Resources:
           TABLE_NAME_LINE_USER: !Ref LINEUserDB
           TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileDB
           LINE_SECRET_ARN: !Ref LINESecrets
-          AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
+          # AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
           REPLY_QUEUE_URL: !Ref ReplyQueueSQS
           DYNAMODB_ENDPOINT_URL: ""
           ENV: ""
@@ -182,16 +182,16 @@ Resources:
           TABLE_NAME_LINE_USER: !Ref LINEUserDB
           TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileDB
           LINE_SECRET_ARN: !Ref LINESecrets
-          AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
+          # AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
           REPLY_QUEUE_URL: !Ref ReplyQueueSQS
           DYNAMODB_ENDPOINT_URL: ""
           ENV: ""
-      Events:
-        AIChatQueueEvent:
-          Type: SQS
-          Properties:
-            Queue: !GetAtt AIChatQueueSQS.Arn
-            BatchSize: 1
+      # Events:
+      #   AIChatQueueEvent:
+      #     Type: SQS
+      #     Properties:
+      #       Queue: !GetAtt AIChatQueueSQS.Arn
+      #       BatchSize: 1
 
   ReplyMessageFunction:
     Type: AWS::Serverless::Function
@@ -207,7 +207,7 @@ Resources:
           TABLE_NAME_LINE_USER: !Ref LINEUserDB
           TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileDB
           LINE_SECRET_ARN: !Ref LINESecrets
-          AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
+          # AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
           REPLY_QUEUE_URL: !Ref ReplyQueueSQS
           DYNAMODB_ENDPOINT_URL: ""
           ENV: ""
@@ -239,9 +239,9 @@ Outputs:
     Description: Secrets Manager secret ARN
     Value: !Ref LINESecrets
 
-  AIChatQueueSQSUrl:
-    Description: AIChatQueueSQS URL
-    Value: !Ref AIChatQueueSQS
+  # AIChatQueueSQSUrl:
+  #   Description: AIChatQueueSQS URL
+  #   Value: !Ref AIChatQueueSQS
 
   ReplyQueueSQSUrl:
     Description: ReplyQueueSQS URL
