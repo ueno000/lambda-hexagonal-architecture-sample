@@ -1,8 +1,6 @@
 import unittest
 from unittest.mock import Mock, patch
 
-from requests.exceptions import HTTPError
-
 from app.tests.support import install_test_stubs
 
 install_test_stubs()
@@ -13,6 +11,11 @@ from app.domain.model.line.line_message_processor import (
     MessageStatus,
 )
 from app.domain.model.line.line_user import LINEUser
+
+
+# テスト用カスタム例外
+class HTTPError(Exception):
+    pass
 
 
 class AIChatRequestTests(unittest.TestCase):
