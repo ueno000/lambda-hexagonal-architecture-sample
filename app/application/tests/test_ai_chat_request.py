@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 
-import requests
+from requests.exceptions import HTTPError
 
 from app.tests.support import install_test_stubs
 
@@ -60,10 +60,8 @@ class AIChatRequestTests(unittest.TestCase):
             "message": "quota exceeded",
         }
         response = Mock()
-        response.json.return_value = {
-            "error": error_payload
-        }
-        response.raise_for_status.side_effect = requests.HTTPError("429 Client Error")
+        response.json.return_value = {"error": error_payload}
+        response.raise_for_status.side_effect = HTTPError("429 Client Error")
 
         with patch.object(
             ai_chat_request.config.AppConfig,
@@ -96,7 +94,7 @@ class AIChatRequestTests(unittest.TestCase):
         ), patch.object(
             ai_chat_request,
             "request_chat",
-            side_effect=requests.HTTPError("429 Client Error"),
+            side_effect=HTTPError("429 Client Error"),
         ), patch.object(
             ai_chat_request, "response_chat", return_value=line_message_processor
         ) as mock_response_chat, patch.object(
