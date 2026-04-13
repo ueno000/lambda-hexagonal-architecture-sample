@@ -47,7 +47,6 @@ def receive_message():
 
         logger.info("repr(request_body)=%r", request_body)
         logger.info("type=%s", type(request_body))
-        logger.info("around error=%r", request_body[e.pos - 20 : e.pos + 20])
 
         payload = json.loads(request_body)
         webhook_event = LINEMessagingWebhookEvent(**payload)
