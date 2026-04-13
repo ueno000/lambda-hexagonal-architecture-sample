@@ -42,10 +42,14 @@ def reply_message(line_message_processor: LINEMessageProcessor) -> None:
     reply_token = get_reply_token(line_message_processor)
     logger.info("Replying message with reply_token=%s", reply_token)
 
-    response = send_message(reply_token, REPLY_TEXT)
+    reply_message_text = REPLY_TEXT
+    if line_message_processor.reply_message:
+        reply_message_text = "【本日の案内】\r\n" + line_message_processor.reply_message
+
+    response = send_message(reply_token, reply_message_text)
 
     if response.status_code == 200:
-        update_reply_result(line_message_processor, REPLY_TEXT)
+        update_reply_result(line_message_processor, reply_message_text)
         logger.info("Message replied successfully")
     else:
         logger.error(

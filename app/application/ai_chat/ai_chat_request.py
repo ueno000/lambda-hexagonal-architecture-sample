@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+import json
 from typing import Any, Dict
 
 import boto3
@@ -21,20 +22,27 @@ dynamodb_client = boto3.resource(
 line_query_service = dynamodb_query_service.DynamoDBLINEMessageProcessorsQueryService(
     config.AppConfig.get_table_name_line(), dynamodb_client.meta.client
 )
+
 ai_user_profiles_query_service = (
     dynamodb_query_service.DynamoDBAIUserProfilesQueryService(
         config.AppConfig.get_table_name_ai_user_profile(),
         dynamodb_client.meta.client,
     )
 )
+
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     config.AppConfig.get_table_name_line(),
     config.AppConfig.get_table_name_line_user(),
     dynamodb_client.meta.client,
 )
 
+sqs_client = boto3.client(
+    "sqs",
+    region_name=config.AppConfig.get_default_region(),
+)
 
-def execute(line_message_processor, ai_user_profile_id: str):
+
+def execute(line_message_processor, ai_user_profile_id: str) -> None:
     ai_user_profile = ai_user_profiles_query_service.get_ai_user_profile_by_id(
         ai_user_profile_id
     )
@@ -48,8 +56,7 @@ def execute(line_message_processor, ai_user_profile_id: str):
         ai_user_profile_id,
         chat_response,
     )
-
-    return updated_line_message_processor
+    enqueue_reply_request(updated_line_message_processor.id)
 
 
 def init_chat_request(ai_user_profile: Dict[str, Any]) -> str:
@@ -111,7 +118,7 @@ def _parse_ai_user_profile(ai_user_profile: Dict[str, Any]) -> AIUserProfile:
     if callable(model_validate):
         return model_validate(ai_user_profile)
 
-    return AIUserProfile.parse_obj(ai_user_profile)
+    return AIUserProfile(**ai_user_profile)
 
 
 def _extract_chat_text(payload: Dict[str, Any]) -> str:
@@ -128,3 +135,25 @@ def _extract_chat_text(payload: Dict[str, Any]) -> str:
         raise RuntimeError("Gemini response does not contain text")
 
     return text
+
+
+def enqueue_reply_request(line_message_processor_id: str) -> None:
+    """LINEMessageProcessor の ID を reply SQS キューに送信する。
+
+    Args:
+        line_message_processor_id (str): LINEMessageProcessor の ID
+
+    Raises:
+        RuntimeError: REPLY_QUEUE_URL が未設定の場合
+    """
+    queue_url = config.AppConfig.get_reply_queue_url()
+    if not queue_url:
+        raise RuntimeError("REPLY_QUEUE_URL is not set")
+
+    sqs_client.send_message(
+        QueueUrl=queue_url,
+        MessageBody=json.dumps(
+            {"line_message_processor_id": line_message_processor_id},
+            ensure_ascii=False,
+        ),
+    )
