@@ -29,17 +29,11 @@ def receive_message():
 
         body = _normalize_request_body(event)
 
-        logger.info("before GET_LINE_CHANNEL_SECRET")
-
         try:
             channel_secret = app_config.get_line_channel_secret()
         except Exception:
             logger.exception("get_line_channel_secret failed")
             raise
-
-        logger.info("after GET_LINE_CHANNEL_SECRET")
-
-        logger.info("before validate_signature")
 
         # Validate LINE signature
         error, request_body = validate_signature(
@@ -47,9 +41,6 @@ def receive_message():
             body=body,
             channel_secret=channel_secret,
         )
-
-        logger.info("after validate_signature")
-        logger.info("===========request_body=%s", request_body)
 
         if error:
             logger.warning("Signature validation failed")
@@ -61,14 +52,6 @@ def receive_message():
         webhook_event = LINEMessagingWebhookEvent(**payload)
         logger.info("pydantic success")
 
-        # Process the message using command handler
-        # processor_id = create_line_message_processor_command_handler.handle_create_line_messaging_processor_command(
-        #     command=create_line_message_processor_command.CreateLINEMessagingProcessorCommand(
-        #         event=webhook_event
-        #     ),
-        #     unit_of_work=unit_of_work,
-        # )
-
         # Assign the received message
         event_type_switcher(webhook_event)
 
@@ -76,10 +59,7 @@ def receive_message():
 
     except json.JSONDecodeError as e:
         failed_body = locals().get("request_body", "")
-
-        logger.error("JSON decode failed at pos=%s", e.pos)
         logger.error("request_body repr=%r", failed_body)
-        logger.error("around error=%r", failed_body[max(e.pos - 40, 0) : e.pos + 40])
 
         return {"error": "Invalid JSON"}, 400
 
@@ -89,14 +69,13 @@ def receive_message():
 
 
 def _normalize_request_body(event) -> str:
+    """API Gateway からのリクエストボディを正規化する"""
     body = event.body or ""
 
     if isinstance(body, bytes):
         body = body.decode("utf-8")
     elif not isinstance(body, str):
         body = json.dumps(body, ensure_ascii=False)
-
-    logger.info("=========Normalized request body: %s", body)
 
     raw_event = getattr(event, "raw_event", {}) or {}
     is_base64_encoded = getattr(event, "is_base64_encoded", None)
@@ -105,8 +84,6 @@ def _normalize_request_body(event) -> str:
 
     if is_base64_encoded:
         body = base64.b64decode(body).decode("utf-8")
-
-    logger.info("===========Decoded request body: %s", body)
 
     return body
 

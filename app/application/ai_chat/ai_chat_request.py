@@ -1,6 +1,4 @@
 from datetime import datetime, timezone
-import importlib.util
-from pathlib import Path
 from typing import Any, Dict
 
 import boto3
@@ -9,7 +7,10 @@ import requests
 from app import config
 from app.adapters import dynamodb_query_service, dynamodb_unit_of_work
 from app.application.ai_chat.prompt_builder import build_daily_guide_prompt
+from app.domain.model.ai_chat.chat_session import ChatSession
 from app.domain.model.line.line_message_processor import MessageStatus
+from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
+
 
 dynamodb_client = boto3.resource(
     "dynamodb",
@@ -32,37 +33,27 @@ unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     dynamodb_client.meta.client,
 )
 
-_chat_session_path = (
-    Path(__file__).resolve().parents[2]
-    / "domain"
-    / "model"
-    / "ai_chat"
-    / "chat_session.py"
-)
-_chat_session_spec = importlib.util.spec_from_file_location(
-    "app.domain.model.ai_chat.chat_session",
-    _chat_session_path,
-)
-_chat_session_module = importlib.util.module_from_spec(_chat_session_spec)
-assert _chat_session_spec.loader is not None
-_chat_session_spec.loader.exec_module(_chat_session_module)
-ChatSession = _chat_session_module.ChatSession
 
-
-def execute(line_message_processor, ai_user_profile_id: str) -> None:
+def execute(line_message_processor, ai_user_profile_id: str):
     ai_user_profile = ai_user_profiles_query_service.get_ai_user_profile_by_id(
         ai_user_profile_id
     )
     if not ai_user_profile:
         raise ValueError(f"AI user profile not found: {ai_user_profile_id}")
 
-    prompt = init_chat_request(line_message_processor, ai_user_profile)
+    prompt = init_chat_request(ai_user_profile)
     chat_response = request_chat(prompt)
-    response_chat(line_message_processor, ai_user_profile_id, chat_response)
+    updated_line_message_processor = response_chat(
+        line_message_processor,
+        ai_user_profile_id,
+        chat_response,
+    )
+
+    return updated_line_message_processor
 
 
-def init_chat_request(line_message_processor, ai_user_profile: Dict[str, Any]) -> str:
-    return build_daily_guide_prompt(ai_user_profile)
+def init_chat_request(ai_user_profile: Dict[str, Any]) -> str:
+    return build_daily_guide_prompt(_parse_ai_user_profile(ai_user_profile))
 
 
 def request_chat(prompt: str) -> str:
@@ -91,20 +82,10 @@ def request_chat(prompt: str) -> str:
     )
     response.raise_for_status()
     payload = response.json()
-    candidates = payload.get("candidates", [])
-    if not candidates:
-        raise RuntimeError("Gemini response does not contain candidates")
-
-    parts = candidates[0].get("content", {}).get("parts", [])
-    if not parts or not parts[0].get("text"):
-        raise RuntimeError("Gemini response does not contain text")
-
-    return parts[0]["text"]
+    return _extract_chat_text(payload)
 
 
-def response_chat(
-    line_message_processor, ai_user_profile_id: str, chat_response: str
-) -> None:
+def response_chat(line_message_processor, ai_user_profile_id: str, chat_response: str):
     chat_session = init_chat_session(ai_user_profile_id, chat_response)
     line_message_processor.reply_message = chat_session.reply_message
     line_message_processor.processing_status = MessageStatus.ReplyReady
@@ -114,6 +95,8 @@ def response_chat(
         unit_of_work.line_message_processors.put(line_message_processor)
         unit_of_work.commit()
 
+    return line_message_processor
+
 
 def init_chat_session(ai_user_profile_id: str, chat_response: str):
     return ChatSession(
@@ -121,3 +104,27 @@ def init_chat_session(ai_user_profile_id: str, chat_response: str):
         ai_user_profile_id=ai_user_profile_id,
         reply_message=chat_response,
     )
+
+
+def _parse_ai_user_profile(ai_user_profile: Dict[str, Any]) -> AIUserProfile:
+    model_validate = getattr(AIUserProfile, "model_validate", None)
+    if callable(model_validate):
+        return model_validate(ai_user_profile)
+
+    return AIUserProfile.parse_obj(ai_user_profile)
+
+
+def _extract_chat_text(payload: Dict[str, Any]) -> str:
+    candidates = payload.get("candidates", [])
+    if not candidates:
+        raise RuntimeError("Gemini response does not contain candidates")
+
+    parts = candidates[0].get("content", {}).get("parts", [])
+    if not parts:
+        raise RuntimeError("Gemini response does not contain text")
+
+    text = parts[0].get("text")
+    if not text:
+        raise RuntimeError("Gemini response does not contain text")
+
+    return text

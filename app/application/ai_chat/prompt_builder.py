@@ -95,7 +95,7 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
         構築されたプロンプト文字列
     """
     # ユーザー情報の抽出と正規化
-    name = ai_user_profile.name or "未設定"
+    name = ai_user_profile.name
     age_decade = _to_age_decade(ai_user_profile.birth_year)
     gender = ai_user_profile.gender or "未設定"
     residence = ai_user_profile.residence or "未設定"
