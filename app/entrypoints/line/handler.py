@@ -27,18 +27,22 @@ def receive_message():
 
         headers = event.headers or {}
         body = _normalize_request_body(event)
+        channel_secret = app_config.get_line_channel_secret()
 
-        logger.info(
-            "===========Received LINE webhook event. headers=%s body=%s", headers, body
-        )
+        if not channel_secret:
+            logger.error("LINE channel secret is not configured")
+            return {"error": "Server configuration error"}, 500
+
+        logger.info("before validate_signature")
 
         # Validate LINE signature
         error, request_body = validate_signature(
             headers=headers,
             body=body,
-            channel_secret=config.AppConfig.get_line_channel_secret(),
+            channel_secret=channel_secret,
         )
 
+        logger.info("after validate_signature")
         logger.info("===========request_body=%s", request_body)
 
         if error:
@@ -86,8 +90,6 @@ def _normalize_request_body(event) -> str:
     elif not isinstance(body, str):
         body = json.dumps(body, ensure_ascii=False)
 
-    logger.info("=========Normalized request body: %s", body)
-
     raw_event = getattr(event, "raw_event", {}) or {}
     is_base64_encoded = getattr(event, "is_base64_encoded", None)
     if is_base64_encoded is None:
@@ -95,8 +97,6 @@ def _normalize_request_body(event) -> str:
 
     if is_base64_encoded:
         body = base64.b64decode(body).decode("utf-8")
-
-    logger.info("===========Decoded request body: %s", body)
 
     return body
 

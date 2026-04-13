@@ -1,7 +1,10 @@
 import base64
 import hashlib
 import hmac
+from aws_lambda_powertools import Logger
 from typing import Tuple, Optional
+
+logger = Logger()
 
 
 def validate_signature(
@@ -16,6 +19,11 @@ def validate_signature(
     Returns:
         (error_response, request_body)
     """
+
+    logger.info("validate_signature start")
+    logger.info("body type=%s", type(body))
+    logger.info("body len=%s", len(body))
+    logger.info("channel_secret exists=%s", bool(channel_secret))
 
     # ヘッダー取得
     signature = headers.get("x-line-signature") or headers.get("X-Line-Signature")
