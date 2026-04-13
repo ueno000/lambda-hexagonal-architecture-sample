@@ -25,12 +25,14 @@ line_query_service = dynamodb_query_service.DynamoDBLINEMessageProcessorsQuerySe
 @logger.inject_lambda_context(log_event=True)
 def handler(event, context):
     records = event.get("Records", [])
-    if not records:
-        logger.warning("No SQS records found")
-        return
 
     for record in records:
-        process_record(record)
+        try:
+            process_record(record)
+        except Exception:
+            logger.exception("Failed to process record, dropping message")
+            # 例外を再送出しない
+            continue
 
 
 @tracer.capture_method
