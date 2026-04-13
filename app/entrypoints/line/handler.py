@@ -30,11 +30,14 @@ def receive_message():
         body = _normalize_request_body(event)
 
         logger.info("before GET_LINE_CHANNEL_SECRET")
-        channel_secret = app_config.get_line_channel_secret()
-        logger.info(
-            "after GET_LINE_CHANNEL_SECRET channel_secret exists=%s",
-            bool(channel_secret),
-        )
+
+        try:
+            channel_secret = app_config.get_line_channel_secret()
+        except Exception:
+            logger.exception("get_line_channel_secret failed")
+            raise
+
+        logger.info("after GET_LINE_CHANNEL_SECRET")
 
         logger.info("before validate_signature")
 
