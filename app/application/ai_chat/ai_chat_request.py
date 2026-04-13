@@ -68,31 +68,35 @@ def request_chat(prompt: str) -> str:
     if not gemini_api_key:
         raise RuntimeError("gemini_api_key is not set")
 
-    response = requests.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent",
-        headers={
-            "Content-Type": "application/json",
-            "x-goog-api-key": gemini_api_key,
-        },
-        json={
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": prompt,
-                        }
-                    ]
-                }
-            ]
-        },
-        timeout=30,
-    )
-    payload = response.json()
+    payload: Dict[str, Any] = {}
+
     try:
+        response = requests.post(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent",
+            headers={
+                "Content-Type": "application/json",
+                "x-goog-api-key": gemini_api_key,
+            },
+            json={
+                "contents": [
+                    {
+                        "parts": [
+                            {
+                                "text": prompt,
+                            }
+                        ]
+                    }
+                ]
+            },
+            timeout=30,
+        )
+        payload = response.json()
         response.raise_for_status()
         return _extract_chat_text(payload)
-    except Exception:
-        return _stringify_error_payload(payload)
+    except Exception as e:
+        if payload:
+            return _stringify_error_payload(payload)
+        return f"Error requesting chat: {str(e)}"
 
 
 def response_chat(line_message_processor, ai_user_profile_id: str, chat_response: str):
@@ -149,9 +153,7 @@ def _stringify_error_payload(payload: Dict[str, Any]) -> str:
         return error
 
     if isinstance(error, dict):
-        message = error.get("message")
-        if message:
-            return str(message)
+        return json.dumps(error, ensure_ascii=False)
 
     return json.dumps(error, ensure_ascii=False)
 

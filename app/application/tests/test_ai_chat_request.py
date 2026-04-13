@@ -55,12 +55,13 @@ class AIChatRequestTests(unittest.TestCase):
         response.raise_for_status.assert_called_once_with()
 
     def test_request_chat_returns_error_message_when_response_is_error(self):
+        error_payload = {
+            "code": 429,
+            "message": "quota exceeded",
+        }
         response = Mock()
         response.json.return_value = {
-            "error": {
-                "code": 429,
-                "message": "quota exceeded",
-            }
+            "error": error_payload
         }
         response.raise_for_status.side_effect = requests.HTTPError("429 Client Error")
 
@@ -71,7 +72,7 @@ class AIChatRequestTests(unittest.TestCase):
         ), patch.object(ai_chat_request.requests, "post", return_value=response):
             actual = ai_chat_request.request_chat("prompt")
 
-        self.assertEqual("quota exceeded", actual)
+        self.assertEqual('{"code": 429, "message": "quota exceeded"}', actual)
 
     def test_response_chat_updates_processor_and_persists(self):
         line_message_processor = LINEMessageProcessor(
