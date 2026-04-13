@@ -50,7 +50,11 @@ def execute(line_message_processor, ai_user_profile_id: str) -> None:
         raise ValueError(f"AI user profile not found: {ai_user_profile_id}")
 
     prompt = init_chat_request(ai_user_profile)
-    chat_response = request_chat(prompt)
+    try:
+        chat_response = request_chat(prompt)
+    except Exception as e:
+        chat_response = _stringify_exception(e)
+
     updated_line_message_processor = response_chat(
         line_message_processor,
         ai_user_profile_id,
@@ -156,6 +160,10 @@ def _stringify_error_payload(payload: Dict[str, Any]) -> str:
         return json.dumps(error, ensure_ascii=False)
 
     return json.dumps(error, ensure_ascii=False)
+
+
+def _stringify_exception(error: Exception) -> str:
+    return f"{type(error).__name__}: {error}"
 
 
 def enqueue_reply_request(line_message_processor_id: str) -> None:

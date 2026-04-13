@@ -74,6 +74,43 @@ class AIChatRequestTests(unittest.TestCase):
 
         self.assertEqual('{"code": 429, "message": "quota exceeded"}', actual)
 
+    def test_execute_persists_error_message_when_request_chat_raises(self):
+        line_message_processor = LINEMessageProcessor(
+            id="processor-1",
+            processing_status=MessageStatus.AwaitingChatResponse.value,
+            message_event={"replyToken": "reply-token"},
+            line_user=LINEUser(id="user-1", line_id="line-user-1", talk_count=0),
+        )
+
+        with patch.object(
+            ai_chat_request.ai_user_profiles_query_service,
+            "get_ai_user_profile_by_id",
+            return_value={
+                "id": "profile-1",
+                "line_user_id": "line-user-1",
+                "interest_topics": [],
+                "lines": [],
+            },
+        ), patch.object(
+            ai_chat_request, "init_chat_request", return_value="prompt"
+        ), patch.object(
+            ai_chat_request,
+            "request_chat",
+            side_effect=requests.HTTPError("429 Client Error"),
+        ), patch.object(
+            ai_chat_request, "response_chat", return_value=line_message_processor
+        ) as mock_response_chat, patch.object(
+            ai_chat_request, "enqueue_reply_request"
+        ) as mock_enqueue_reply_request:
+            ai_chat_request.execute(line_message_processor, "profile-1")
+
+        mock_response_chat.assert_called_once_with(
+            line_message_processor,
+            "profile-1",
+            "HTTPError: 429 Client Error",
+        )
+        mock_enqueue_reply_request.assert_called_once_with("processor-1")
+
     def test_response_chat_updates_processor_and_persists(self):
         line_message_processor = LINEMessageProcessor(
             id="processor-1",
