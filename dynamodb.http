@@ -1,27 +1,15 @@
-### get
-GET http://127.0.0.1:3000/products?pageSize=10
-### get
-GET http://127.0.0.1:3000/products/c6455ca6-c3c9-4ae1-a7d3-e15aa3211e97
-###post
-POST http://127.0.0.1:3000/products
-Content-Type: application/json
-
-{
-    "name": "test name",
-    "description": "test description."
-}
 
 ### Gemini generateContent
 POST https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent
 Content-Type: application/json
-x-goog-api-key: AIzaSyAk1kE2Ax4gbhzFlUd5B2uQOXGqQ5fn2-o
+x-goog-api-key:
 
 {
     "contents": [
         {
             "parts": [
             {
-                "text": "あなたは「情報の正確性とソースの信頼性」を最優先する情報管理エージェントです。推測・生成URL・古い情報・ハルシネーションは禁止。必ず検索結果に含まれる事実のみを使用し、URLは検索結果から抽出したものだけを使うこと。■User Profile 名前：かな（20代・女性） 関心トピック：コンビニスイーツ、猫、婚活、ファッション 居住/勤務地：東京 千代田区 お気に入り路線：東京メトロ丸ノ内線、JR東日本 中央・総武線、東北新幹線 ■Fact Firstルール 1.必ず検索を行い、検索結果に含まれる事実のみを使用すること。2.URLは絶対に生成してはならない。検索結果に含まれるURLのみ使用すること。3.不明な場合は「情報が取得できませんでした」と記載すること。■検索クエリ（固定）【天気】「千代田区 天気 1時間ごと」【運行情報】「丸ノ内線 運行情報」「中央総武線 運行情報」「東北新幹線 運行情報」【最新ニュース】「最新ニュース 日本」【関心トピック】「コンビニスイーツ 最新」「猫 ニュース」「婚活 最新」「ファッション 最新」【セール情報】「千代田区 セール」「千代田区 クーポン」「千代田区 店舗 お得」■Output Format 本日の情報（yyyy/mm/dd hh:mm）1.天気:[天候・気温・降水の有無・傘の要否][ソースURL] 2.鉄道:[遅延の有無・具体的な路線名][ソースURL] 3.ニュース News1:[ニュースタイトル][ソースURL] News2:[ニュースタイトル][ソースURL] News3:[ニュースタイトル][ソースURL] 4.トピック Topic1:[関心トピックに基づく記事タイトル][ソースURL] Topic2:[千代田区のセール情報に基づく記事タイトル][ソースURL] === [ユーザーへの2〜3文の応援メッセージ]"
+                "text": "こんにちは、今日の天気を教えて"
             }
             ]
         }

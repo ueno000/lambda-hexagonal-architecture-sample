@@ -94,7 +94,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: '2012-10-17'
         Statement:
           - Effect: Allow
             Principal:
@@ -105,7 +105,7 @@ Resources:
       Policies:
         - PolicyName: LambdaDynamoDBPolicy
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
@@ -116,14 +116,14 @@ Resources:
                   - dynamodb:Query
                   - dynamodb:Scan
                 Resource:
-                          - !GetAtt LINEMessageProcessorDB.Arn
-                          - !GetAtt LINEUserDB.Arn
-                          - !GetAtt AIUserProfileDB.Arn
-                          - !Sub "${LINEUserDB.Arn}/index/line_id-index"
-                          - !Sub "${AIUserProfileDB.Arn}/index/line_user_id-index"
+                  - !GetAtt LINEMessageProcessorDB.Arn
+                  - !GetAtt LINEUserDB.Arn
+                  - !GetAtt AIUserProfileDB.Arn
+                  - !Sub ${LINEUserDB.Arn}/index/line_id-index
+                  - !Sub ${AIUserProfileDB.Arn}/index/line_user_id-index
         - PolicyName: LambdaSecretsManagerPolicy
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
@@ -131,7 +131,7 @@ Resources:
                 Resource: !Ref LINESecrets
         - PolicyName: LambdaSQSSendMessagePolicy
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: '2012-10-17'
             Statement:
               - Effect: Allow
                 Action:
@@ -159,8 +159,8 @@ Resources:
           LINE_SECRET_ARN: !Ref LINESecrets
           AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
           REPLY_QUEUE_URL: !Ref ReplyQueueSQS
-          DYNAMODB_ENDPOINT_URL: ""
-          ENV: ""
+          DYNAMODB_ENDPOINT_URL: ''
+          ENV: ''
       Events:
         Webhook:
           Type: Api
@@ -184,8 +184,8 @@ Resources:
           LINE_SECRET_ARN: !Ref LINESecrets
           AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
           REPLY_QUEUE_URL: !Ref ReplyQueueSQS
-          DYNAMODB_ENDPOINT_URL: ""
-          ENV: ""
+          DYNAMODB_ENDPOINT_URL: ''
+          ENV: ''
       Events:
         AIChatQueueEvent:
           Type: SQS
@@ -209,8 +209,8 @@ Resources:
           LINE_SECRET_ARN: !Ref LINESecrets
           AI_CHAT_QUEUE_URL: !Ref AIChatQueueSQS
           REPLY_QUEUE_URL: !Ref ReplyQueueSQS
-          DYNAMODB_ENDPOINT_URL: ""
-          ENV: ""
+          DYNAMODB_ENDPOINT_URL: ''
+          ENV: ''
       Events:
         ReplyQueueEvent:
           Type: SQS
@@ -233,7 +233,7 @@ Outputs:
 
   ApiUrl:
     Description: API Gateway endpoint URL
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/line/receive-message"
+    Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/line/receive-message
 
   LINESecretsArn:
     Description: Secrets Manager secret ARN
