@@ -1,6 +1,5 @@
-import logging
-
 import boto3
+from aws_lambda_powertools import Logger
 
 from app import config
 from app.adapters import dynamodb_unit_of_work
@@ -10,7 +9,7 @@ from app.domain.model.line.line_message_processor import (
     MessageStatus,
 )
 
-logger = logging.getLogger(__name__)
+logger = Logger()
 
 REPLY_TEXT = "これは返信メッセージです。"
 
@@ -29,10 +28,7 @@ unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
 
 def reply_message(line_message_processor: LINEMessageProcessor) -> None:
     # 返信可能な状態か確認
-    if (
-        line_message_processor.processing_status
-        != MessageStatus.AwaitingChatResponse.value
-    ):
+    if line_message_processor.processing_status != MessageStatus.ReplyReady.value:
         logger.warning(
             "Message is not ready for reply. Current status: %s",
             line_message_processor.processing_status,
@@ -43,7 +39,7 @@ def reply_message(line_message_processor: LINEMessageProcessor) -> None:
     logger.info("Replying message with reply_token=%s", reply_token)
 
     reply_message_text = REPLY_TEXT
-    if line_message_processor.reply_message:
+    if line_message_processor.reply_message is not None:
         reply_message_text = "【本日の案内】\r\n" + line_message_processor.reply_message
 
     response = send_message(reply_token, reply_message_text)

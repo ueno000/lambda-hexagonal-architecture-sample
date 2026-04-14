@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 
 import requests
 from dataclasses import asdict
@@ -32,13 +31,15 @@ def send_message(reply_token: str, message: str):
         "Content-Type": "application/json",
         "Authorization": f"Bearer {access_token}",
     }
-
-    response = requests.post(
-        "https://api.line.me/v2/bot/message/reply",
-        headers=headers,
-        data=json_data,
-        timeout=10,
-    )
+    try:
+        response = requests.post(
+            "https://api.line.me/v2/bot/message/reply",
+            headers=headers,
+            data=json_data,
+            timeout=10,
+        )
+    except Exception as e:
+        logger.error(f"Error sending message to LINE API: {type(e).__name__}: {str(e)}")
 
     logger.info("LINE response status=%s body=%s", response.status_code, response.text)
     return response

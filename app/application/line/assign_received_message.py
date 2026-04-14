@@ -110,8 +110,10 @@ def assign_received_message(
 
         # LINEMessageProcessorのIdをSQSキューに送信
         if is_today_guide_command(messaging_webhook_event):
-            ai_user_profile = ai_user_profiles_query_service.get_ai_user_profile_by_line_user_id(
-                line_user.id
+            ai_user_profile = (
+                ai_user_profiles_query_service.get_ai_user_profile_by_line_user_id(
+                    line_user.id
+                )
             )
             if not ai_user_profile:
                 send_message(
@@ -133,7 +135,13 @@ def assign_received_message(
                 line_message_processor.id,
             )
         else:
+            # リプライする前にLINEMessageProcessorの状態をReplyReadyに更新しておく
+            line_message_processor.processing_status = MessageStatus.ReplyReady
+            with unit_of_work:
+                unit_of_work.line_message_processors.put(line_message_processor)
+                unit_of_work.commit()
             enqueue_reply_request(line_message_processor.id)
+
             logger.info(
                 "Enqueued reply request for LINE message processor ID: %s",
                 line_message_processor.id,
@@ -203,20 +211,32 @@ def enqueue_ai_chat_request(
     Raises:
         RuntimeError: AI_CHAT_QUEUE_URL が未設定の場合
     """
+
     queue_url = config.AppConfig.get_ai_chat_queue_url()
     if not queue_url:
         raise RuntimeError("AI_CHAT_QUEUE_URL is not set")
 
-    sqs_client.send_message(
-        QueueUrl=queue_url,
-        MessageBody=json.dumps(
-            {
-                "line_message_processor_id": line_message_processor_id,
-                "ai_user_profile_id": ai_user_profile_id,
-            },
-            ensure_ascii=False,
-        ),
-    )
+    try:
+        sqs_client.send_message(
+            QueueUrl=queue_url,
+            MessageBody=json.dumps(
+                {
+                    "line_message_processor_id": line_message_processor_id,
+                    "ai_user_profile_id": ai_user_profile_id,
+                },
+                ensure_ascii=False,
+            ),
+        )
+        logger.info(
+            f"Reply request enqueued successfully for processor_id: {line_message_processor_id}"
+        )
+    except Exception as e:
+        logger.error(
+            f"Error enqueuing reply request for processor_id: {line_message_processor_id}, error: {type(e).__name__}: {str(e)}"
+        )
+        raise RuntimeError(
+            f"Failed to enqueue reply request for processor_id: {line_message_processor_id}"
+        ) from e
 
 
 def enqueue_reply_request(line_message_processor_id: str) -> None:
@@ -232,10 +252,21 @@ def enqueue_reply_request(line_message_processor_id: str) -> None:
     if not queue_url:
         raise RuntimeError("REPLY_QUEUE_URL is not set")
 
-    sqs_client.send_message(
-        QueueUrl=queue_url,
-        MessageBody=json.dumps(
-            {"line_message_processor_id": line_message_processor_id},
-            ensure_ascii=False,
-        ),
-    )
+    try:
+        sqs_client.send_message(
+            QueueUrl=queue_url,
+            MessageBody=json.dumps(
+                {"line_message_processor_id": line_message_processor_id},
+                ensure_ascii=False,
+            ),
+        )
+        logger.info(
+            f"Reply request enqueued successfully for processor_id: {line_message_processor_id}"
+        )
+    except Exception as e:
+        logger.error(
+            f"Error enqueuing reply request for processor_id: {line_message_processor_id}, error: {type(e).__name__}: {str(e)}"
+        )
+        raise RuntimeError(
+            f"Failed to enqueue reply request for processor_id: {line_message_processor_id}"
+        ) from e
