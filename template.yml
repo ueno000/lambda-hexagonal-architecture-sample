@@ -86,7 +86,7 @@ Resources:
       SecretString: !Sub |
         {
           "LINE_CHANNEL_SECRET": "${LINEChannelSecret}",
-          "LINE_CHANNEL_ACCESS_TOKEN": "${LINEChannelAccessToken}"
+          "LINE_CHANNEL_ACCESS_TOKEN": "${LINEChannelAccessToken}",
           "GEMINI_API_KEY": "${GeminiAPIKey}"
         }
 
