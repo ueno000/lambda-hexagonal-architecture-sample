@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 import json
 from typing import Any, Dict
+from aws_lambda_powertools import Logger, Tracer
 
 import boto3
 import requests
@@ -12,6 +13,7 @@ from app.domain.model.ai_chat.chat_session import ChatSession
 from app.domain.model.line.line_message_processor import MessageStatus
 from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 
+logger = Logger()
 
 dynamodb_client = boto3.resource(
     "dynamodb",
@@ -43,24 +45,35 @@ sqs_client = boto3.client(
 
 
 def execute(line_message_processor, ai_user_profile_id: str) -> None:
+    logger.info(
+        f"Starting AI chat request for processor_id: {line_message_processor.id}, user_id: {ai_user_profile_id}"
+    )
+
     ai_user_profile = ai_user_profiles_query_service.get_ai_user_profile_by_id(
         ai_user_profile_id
     )
     if not ai_user_profile:
-        raise ValueError(f"AI user profile not found: {ai_user_profile_id}")
+        logger.error(f"AI user profile not found: {ai_user_profile_id}")
+        return
 
     prompt = init_chat_request(ai_user_profile)
-    try:
-        chat_response = request_chat(prompt)
-    except Exception as e:
-        chat_response = _stringify_exception(e)
+    logger.info(f"Builded Prompt: {prompt}")
 
+    # リクエスト
+    chat_response = request_chat(prompt)
+    logger.info("Chat response received successfully")
+
+    logger.info("Updating message processor with chat response")
     updated_line_message_processor = response_chat(
         line_message_processor,
         ai_user_profile_id,
         chat_response,
     )
+    logger.info(
+        f"Enqueueing reply request for processor_id: {updated_line_message_processor.id}"
+    )
     enqueue_reply_request(updated_line_message_processor.id)
+    logger.info("AI chat request completed successfully")
 
 
 def init_chat_request(ai_user_profile: Dict[str, Any]) -> str:
@@ -70,6 +83,7 @@ def init_chat_request(ai_user_profile: Dict[str, Any]) -> str:
 def request_chat(prompt: str) -> str:
     gemini_api_key = config.AppConfig.get_gemini_api_key()
     if not gemini_api_key:
+        logger.error("gemini_api_key is not set")
         raise RuntimeError("gemini_api_key is not set")
 
     payload: Dict[str, Any] = {}
@@ -96,32 +110,30 @@ def request_chat(prompt: str) -> str:
         )
         payload = response.json()
         response.raise_for_status()
-        return _extract_chat_text(payload)
+        text = _extract_chat_text(payload)
+        logger.info("Successfully extracted chat text from response")
+        return text
     except Exception as e:
+        logger.error(
+            f"Error requesting chat from Gemini API: {type(e).__name__}: {str(e)}"
+        )
         if payload:
-            return _stringify_error_payload(payload)
-        return f"Error requesting chat: {str(e)}"
+            logger.error(f"Error payload: {_stringify_error_payload(payload)}")
+        raise
 
 
-def response_chat(line_message_processor, ai_user_profile_id: str, chat_response: str):
-    chat_session = init_chat_session(ai_user_profile_id, chat_response)
-    line_message_processor.reply_message = chat_session.reply_message
+def response_chat(line_message_processor, chat_response: str):
+    ### 返信内容をLINEMessageProcessorに保存
+    line_message_processor.reply_message = chat_response
     line_message_processor.processing_status = MessageStatus.ReplyReady
     line_message_processor.last_update_date = datetime.now(timezone.utc).isoformat()
 
     with unit_of_work:
         unit_of_work.line_message_processors.put(line_message_processor)
         unit_of_work.commit()
+    logger.info(f"Message processor {line_message_processor.id} updated successfully")
 
     return line_message_processor
-
-
-def init_chat_session(ai_user_profile_id: str, chat_response: str):
-    return ChatSession(
-        id=f"chat-session-{ai_user_profile_id}",
-        ai_user_profile_id=ai_user_profile_id,
-        reply_message=chat_response,
-    )
 
 
 def _parse_ai_user_profile(ai_user_profile: Dict[str, Any]) -> AIUserProfile:
@@ -177,12 +189,19 @@ def enqueue_reply_request(line_message_processor_id: str) -> None:
     """
     queue_url = config.AppConfig.get_reply_queue_url()
     if not queue_url:
+        logger.error("REPLY_QUEUE_URL is not set")
         raise RuntimeError("REPLY_QUEUE_URL is not set")
 
+    logger.Info(
+        f"Sending message to reply queue for processor_id: {line_message_processor_id}"
+    )
     sqs_client.send_message(
         QueueUrl=queue_url,
         MessageBody=json.dumps(
             {"line_message_processor_id": line_message_processor_id},
             ensure_ascii=False,
         ),
+    )
+    logger.info(
+        f"Reply request enqueued successfully for processor_id: {line_message_processor_id}"
     )
