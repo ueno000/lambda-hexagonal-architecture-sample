@@ -5,20 +5,14 @@ import random
 from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 
 # プロンプトテンプレート定数
-ROLE_DEFINITION = (
-    "# 役割定義\n"
-    "あなたは「情報の正確性・最新性・出典の信頼性」を最優先する情報収集エージェントです。\n"
-    "推測・補完・一般知識による補足は禁止し、必ず検索結果に含まれる事実のみを使用してください。"
-)
+ROLE_DEFINITION = "# 役割定義 \
+    あなたは「情報収集」と「応援メッセージ生成」を行う朝情報アシスタントです。\
+    まず事実ベースで情報収集し、その後に取得情報を用いて応援メッセージを生成してください。"
 
 OUTPUT_FORMAT = (
     "# OutputFormat\n"
     "{{\n"
     '  "timestamp": "{timestamp}",\n'
-    '  "weather": {{\n'
-    '    "today_to_daytime": {{"description": "", "temperature": "", "rain": "", "umbrella": "", "source_url": ""}},\n'
-    '    "daytime_to_night": {{"description": "", "temperature": "", "rain": "", "umbrella": "", "source_url": ""}}\n'
-    "  }},\n"
     '  "train": [{{"line": "", "status": "", "source_url": ""}}],\n'
     '  "news": [{{"title": "", "source_url": ""}}, {{"title": "", "source_url": ""}}, {{"title": "", "source_url": ""}}],\n'
     '  "topics": [{{"type": "interest_topic", "title": "", "source_url": ""}}],\n'
@@ -49,7 +43,6 @@ USER_PROFILE_TEMPLATE = (
 SEARCH_QUERY_TEMPLATE = (
     "# 検索クエリ\n"
     "以下のクエリで検索し、最上位の信頼できる情報を使用すること。\n"
-    "【天気】 「{residence} 天気 1時間ごと」「{residence} 天気 今夜」\n"
     "【運行情報】 {line_queries}\n"
     "【最新ニュース】 「最新ニュース 日本」\n"
     "【関心トピック】 {topic_queries}"
@@ -57,11 +50,6 @@ SEARCH_QUERY_TEMPLATE = (
 
 DATA_EXTRACTION_RULES = (
     "# データ抽出ルール\n"
-    "【天気】\n"
-    "  - 「today_to_daytime」: 現在〜日中\n"
-    "  - 「daytime_to_night」: 日中〜夜\n"
-    "  - 降水確率・気温・天候は検索結果に明記された値のみ使用\n"
-    "  - 傘の必要性は降水確率や記述に基づき簡潔に判断（必要 / 不要 / 念のため）\n"
     "【運行情報】\n"
     "  - 「平常運転」「遅延」「運転見合わせ」など公式表現をそのまま使用\n"
     "  - 不明な場合は必ず「情報が取得できませんでした」\n"
@@ -82,6 +70,27 @@ OUTPUT_CONSTRAINTS = (
     "  - JSONのみ出力（説明文・補足・コードブロック禁止）\n"
     "  - キー名・構造は完全一致\n"
     "  - 空欄は禁止（不明時は「情報が取得できませんでした」）"
+)
+
+MESSAGE_RULES = (
+    "# Message Rules\n"
+    "- 500文字以内\n"
+    "- User Profile / 天気 / train / news / topics を自然に織り込む\n"
+    "- 事実部分は検索結果のみ使用\n"
+    "- 応援表現のみ創作可\n"
+    "- キャラクター設定を反映する\n"
+    "- 過度なポエム調禁止\n"
+    "- 朝に読むことを想定した簡潔な文章にする\n"
+)
+
+CHARACTER = (
+    "# Character\n"
+    "- 高校2年生の女の子\n"
+    "- ギャル\n"
+    "- 明るく元気\n"
+    "- ちょっとおせっかい\n"
+    "- 情報通で好奇心旺盛\n"
+    "- 友達思いで優しい\n"
 )
 
 
@@ -108,6 +117,9 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
     interest_topics = _format_list(interest_topics_list)
     lines = _format_list(lines_list)
 
+    # 天気の情報は先に取得してプロンプトに組み込む
+    wether_info = "# 本日の天気 晴れたり曇ったり 昼間は暖かい 今日は晴れたり曇ったり、穏やかな天気。ただ、多摩エリアでは夕方以降ににわか雨が心配です。昼間は暖かく感じられそう。朝晩と昼間の体感差が大きくなるため、服装で上手に調節をしてください。"
+
     # 検索クエリの構築
     line_queries = _build_line_queries(lines_list)
     topic_queries = _build_topic_queries(interest_topics_list)
@@ -124,9 +136,12 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
         f"{output_format}\n\n"
         f"{ABSOLUTE_RULES}\n\n"
         f"{USER_PROFILE_TEMPLATE.format(name=name, age_decade=age_decade, gender=gender, interest_topics=interest_topics, residence=residence, lines=lines)}\n\n"
+        f"{wether_info}\n\n"
         f"{SEARCH_QUERY_TEMPLATE.format(residence=residence, line_queries=line_queries, topic_queries=topic_queries)}\n\n"
         f"{DATA_EXTRACTION_RULES}\n\n"
         f"{OUTPUT_CONSTRAINTS}"
+        f"{MESSAGE_RULES}\n\n"
+        f"{CHARACTER}"
     )
     return prompt
 
