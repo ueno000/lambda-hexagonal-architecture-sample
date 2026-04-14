@@ -64,7 +64,9 @@ class AssignReceivedMessageTests(unittest.TestCase):
             assign_received_message.ai_user_profiles_query_service,
             "get_ai_user_profile_by_line_user_id",
         ) as mock_get_ai_user_profile:
-            processor_id = assign_received_message.assign_received_message(webhook_event)
+            processor_id = assign_received_message.assign_received_message(
+                webhook_event
+            )
 
         self.assertIsNone(processor_id)
         mock_create_line_user.assert_called_once_with("new-user")
@@ -116,12 +118,14 @@ class AssignReceivedMessageTests(unittest.TestCase):
         ) as mock_get_ai_user_profile, patch.object(
             assign_received_message, "send_message"
         ) as mock_send_message:
-            processor_id = assign_received_message.assign_received_message(webhook_event)
+            processor_id = assign_received_message.assign_received_message(
+                webhook_event
+            )
 
         self.assertEqual("processor-1", processor_id)
         self.assertTrue(dummy_uow.committed)
         self.assertEqual(
-            MessageStatus.AwaitingChatResponse,
+            MessageStatus.ReplyReady,
             line_message_processor.processing_status,
         )
         self.assertEqual("user-1", line_message_processor.line_user.line_id)
@@ -130,7 +134,9 @@ class AssignReceivedMessageTests(unittest.TestCase):
         mock_send_message.assert_not_called()
         mock_get_ai_user_profile.assert_not_called()
 
-    def test_assign_received_message_enqueues_ai_chat_queue_for_todays_guide_command(self):
+    def test_assign_received_message_enqueues_ai_chat_queue_for_todays_guide_command(
+        self,
+    ):
         webhook_event = SimpleNamespace(
             events=[
                 {
@@ -169,7 +175,9 @@ class AssignReceivedMessageTests(unittest.TestCase):
         ) as mock_enqueue_ai_chat_request, patch.object(
             assign_received_message, "enqueue_reply_request"
         ) as mock_enqueue_reply_request:
-            processor_id = assign_received_message.assign_received_message(webhook_event)
+            processor_id = assign_received_message.assign_received_message(
+                webhook_event
+            )
 
         self.assertEqual("processor-1", processor_id)
         mock_get_ai_user_profile.assert_called_once_with("line-user-id")
@@ -216,7 +224,9 @@ class AssignReceivedMessageTests(unittest.TestCase):
         ) as mock_enqueue_reply_request, patch.object(
             assign_received_message, "send_message"
         ) as mock_send_message:
-            processor_id = assign_received_message.assign_received_message(webhook_event)
+            processor_id = assign_received_message.assign_received_message(
+                webhook_event
+            )
 
         self.assertEqual("processor-1", processor_id)
         mock_send_message.assert_called_once_with(
@@ -234,7 +244,9 @@ class AssignReceivedMessageTests(unittest.TestCase):
         ), patch.object(
             assign_received_message.sqs_client, "send_message"
         ) as mock_send_message:
-            assign_received_message.enqueue_ai_chat_request("processor-123", "profile-1")
+            assign_received_message.enqueue_ai_chat_request(
+                "processor-123", "profile-1"
+            )
 
         mock_send_message.assert_called_once_with(
             QueueUrl="https://example.com/ai-chat-queue",

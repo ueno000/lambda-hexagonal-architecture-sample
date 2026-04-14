@@ -29,7 +29,7 @@ class DummyUnitOfWork:
         self.commit_count += 1
 
 
-def make_processor(status: int = MessageStatus.AwaitingChatResponse.value):
+def make_processor(status: int = MessageStatus.ReplyReady.value):
     return LINEMessageProcessor(
         id="processor-1",
         processing_status=status,
@@ -45,7 +45,7 @@ class ReplyMessageTests(unittest.TestCase):
 
         mock_send_message.assert_not_called()
 
-    def test_reply_message_calls_send_message_when_status_is_awaiting_chat_response(
+    def test_reply_message_calls_send_message_when_status_is_reply_lady(
         self,
     ):
         response = type("Response", (), {"status_code": 200, "text": "ok"})()
@@ -54,9 +54,7 @@ class ReplyMessageTests(unittest.TestCase):
 
         with patch.object(
             reply_message, "send_message", return_value=response
-        ) as mock_send_message, patch.object(
-            reply_message, "unit_of_work", dummy_uow
-        ):
+        ) as mock_send_message, patch.object(reply_message, "unit_of_work", dummy_uow):
             reply_message.reply_message(processor)
 
         mock_send_message.assert_called_once_with(
