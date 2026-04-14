@@ -60,15 +60,13 @@ def execute(line_message_processor, ai_user_profile_id: str) -> None:
     logger.info(f"Builded Prompt: {prompt}")
 
     # リクエスト
-    chat_response = request_chat(prompt)
-    logger.info("Chat response received successfully")
+    chat_response_text = request_chat(prompt)
 
-    logger.info("Updating message processor with chat response")
     updated_line_message_processor = response_chat(
         line_message_processor,
-        ai_user_profile_id,
-        chat_response,
+        chat_response_text,
     )
+
     logger.info(
         f"Enqueueing reply request for processor_id: {updated_line_message_processor.id}"
     )
@@ -108,10 +106,10 @@ def request_chat(prompt: str) -> str:
             },
             timeout=30,
         )
-        payload = response.json()
         response.raise_for_status()
+        payload = response.json()
         text = _extract_chat_text(payload)
-        logger.info("Successfully extracted chat text from response")
+        logger.info(f"Chat text extracted successfully: {text}")
         return text
     except Exception as e:
         logger.error(
@@ -122,9 +120,9 @@ def request_chat(prompt: str) -> str:
         raise
 
 
-def response_chat(line_message_processor, chat_response: str):
+def response_chat(line_message_processor, chat_response_text: str):
     ### 返信内容をLINEMessageProcessorに保存
-    line_message_processor.reply_message = chat_response
+    line_message_processor.reply_message = chat_response_text
     line_message_processor.processing_status = MessageStatus.ReplyReady
     line_message_processor.last_update_date = datetime.now(timezone.utc).isoformat()
 
@@ -174,10 +172,6 @@ def _stringify_error_payload(payload: Dict[str, Any]) -> str:
     return json.dumps(error, ensure_ascii=False)
 
 
-def _stringify_exception(error: Exception) -> str:
-    return f"{type(error).__name__}: {error}"
-
-
 def enqueue_reply_request(line_message_processor_id: str) -> None:
     """LINEMessageProcessor の ID を reply SQS キューに送信する。
 
@@ -192,16 +186,25 @@ def enqueue_reply_request(line_message_processor_id: str) -> None:
         logger.error("REPLY_QUEUE_URL is not set")
         raise RuntimeError("REPLY_QUEUE_URL is not set")
 
-    logger.Info(
+    logger.info(
         f"Sending message to reply queue for processor_id: {line_message_processor_id}"
     )
-    sqs_client.send_message(
-        QueueUrl=queue_url,
-        MessageBody=json.dumps(
-            {"line_message_processor_id": line_message_processor_id},
-            ensure_ascii=False,
-        ),
-    )
-    logger.info(
-        f"Reply request enqueued successfully for processor_id: {line_message_processor_id}"
-    )
+
+    try:
+        sqs_client.send_message(
+            QueueUrl=queue_url,
+            MessageBody=json.dumps(
+                {"line_message_processor_id": line_message_processor_id},
+                ensure_ascii=False,
+            ),
+        )
+        logger.info(
+            f"Reply request enqueued successfully for processor_id: {line_message_processor_id}"
+        )
+    except Exception as e:
+        logger.error(
+            f"Error enqueuing reply request for processor_id: {line_message_processor_id}, error: {type(e).__name__}: {str(e)}"
+        )
+        raise RuntimeError(
+            f"Failed to enqueue reply request for processor_id: {line_message_processor_id}"
+        ) from e
