@@ -1,7 +1,8 @@
+import random
 from datetime import datetime
 from typing import Any
-import random
 
+from app.application.ai_chat.get_wether import get_wether
 from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 
 # プロンプトテンプレート定数
@@ -105,9 +106,10 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
     """
     # ユーザー情報の抽出と正規化
     name = ai_user_profile.name
-    age_decade = _to_age_decade(ai_user_profile.birth_year)
-    gender = ai_user_profile.gender or "未設定"
-    residence = ai_user_profile.residence or "未設定"
+    age = ai_user_profile.age
+    gender = ai_user_profile.gender
+    region = ai_user_profile.region or "東京都"
+    region_cd = ai_user_profile.region_cd or "130000"
 
     # リスト形式のデータを正規化
     interest_topics_list = _normalize_list(ai_user_profile.interest_topics)
@@ -118,7 +120,7 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
     lines = _format_list(lines_list)
 
     # 天気の情報は先に取得してプロンプトに組み込む
-    wether_info = "# 本日の天気 晴れたり曇ったり 昼間は暖かい 今日は晴れたり曇ったり、穏やかな天気。ただ、多摩エリアでは夕方以降ににわか雨が心配です。昼間は暖かく感じられそう。朝晩と昼間の体感差が大きくなるため、服装で上手に調節をしてください。"
+    wether_info = get_wether(region_cd)
 
     # 検索クエリの構築
     line_queries = _build_line_queries(lines_list)
@@ -135,9 +137,9 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
         f"{ROLE_DEFINITION}\n\n"
         f"{output_format}\n\n"
         f"{ABSOLUTE_RULES}\n\n"
-        f"{USER_PROFILE_TEMPLATE.format(name=name, age_decade=age_decade, gender=gender, interest_topics=interest_topics, residence=residence, lines=lines)}\n\n"
+        f"{USER_PROFILE_TEMPLATE.format(name=name, age_decade=age, gender=gender, interest_topics=interest_topics, residence=region, lines=lines)}\n\n"
         f"{wether_info}\n\n"
-        f"{SEARCH_QUERY_TEMPLATE.format(residence=residence, line_queries=line_queries, topic_queries=topic_queries)}\n\n"
+        f"{SEARCH_QUERY_TEMPLATE.format(residence=region, line_queries=line_queries, topic_queries=topic_queries)}\n\n"
         f"{DATA_EXTRACTION_RULES}\n\n"
         f"{OUTPUT_CONSTRAINTS}"
         f"{MESSAGE_RULES}\n\n"
@@ -170,33 +172,11 @@ def _build_topic_queries(topics_list: list[str]) -> str:
         フォーマットされた検索クエリ文字列
     """
     if not topics_list:
-        return "「未設定 最新」"
+        return "「未設定」"
 
     # 4件以上の場合はランダムに3件を抽出、3件以下の場合はそのまま使用
     selected_topics = random.sample(topics_list, min(3, len(topics_list)))
     return "".join(f"「{topic} 最新」" for topic in selected_topics)
-
-
-def _to_age_decade(birth_year: Any) -> str:
-    """生年から年代表記を生成します。
-
-    Args:
-        birth_year: 生年
-
-    Returns:
-        年代表記文字列（例：「30代」、「未設定」）
-    """
-    if not birth_year:
-        return "未設定"
-
-    try:
-        current_year = datetime.now().year
-        age = current_year - int(birth_year)
-        if age < 0:
-            return "未設定"
-        return f"{(age // 10) * 10}代"
-    except (ValueError, TypeError):
-        return "未設定"
 
 
 def _format_list(value: list[str]) -> str:

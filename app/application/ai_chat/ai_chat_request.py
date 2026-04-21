@@ -1,17 +1,17 @@
-from datetime import datetime, timezone
 import json
+from datetime import datetime, timezone
 from typing import Any, Dict
-from aws_lambda_powertools import Logger, Tracer
 
 import boto3
 import requests
+from aws_lambda_powertools import Logger, Tracer
 
 from app import config
 from app.adapters import dynamodb_query_service, dynamodb_unit_of_work
 from app.application.ai_chat.prompt_builder import build_daily_guide_prompt
+from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 from app.domain.model.ai_chat.chat_session import ChatSession
 from app.domain.model.line.line_message_processor import MessageStatus
-from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 
 logger = Logger()
 
