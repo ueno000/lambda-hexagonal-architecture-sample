@@ -11,5 +11,5 @@ class AIUserProfile(BaseModel):
     age: str = Field(default=None, title="Age")
     region: Optional[str] = Field(default=None, title="Region")
     region_cd: Optional[str] = Field(default=None, title="Region_Code")
-    lines: List[int] = Field(default_factory=None, title="Lines")
-    interest_topics: List[int] = Field(default_factory=None, title="InterestTopics")
+    lines: List[str] = Field(default_factory=None, title="Lines")
+    interest_topics: List[str] = Field(default_factory=None, title="InterestTopics")
