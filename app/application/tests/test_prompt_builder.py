@@ -18,7 +18,7 @@ class AIUserProfile:
     interest_topics: list | None = None
 
 sys.modules["app.application.ai_chat.get_wether"] = types.SimpleNamespace(
-    get_wether=lambda region_code: f"天気:{region_code}"
+    get_wether=lambda region_code: ""
 )
 fake_ai_chat_package = types.ModuleType("app.domain.model.ai_chat")
 fake_ai_user_profile_module = types.ModuleType(
@@ -66,7 +66,11 @@ class PromptBuilderTests(unittest.TestCase):
             lines=lines or [],
         )
 
-    def test_build_daily_guide_prompt_with_full_profile(self):
+    @patch(
+        "app.application.ai_chat.prompt_builder.get_wether",
+        return_value="天気:130000",
+    )
+    def test_build_daily_guide_prompt_with_full_profile(self, mock_get_wether):
         """すべてのフィールドが設定されている場合のプロンプト構築"""
         profile = self._make_ai_user_profile(
             name="太郎",
@@ -88,8 +92,13 @@ class PromptBuilderTests(unittest.TestCase):
         self.assertIn("東京都", prompt)
         self.assertIn("山手線", prompt)
         self.assertIn("天気:130000", prompt)
+        mock_get_wether.assert_called_once_with("130000")
 
-    def test_build_daily_guide_prompt_with_none_optional_fields(self):
+    @patch(
+        "app.application.ai_chat.prompt_builder.get_wether",
+        return_value="天気:130000",
+    )
+    def test_build_daily_guide_prompt_with_none_optional_fields(self, mock_get_wether):
         """オプショナルフィールドが None の場合"""
         profile = self._make_ai_user_profile(
             name=None,
@@ -105,8 +114,13 @@ class PromptBuilderTests(unittest.TestCase):
         self.assertIn("- 性別: None", prompt)
         self.assertIn("東京都", prompt)
         self.assertIn("OutputFormat", prompt)
+        mock_get_wether.assert_called_once_with("130000")
 
-    def test_build_daily_guide_prompt_with_empty_lists(self):
+    @patch(
+        "app.application.ai_chat.prompt_builder.get_wether",
+        return_value="天気:130000",
+    )
+    def test_build_daily_guide_prompt_with_empty_lists(self, mock_get_wether):
         """リストフィールドが空の場合"""
         profile = self._make_ai_user_profile(
             interest_topics=[],
@@ -117,8 +131,13 @@ class PromptBuilderTests(unittest.TestCase):
 
         self.assertIn("未設定", prompt)
         self.assertIn("路線未設定の為、検索不要", prompt)
+        mock_get_wether.assert_called_once_with("130000")
 
-    def test_build_daily_guide_prompt_includes_timestamp(self):
+    @patch(
+        "app.application.ai_chat.prompt_builder.get_wether",
+        return_value="天気:130000",
+    )
+    def test_build_daily_guide_prompt_includes_timestamp(self, mock_get_wether):
         """プロンプトにタイムスタンプが含まれる"""
         profile = self._make_ai_user_profile()
 
@@ -126,6 +145,7 @@ class PromptBuilderTests(unittest.TestCase):
 
         # YYYY/MM/DD HH:MM形式のタイムスタンプが含まれることを確認
         self.assertRegex(prompt, r"\d{4}/\d{2}/\d{2} \d{2}:\d{2}")
+        mock_get_wether.assert_called_once_with("130000")
 
     def test_build_line_queries_with_empty_list(self):
         """路線リストが空の場合"""
