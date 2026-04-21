@@ -1,14 +1,42 @@
 import unittest
+import types
+import sys
 from unittest.mock import patch
+from dataclasses import dataclass
 
-from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
+
+@dataclass
+class AIUserProfile:
+    id: str
+    line_user_id: str
+    name: str = None
+    gender: str = None
+    age: str = None
+    region: str = None
+    region_cd: str = None
+    lines: list | None = None
+    interest_topics: list | None = None
+
+sys.modules["app.application.ai_chat.get_wether"] = types.SimpleNamespace(
+    get_wether=lambda region_code: f"天気:{region_code}"
+)
+fake_ai_chat_package = types.ModuleType("app.domain.model.ai_chat")
+fake_ai_user_profile_module = types.ModuleType(
+    "app.domain.model.ai_chat.ai_user_profile"
+)
+fake_ai_chat_package.AIUserProfile = AIUserProfile
+fake_ai_user_profile_module.AIUserProfile = AIUserProfile
+sys.modules["app.domain.model.ai_chat"] = fake_ai_chat_package
+sys.modules["app.domain.model.ai_chat.ai_user_profile"] = (
+    fake_ai_user_profile_module
+)
+
 from app.application.ai_chat.prompt_builder import (
-    build_daily_guide_prompt,
     _build_line_queries,
     _build_topic_queries,
-    _to_age_decade,
     _format_list,
     _normalize_list,
+    build_daily_guide_prompt,
 )
 
 
@@ -19,9 +47,10 @@ class PromptBuilderTests(unittest.TestCase):
         self,
         name="太郎",
         gender="男性",
-        birth_year=1990,
+        age="10代",
         interest_topics=None,
-        residence="東京都",
+        region="東京都",
+        region_code="130000",
         lines=None,
     ):
         """テスト用の AIUserProfile を生成"""
@@ -30,9 +59,10 @@ class PromptBuilderTests(unittest.TestCase):
             line_user_id="line-user-1",
             name=name,
             gender=gender,
-            birth_year=birth_year,
+            age=age,
             interest_topics=interest_topics or [],
-            residence=residence,
+            region=region,
+            region_cd=region_code,
             lines=lines or [],
         )
 
@@ -41,9 +71,10 @@ class PromptBuilderTests(unittest.TestCase):
         profile = self._make_ai_user_profile(
             name="太郎",
             gender="男性",
-            birth_year=1990,
+            age="30代",
             interest_topics=["グルメ", "イベント"],
-            residence="東京都",
+            region="東京都",
+            region_code="130000",
             lines=["山手線", "中央線"],
         )
 
@@ -56,19 +87,23 @@ class PromptBuilderTests(unittest.TestCase):
         self.assertIn("グルメ、イベント", prompt)
         self.assertIn("東京都", prompt)
         self.assertIn("山手線", prompt)
+        self.assertIn("天気:130000", prompt)
 
     def test_build_daily_guide_prompt_with_none_optional_fields(self):
         """オプショナルフィールドが None の場合"""
         profile = self._make_ai_user_profile(
             name=None,
             gender=None,
-            birth_year=None,
-            residence=None,
+            age=None,
+            region=None,
         )
 
         prompt = build_daily_guide_prompt(profile)
 
-        self.assertIn("未設定", prompt)
+        self.assertIn("- 名前: None", prompt)
+        self.assertIn("- 年代: None", prompt)
+        self.assertIn("- 性別: None", prompt)
+        self.assertIn("東京都", prompt)
         self.assertIn("OutputFormat", prompt)
 
     def test_build_daily_guide_prompt_with_empty_lists(self):
@@ -121,7 +156,7 @@ class PromptBuilderTests(unittest.TestCase):
     def test_build_topic_queries_with_empty_list(self):
         """トピックリストが空の場合"""
         result = _build_topic_queries([])
-        self.assertEqual(result, "「未設定 最新」")
+        self.assertEqual(result, "「未設定」")
 
     def test_build_topic_queries_with_3_topics(self):
         """3件のトピック"""
@@ -156,31 +191,6 @@ class PromptBuilderTests(unittest.TestCase):
         # ランダム抽出が呼ばれたことを確認
         mock_sample.assert_called_once_with(topics, 3)
         self.assertEqual(result.count("「"), 3)
-
-    def test_to_age_decade_with_valid_birth_year(self):
-        """有効な生年から年代を計算"""
-        # 2026 - 1990 = 36歳 → 30代
-        with patch("app.application.ai_chat.prompt_builder.datetime") as mock_datetime:
-            mock_datetime.now.return_value.year = 2026
-            result = _to_age_decade(1990)
-            self.assertEqual(result, "30代")
-
-    def test_to_age_decade_with_none(self):
-        """生年が None の場合"""
-        result = _to_age_decade(None)
-        self.assertEqual(result, "未設定")
-
-    def test_to_age_decade_with_negative_age(self):
-        """生年が未来の場合（負の年齢）"""
-        with patch("app.application.ai_chat.prompt_builder.datetime") as mock_datetime:
-            mock_datetime.now.return_value.year = 2026
-            result = _to_age_decade(2030)
-            self.assertEqual(result, "未設定")
-
-    def test_to_age_decade_with_invalid_type(self):
-        """生年が無効な型の場合"""
-        result = _to_age_decade("invalid")
-        self.assertEqual(result, "未設定")
 
     def test_format_list_with_empty_list(self):
         """空のリスト"""
