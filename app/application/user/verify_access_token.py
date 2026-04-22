@@ -12,6 +12,13 @@ tracer = Tracer()
 VERIFY_URL = "https://api.line.me/oauth2/v2.1/verify?access_token="
 
 
+@dataclass
+class VerifyResult:
+    client_id: str | None
+    expires_in: int | None
+    scope: str | None
+
+
 def verify_access_token(access_token: str) -> Optional[str]:
     """_summary_
     有効なアクセストークンか検証
@@ -49,10 +56,3 @@ def verify_access_token(access_token: str) -> Optional[str]:
     except Exception as e:
         logger.exception(f"Failed to fetch forecast : {e}")
         return None
-
-
-@dataclass
-class VerifyResult:
-    client_id: str | None
-    expires_in: int | None
-    scope: str | None
