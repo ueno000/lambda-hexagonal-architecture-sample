@@ -1,27 +1,22 @@
 from datetime import datetime, timezone
 import uuid
 
-import boto3
 import requests
 from aws_lambda_powertools import Logger, Tracer
 
 from app import config
-from app.adapters import dynamodb_unit_of_work
+from app.adapters import aws_clients, dynamodb_unit_of_work
 from app.domain.model.line.line_user import LINEUser
 
 logger = Logger()
 tracer = Tracer()
 
-dynamodb_client = boto3.resource(
-    "dynamodb",
-    region_name=config.AppConfig.get_default_region(),
-    endpoint_url=config.AppConfig.get_dynamodb_endpoint_url(),
-)
+dynamodb_client = aws_clients.get_dynamodb_client()
 
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     config.AppConfig.get_table_name_line(),
     config.AppConfig.get_table_name_line_user(),
-    dynamodb_client.meta.client,
+    dynamodb_client,
 )
 
 

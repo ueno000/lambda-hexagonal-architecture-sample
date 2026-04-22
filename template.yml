@@ -218,6 +218,27 @@ Resources:
             Queue: !GetAtt ReplyQueueSQS.Arn
             BatchSize: 1
 
+  LINEUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: app.entrypoints.user.handler.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME_LINE_USER: !Ref LINEUserDB
+          TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileDB
+          DYNAMODB_ENDPOINT_URL: ''
+          ENV: ''
+      Events:
+        Webhook:
+          Type: Api
+          Properties:
+            Path: /user/exist-line-user
+            Method: post
+
 Outputs:
   ReceivedMessageFunctionArn:
     Description: ReceivedMessageFunction ARN
@@ -230,6 +251,10 @@ Outputs:
   AIChatFunctionArn:
     Description: AIChatFunction ARN
     Value: !GetAtt AIChatFunction.Arn
+
+  LINEUserFunctionArn:
+    Description: LINEUserFunction ARN
+    Value: !GetAtt LINEUserFunction.Arn
 
   ApiUrl:
     Description: API Gateway endpoint URL

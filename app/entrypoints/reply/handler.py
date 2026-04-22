@@ -1,23 +1,18 @@
 import json
 
-import boto3
 from aws_lambda_powertools import Logger, Tracer
 
 from app import config
-from app.adapters import dynamodb_query_service
+from app.adapters import aws_clients, dynamodb_query_service
 from app.application.line.reply_message import reply_message
 
 logger = Logger()
 tracer = Tracer()
 
-dynamodb_client = boto3.resource(
-    "dynamodb",
-    region_name=config.AppConfig.get_default_region(),
-    endpoint_url=config.AppConfig.get_dynamodb_endpoint_url(),
-)
+dynamodb_client = aws_clients.get_dynamodb_client()
 
 line_query_service = dynamodb_query_service.DynamoDBLINEMessageProcessorsQueryService(
-    config.AppConfig.get_table_name_line(), dynamodb_client.meta.client
+    config.AppConfig.get_table_name_line(), dynamodb_client
 )
 
 

@@ -1,8 +1,7 @@
-import boto3
 from aws_lambda_powertools import Logger
 
 from app import config
-from app.adapters import dynamodb_unit_of_work
+from app.adapters import aws_clients, dynamodb_unit_of_work
 from app.application.line.send_message import send_message
 from app.domain.model.line.line_message_processor import (
     LINEMessageProcessor,
@@ -13,16 +12,12 @@ logger = Logger()
 
 REPLY_TEXT = "これは返信メッセージです。"
 
-dynamodb_client = boto3.resource(
-    "dynamodb",
-    region_name=config.AppConfig.get_default_region(),
-    endpoint_url=config.AppConfig.get_dynamodb_endpoint_url(),
-)
+dynamodb_client = aws_clients.get_dynamodb_client()
 
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     config.AppConfig.get_table_name_line(),
     config.AppConfig.get_table_name_line_user(),
-    dynamodb_client.meta.client,
+    dynamodb_client,
 )
 
 

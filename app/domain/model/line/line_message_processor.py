@@ -1,9 +1,11 @@
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Optional
+
+from pydantic import BaseModel, Field
+
 from app.domain.model.line.line_messaging_webhook_event import LINEMessageEvent
 from app.domain.model.line.line_user import LINEUser
-from pydantic import BaseModel, Field
-from datetime import datetime, timezone
-from typing import Any, Optional
-from enum import Enum
 
 
 class MessageStatus(Enum):

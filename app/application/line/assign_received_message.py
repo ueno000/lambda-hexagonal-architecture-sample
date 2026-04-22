@@ -3,52 +3,43 @@ import uuid
 from datetime import datetime, timezone
 
 import boto3
-
 from aws_lambda_powertools import Logger, Tracer
 
 from app import config
-from app.domain.model.line.line_messaging_webhook_event import LINEMessagingWebhookEvent
-from app.domain.model.line.line_user import LINEUser
+from app.adapters import aws_clients, dynamodb_query_service, dynamodb_unit_of_work
+from app.application.line.create_line_user import create_line_user
+from app.application.line.send_message import send_message
 from app.domain.model.line.line_message_processor import (
     LINEMessageProcessor,
     MessageStatus,
 )
-from app.adapters import dynamodb_unit_of_work, dynamodb_query_service
-from app.application.line.create_line_user import create_line_user
-from app.application.line.send_message import send_message
+from app.domain.model.line.line_messaging_webhook_event import LINEMessagingWebhookEvent
+from app.domain.model.line.line_user import LINEUser
 
 app_config = config.AppConfig(**config.config)
 logger = Logger()
 tracer = Tracer()
 
-# ========== DynamoDB クライアント初期化 ==========
-# DynamoDBクライアントを指定リージョンで作成
-endpoint = config.AppConfig.get_dynamodb_endpoint_url()
-
-dynamodb_client = boto3.resource(
-    "dynamodb",
-    region_name=config.AppConfig.get_default_region(),
-    endpoint_url=endpoint,
-)
+dynamodb_client = aws_clients.get_dynamodb_client()
 
 # Unit of Work パターン：複数の変更をトランザクションで管理
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     config.AppConfig.get_table_name_line(),
     config.AppConfig.get_table_name_line_user(),
-    dynamodb_client.meta.client,
+    dynamodb_client,
 )
 # CQRS パターン：読み取り専用のクエリサービス
 line_query_service = dynamodb_query_service.DynamoDBLINEMessageProcessorsQueryService(
-    config.AppConfig.get_table_name_line(), dynamodb_client.meta.client
+    config.AppConfig.get_table_name_line(), dynamodb_client
 )
 
 line_users_query_service = dynamodb_query_service.DynamoDBLINEUsersQueryService(
-    config.AppConfig.get_table_name_line_user(), dynamodb_client.meta.client
+    config.AppConfig.get_table_name_line_user(), dynamodb_client
 )
 ai_user_profiles_query_service = (
     dynamodb_query_service.DynamoDBAIUserProfilesQueryService(
         config.AppConfig.get_table_name_ai_user_profile(),
-        dynamodb_client.meta.client,
+        dynamodb_client,
     )
 )
 
