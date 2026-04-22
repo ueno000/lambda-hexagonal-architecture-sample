@@ -12,10 +12,10 @@ PROFILE_URL = "https://api.line.me/v2/profile"
 
 @dataclass
 class ProfileResult:
-    UserId: str
-    DisplayName: Optional[str]
-    PictureUrl: Optional[str]
-    StatusMessage: Optional[str]
+    user_id: str
+    display_name: str | None
+    picture_url: str | None
+    status_message: str | None
 
 
 def get_profile(access_token: str) -> Optional[ProfileResult]:

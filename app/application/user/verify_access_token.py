@@ -53,6 +53,6 @@ def verify_access_token(access_token: str) -> Optional[str]:
 
 @dataclass
 class VerifyResult:
-    Client_id: Optional[str]
-    Expires_in: Optional[int]
-    Scope: Optional[str]
+    client_id: str | None
+    expires_in: int | None
+    scope: str | None
