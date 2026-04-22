@@ -24,7 +24,7 @@ def verify_access_token(access_token: str) -> Optional[str]:
     """
     try:
         response = requests.get(
-            VERIFY_URL + {access_token},
+            VERIFY_URL + access_token,
             timeout=30,
         )
         response.raise_for_status()
