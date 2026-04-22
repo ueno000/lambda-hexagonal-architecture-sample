@@ -42,7 +42,7 @@ class ExistLineUserUseCase:
             self.logger.warning("ユーザープロファイルの取得に失敗しました。")
             return None
 
-        return user_profile_result.UserId
+        return user_profile_result.user_id
 
     def execute(self, req_body: str) -> Optional[ExistUserResult]:
         try:
