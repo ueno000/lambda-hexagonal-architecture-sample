@@ -38,8 +38,8 @@ def get_profile(access_token: str) -> Optional[ProfileResult]:
     data = response.json()
 
     return ProfileResult(
-        UserId=data.get("user_id"),
-        DisplayName=data.get("display_name"),
-        PictureUrl=data.get("picture_url"),
-        StatusMessage=data.get("status_message"),
+        user_id=data.get("user_id"),
+        display_name=data.get("display_name"),
+        picture_url=data.get("picture_url"),
+        status_message=data.get("status_message"),
     )

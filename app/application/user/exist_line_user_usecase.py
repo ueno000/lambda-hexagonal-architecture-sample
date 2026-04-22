@@ -26,7 +26,7 @@ class ExistLineUserUseCase:
         return None
 
     def extract_user_id(self, req_body: str) -> Optional[str]:
-        """アクセストークンから LINE の userId を取得する"""
+        """アクセストークンから LINE の user_Id を取得する"""
         accessToken = self.extract_access_token(req_body)
         if not accessToken:
             self.logger.warning("アクセストークンの取得に失敗しました。")
