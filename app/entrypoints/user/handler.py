@@ -39,6 +39,7 @@ def exist_user():
         body = _normalize_request_body(event)
 
         result = exist_line_user(body)
+        logger.info(f"result:{result}")
 
         if result is None:
             return {
@@ -46,14 +47,23 @@ def exist_user():
                 "body": json.dumps({"error": "Internal server error"}),
             }
 
-        return {"statusCode": 200, "body": json.dumps(asdict(result))}
+        return {"statusCode": 200, "body": result}
+
+        # return Response(
+        #     status_code=200,
+        #     content_type="application/json",
+        #     body=json.dumps({"error": "Internal server error"})
+        # )
 
     except Exception as e:
         logger.exception(e, "Error occurred while processing Exist LINE User")
-        return {
-            "statusCode": 500,
-            "body": json.dumps({"error": "Internal server error"}),
-        }
+        from aws_lambda_powertools.event_handler.api_gateway import Response
+
+        return Response(
+            status_code=500,
+            content_type="application/json",
+            body=json.dumps({"error": "Internal server error"}),
+        )
 
 
 def _normalize_request_body(event) -> str:
