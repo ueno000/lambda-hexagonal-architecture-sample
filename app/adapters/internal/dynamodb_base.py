@@ -1,3 +1,4 @@
+from decimal import Decimal
 from typing import Any, List
 
 from mypy_boto3_dynamodb import client, type_defs
@@ -21,6 +22,10 @@ class DynamoDBContext:
             raise repository_exception.RepositoryException(
                 "Failed to commit a transaction to DynamoDB."
             ) from e
+
+    def rollback(self) -> None:
+        """保留中の変更を破棄する。"""
+        self._db_items = []
 
     def add_generic_item(self, item: dict) -> None:
         """DynamoDB の更新系操作（Put / Update / Delete）を保留リストに追加する。"""
@@ -86,7 +91,7 @@ class DynamoDBRepository:
         return {
             "Put": {
                 "TableName": self._table_name,
-                "Item": {**obj, **key},
+                "Item": _serialize_dynamodb_map({**obj, **key}),
                 "ConditionExpression": "(attribute_not_exists(PK) AND attribute_not_exists(SK))",
             }
         }
@@ -99,7 +104,7 @@ class DynamoDBRepository:
         return {
             "Put": {
                 "TableName": self._table_name,
-                "Item": {**obj, **key},
+                "Item": _serialize_dynamodb_map({**obj, **key}),
             }
         }
 
@@ -107,16 +112,48 @@ class DynamoDBRepository:
         """
         Update 操作用のリクエストを生成する。
         """
-        return {"Update": {"TableName": self._table_name, "Key": key, **expression}}
+        update_expression = dict(expression)
+        if "ExpressionAttributeValues" in update_expression:
+            update_expression["ExpressionAttributeValues"] = _serialize_dynamodb_map(
+                update_expression["ExpressionAttributeValues"]
+            )
+        return {
+            "Update": {
+                "TableName": self._table_name,
+                "Key": _serialize_dynamodb_map(key),
+                **update_expression,
+            }
+        }
 
     def _create_get_request(self, key: dict) -> dict:
         """
         GetItem 用のリクエストを生成する。
         """
-        return {"TableName": self._table_name, "Key": {**key}}
+        return {"TableName": self._table_name, "Key": _serialize_dynamodb_map({**key})}
 
     def _create_delete_modifier(self, key: dict) -> dict:
         """
         Delete 操作用のリクエストを生成する。
         """
-        return {"Delete": {"TableName": self._table_name, "Key": key}}
+        return {"Delete": {"TableName": self._table_name, "Key": _serialize_dynamodb_map(key)}}
+
+
+def _serialize_dynamodb_map(values: dict) -> dict:
+    return {key: _serialize_dynamodb_value(value) for key, value in values.items()}
+
+
+def _serialize_dynamodb_value(value: Any) -> dict:
+    if value is None:
+        return {"NULL": True}
+    if isinstance(value, bool):
+        return {"BOOL": value}
+    if isinstance(value, str):
+        return {"S": value}
+    if isinstance(value, (int, float, Decimal)):
+        return {"N": str(value)}
+    if isinstance(value, list):
+        return {"L": [_serialize_dynamodb_value(item) for item in value]}
+    if isinstance(value, dict):
+        return {"M": {key: _serialize_dynamodb_value(item) for key, item in value.items()}}
+
+    raise TypeError(f"Unsupported DynamoDB attribute value type: {type(value)!r}")
