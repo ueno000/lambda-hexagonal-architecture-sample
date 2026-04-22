@@ -1,5 +1,6 @@
 import base64
 import json
+from dataclasses import asdict
 from typing import Optional
 
 from aws_lambda_powertools import Logger, Tracer
@@ -45,7 +46,7 @@ def exist_user():
                 "body": json.dumps({"error": "Internal server error"}),
             }
 
-        return {"statusCode": 200, "body": json.dumps(result)}
+        return {"statusCode": 200, "body": json.dumps(asdict(result))}
 
     except Exception as e:
         logger.exception(e, "Error occurred while processing Exist LINE User")
