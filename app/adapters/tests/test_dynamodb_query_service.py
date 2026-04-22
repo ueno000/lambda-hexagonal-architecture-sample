@@ -29,7 +29,7 @@ class DynamoDBQueryServiceTests(unittest.TestCase):
         query_service.get_line_message_processor_by_id("processor-1")
 
         self.assertEqual("line-table", captured["TableName"])
-        self.assertEqual({"id": "processor-1"}, captured["Key"])
+        self.assertEqual({"id": {"S": "processor-1"}}, captured["Key"])
 
     def test_get_line_user_by_line_id_queries_index(self):
         captured = {}
@@ -55,7 +55,9 @@ class DynamoDBQueryServiceTests(unittest.TestCase):
 
         self.assertEqual("user-table", captured["TableName"])
         self.assertEqual("line_id-index", captured["IndexName"])
-        self.assertEqual({":v": "line-user-1"}, captured["ExpressionAttributeValues"])
+        self.assertEqual(
+            {":v": {"S": "line-user-1"}}, captured["ExpressionAttributeValues"]
+        )
         self.assertEqual("user-1", user.id)
 
     def test_get_ai_user_profile_by_line_user_id_queries_index(self):
@@ -82,7 +84,9 @@ class DynamoDBQueryServiceTests(unittest.TestCase):
 
         self.assertEqual("ai-user-profile-table", captured["TableName"])
         self.assertEqual("line_user_id-index", captured["IndexName"])
-        self.assertEqual({":v": "user-1"}, captured["ExpressionAttributeValues"])
+        self.assertEqual(
+            {":v": {"S": "user-1"}}, captured["ExpressionAttributeValues"]
+        )
         self.assertEqual("profile-1", profile["id"])
 
     def test_get_ai_user_profile_by_id_uses_id_key(self):
@@ -101,7 +105,7 @@ class DynamoDBQueryServiceTests(unittest.TestCase):
         profile = query_service.get_ai_user_profile_by_id("profile-1")
 
         self.assertEqual("ai-user-profile-table", captured["TableName"])
-        self.assertEqual({"id": "profile-1"}, captured["Key"])
+        self.assertEqual({"id": {"S": "profile-1"}}, captured["Key"])
         self.assertEqual("profile-1", profile["id"])
 
 
