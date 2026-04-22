@@ -15,32 +15,48 @@ class ExistLineUserUseCase:
         self.ai_user_profiles_query_service = ai_user_profiles_query_service
 
     def extract_access_token(self, body: str) -> Optional[str]:
-        """リクエストボディからアクセストークンを取得する"""
-        doc = json.loads(body)
+        self.logger.info(f"raw body: {body}")
+
+        try:
+            doc = json.loads(body)
+        except Exception as e:
+            self.logger.error(f"json parse error: {e}")
+            return None
+
+        self.logger.info(f"parsed body: {doc}")
+
         access_token = doc.get("accessToken")
 
         if access_token:
+            self.logger.info("accessToken取得成功")
             return access_token
 
-        self.logger.warning("有効なアクセストークンが見つからないか、無効な値です。")
+        self.logger.warning("accessTokenが存在しない")
         return None
 
     def extract_user_id(self, req_body: str) -> Optional[str]:
-        """アクセストークンから LINE の user_Id を取得する"""
+        self.logger.info("extract_user_id start")
+
         accessToken = self.extract_access_token(req_body)
         if not accessToken:
-            self.logger.warning("アクセストークンの取得に失敗しました。")
+            self.logger.warning("アクセストークン取得失敗")
             return None
+
+        self.logger.info("アクセストークン取得成功")
 
         access_token_result = verify_access_token(accessToken)
         if not access_token_result:
-            self.logger.warning("アクセストークンの検証に失敗しました。")
+            self.logger.warning("トークン検証失敗")
             return None
+
+        self.logger.info("トークン検証成功")
 
         user_profile_result = get_profile(accessToken)
         if not user_profile_result:
-            self.logger.warning("ユーザープロファイルの取得に失敗しました。")
+            self.logger.warning("プロフィール取得失敗")
             return None
+
+        self.logger.info(f"user_id取得成功: {user_profile_result.user_id}")
 
         return user_profile_result.user_id
 
@@ -48,6 +64,7 @@ class ExistLineUserUseCase:
         try:
             user_id = self.extract_user_id(req_body)
             if not user_id:
+                self.logger.warning("useridの取得に失敗しました。")
                 return None
 
             ai_user_profile = (
