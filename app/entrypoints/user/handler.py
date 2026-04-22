@@ -1,5 +1,6 @@
 import base64
 import json
+from typing import Optional
 
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
@@ -8,13 +9,14 @@ from app import config
 from app.adapters import aws_clients
 from app.adapters.dynamodb_query_service import DynamoDBAIUserProfilesQueryService
 from app.application.user.exist_line_user_usecase import ExistLineUserUseCase
+from app.domain.model.user.exist_user_result import ExistUserResult
 
 app = api_gateway.ApiGatewayResolver()
 logger = Logger()
 tracer = Tracer()
 
 
-def exist_line_user(req_body: str):
+def exist_line_user(req_body: str) -> Optional[ExistUserResult]:
     dynamodb_client = aws_clients.get_dynamodb_client()
     ai_user_profiles_query_service = DynamoDBAIUserProfilesQueryService(
         config.AppConfig.get_table_name_ai_user_profile(),
@@ -35,11 +37,22 @@ def exist_user():
 
         body = _normalize_request_body(event)
 
-        exist_line_user(body)
+        result = exist_line_user(body)
+
+        if result is None:
+            return {
+                "statusCode": 500,
+                "body": json.dumps({"error": "Internal server error"}),
+            }
+
+        return {"statusCode": 200, "body": json.dumps(result)}
 
     except Exception as e:
         logger.exception(e, "Error occurred while processing Exist LINE User")
-        return {"error": "Internal server error"}, 500
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": "Internal server error"}),
+        }
 
 
 def _normalize_request_body(event) -> str:
