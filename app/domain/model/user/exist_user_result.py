@@ -1,10 +1,8 @@
-from dataclasses import dataclass
 from typing import List, Optional
 
 from pydantic import BaseModel, Field
 
 
-@dataclass
 class ExistUserResult(BaseModel):
     is_exist: bool = Field(..., title="IsExist")
     user_profile_id: Optional[str] = Field(default=None, title="UserProfileId")
