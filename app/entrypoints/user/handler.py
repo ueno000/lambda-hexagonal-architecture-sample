@@ -4,6 +4,7 @@ from typing import Optional
 
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
+from aws_lambda_powertools.event_handler.api_gateway import Response
 
 from app import config
 from app.adapters import aws_clients, dynamodb_query_service
@@ -51,17 +52,13 @@ def exist_user():
                 "body": json.dumps({"error": "Internal server error"}),
             }
 
-        return {"statusCode": 200, "body": result}
-
-        # return Response(
-        #     status_code=200,
-        #     content_type="application/json",
-        #     body=json.dumps({"error": "Internal server error"})
-        # )
+        return Response(
+            status_code=200,
+            body=json.dumps(result.model_dump(), ensure_ascii=False),
+        )
 
     except Exception as e:
         logger.exception(e, "Error occurred while processing Exist LINE User")
-        from aws_lambda_powertools.event_handler.api_gateway import Response
 
         return Response(
             status_code=500,
