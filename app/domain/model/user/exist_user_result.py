@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 class ExistUserResult(BaseModel):
     is_exist: bool = Field(..., title="IsExist")
+    line_user_id: Optional[str] = Field(default=None, title="LINEUserId")
     user_profile_id: Optional[str] = Field(default=None, title="UserProfileId")
     name: Optional[str] = Field(default=None, title="Name")
     gender: Optional[str] = Field(default=None, title="Gender")

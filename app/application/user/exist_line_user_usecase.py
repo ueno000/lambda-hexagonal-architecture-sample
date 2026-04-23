@@ -83,6 +83,7 @@ class ExistLineUserUseCase:
                 self.logger.info(f"AIUserProfile:{line_user.id} は存在しません。")
                 return ExistUserResult(
                     is_exist=False,
+                    line_user_id=None,
                     user_profile_id=None,
                     name=None,
                     gender=None,
@@ -96,6 +97,7 @@ class ExistLineUserUseCase:
             # 存在する場合
             return ExistUserResult(
                 is_exist=True,
+                line_user_id=line_user.id,
                 user_profile_id=ai_user_profile.get("id"),
                 name=ai_user_profile.get("name"),
                 gender=ai_user_profile.get("gender"),
