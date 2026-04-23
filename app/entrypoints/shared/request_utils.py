@@ -13,7 +13,7 @@ class HttpResponseBody(Generic[T]):
         self.validation_errors: Optional[List[dict]] = None
 
 
-async def get_body(request_body: str, model: Type[T]) -> HttpResponseBody[T]:
+def get_body(request_body: str, model: Type[T]) -> HttpResponseBody[T]:
     """_summary_
     POST / PUT リクエストのボディを取得し、バリデーション結果を返す(JSONのみ)
     Args:
