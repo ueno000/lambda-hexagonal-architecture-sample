@@ -17,7 +17,7 @@ class CreateAIProfileUseCase:
 
         new_ai_user_profile = AIUserProfile(
             id=str(uuid.uuid4()),
-            line_user_id="",
+            line_user_id=req.line_user_id,
             name=req.name,
             gender=req.gender,
             age=req.age,

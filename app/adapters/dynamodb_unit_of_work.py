@@ -138,14 +138,14 @@ class DynamoDBAIUserProfileRepository(dynamodb_base.DynamoDBRepository):
     def add(self, ai_user_profile: ai_user_profile.AIUserProfile) -> None:
         """Adds a AI User Profile to the DynamoDB table."""
         self.add_generic_item(
-            item=ai_user_profile,
+            item=_dump_model(ai_user_profile),
             key=self.generate_ai_user_profile_key(ai_user_profile.id),
         )
 
     def put(self, ai_user_profile: ai_user_profile.AIUserProfile) -> None:
         """Puts a AI User Profile into the DynamoDB table (upsert)."""
         self.put_generic_item(
-            item=ai_user_profile,
+            item=_dump_model(ai_user_profile),
             key=self.generate_ai_user_profile_key(ai_user_profile.id),
         )
 
@@ -188,6 +188,21 @@ class DynamoDBAIUserProfileRepository(dynamodb_base.DynamoDBRepository):
         return {
             "id": id,
         }
+
+
+def _dump_model(model: typing.Any) -> dict:
+    model_dump = getattr(model, "model_dump", None)
+    if callable(model_dump):
+        return model_dump()
+
+    dict_method = getattr(model, "dict", None)
+    if callable(dict_method):
+        return dict_method()
+
+    if isinstance(model, dict):
+        return model
+
+    raise TypeError(f"Unsupported model type: {type(model)!r}")
 
 
 class DynamoDBUnitOfWork(unit_of_work.UnitOfWork):
