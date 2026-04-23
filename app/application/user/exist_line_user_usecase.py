@@ -3,7 +3,7 @@ from typing import Optional
 
 from aws_lambda_powertools import Logger
 
-from app.application.user.user_profile_fetcher import get_profile
+from app.application.user.userinfo_fetcher import get_info
 from app.application.user.verify_access_token import verify_access_token
 from app.domain.model.user.exist_user_result import ExistUserResult
 
@@ -51,14 +51,14 @@ class ExistLineUserUseCase:
 
         self.logger.info("トークン検証成功")
 
-        user_profile_result = get_profile(accessToken)
-        if not user_profile_result:
+        user_info_result = get_info(accessToken)
+        if not user_info_result:
             self.logger.warning("プロフィール取得失敗")
             return None
 
-        self.logger.info(f"user_id取得成功: {user_profile_result.user_id}")
+        self.logger.info(f"プロフィール取得成功 user_id取得成功: {user_info_result}")
 
-        return user_profile_result.user_id
+        return user_info_result.sub
 
     def execute(self, req_body: str) -> Optional[ExistUserResult]:
         try:
