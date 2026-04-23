@@ -33,7 +33,7 @@ unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
 
 
 def exist_line_user(req_body: str) -> Optional[ExistUserResult]:
-    dynamodb_client = aws_clients.get_dynamodb_client()
+
     line_users_query_service = dynamodb_query_service.DynamoDBLINEUsersQueryService(
         config.AppConfig.get_table_name_line_user(), dynamodb_client
     )
@@ -49,14 +49,8 @@ def exist_line_user(req_body: str) -> Optional[ExistUserResult]:
 
 
 def create_ai_user_profile(req: AIUserProfileRequestCreate) -> AIUserProfile:
-    dynamodb_client = aws_clients.get_dynamodb_client()
-    ai_user_profiles_query_service = DynamoDBAIUserProfilesQueryService(
-        config.AppConfig.get_table_name_ai_user_profile(),
-        dynamodb_client,
-    )
 
     usecase = CreateAIProfileUseCase(
-        ai_user_profiles_query_service,
         unit_of_work,
     )
     return usecase.execute(req)
