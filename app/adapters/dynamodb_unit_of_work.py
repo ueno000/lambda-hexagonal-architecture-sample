@@ -207,7 +207,7 @@ class DynamoDBUnitOfWork(unit_of_work.UnitOfWork):
         self._dynamo_db_client = dynamodb_client
         self._line_table_name = line_table_name
         self._line_user_table_name = line_user_table_name
-        self.ai_user_profile_table_name = ai_user_profile_table_name
+        self._ai_user_profile_table_name = ai_user_profile_table_name
         self._context: typing.Optional[dynamodb_base.DynamoDBContext] = None
 
     def commit(self) -> None:
@@ -224,6 +224,9 @@ class DynamoDBUnitOfWork(unit_of_work.UnitOfWork):
         )
         self.line_message_processors = DynamoDBLINEMessageProcessorsRepository(
             table_name=self._line_table_name, context=self._context
+        )
+        self.ai_user_profile = DynamoDBAIUserProfileRepository(
+            table_name=self._ai_user_profile_table_name, context=self._context
         )
         return self
 
