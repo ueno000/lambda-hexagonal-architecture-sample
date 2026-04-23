@@ -1,6 +1,6 @@
 import json
-from types import SimpleNamespace
 import unittest
+from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
 from app.tests.support import install_test_stubs

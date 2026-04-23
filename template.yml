@@ -9,6 +9,12 @@ Globals:
     MemorySize: 256
     Tracing: Active
 
+  Api:
+    Cors:
+      AllowMethods: "'POST,OPTIONS'"
+      AllowHeaders: "'Content-Type,Authorization'"
+      AllowOrigin: "'*'"
+
 Parameters:
   LINEChannelSecret:
     Type: String
@@ -233,11 +239,18 @@ Resources:
           DYNAMODB_ENDPOINT_URL: ''
           ENV: ''
       Events:
-        Webhook:
+        ExistLineUser:
           Type: Api
           Properties:
             Path: /user/exist-line-user
             Method: post
+
+        CreateAIProfile:
+          Type: Api
+          Properties:
+            Path: /user/create-ai-profile
+            Method: post
+
 
 Outputs:
   ReceivedMessageFunctionArn:

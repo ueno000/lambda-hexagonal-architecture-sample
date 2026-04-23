@@ -17,6 +17,7 @@ dynamodb_client = aws_clients.get_dynamodb_client()
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     config.AppConfig.get_table_name_line(),
     config.AppConfig.get_table_name_line_user(),
+    config.AppConfig.get_table_name_ai_user_profile(),
     dynamodb_client,
 )
 

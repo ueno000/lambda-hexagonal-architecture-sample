@@ -4,13 +4,15 @@ import typing
 from mypy_boto3_dynamodb import client
 
 from app.adapters.internal import dynamodb_base
-from app.domain.model.line import line_user, line_message_processor
+from app.domain.model.ai_chat import ai_user_profile
+from app.domain.model.line import line_message_processor, line_user
 from app.domain.ports import unit_of_work
 
 
 class DBPrefix(enum.Enum):
     LINE_USER = "LINEUSER"
     LINE_MESSAGE_PROCESSOR = "LINEMESSAGEPROCESSOR"
+    AI_USER_PROFILE = "AIUSERPROFILE"
 
 
 class DynamoDBLINEUsersRepository(dynamodb_base.DynamoDBRepository):
@@ -127,21 +129,85 @@ class DynamoDBLINEMessageProcessorsRepository(dynamodb_base.DynamoDBRepository):
         }
 
 
+class DynamoDBAIUserProfileRepository(dynamodb_base.DynamoDBRepository):
+    """AI User Profile DynamoDB repository."""
+
+    def __init__(self, table_name, context: dynamodb_base.DynamoDBContext):
+        super().__init__(table_name, context)
+
+    def add(self, ai_user_profile: ai_user_profile.AIUserProfile) -> None:
+        """Adds a AI User Profile to the DynamoDB table."""
+        self.add_generic_item(
+            item=ai_user_profile,
+            key=self.generate_ai_user_profile_key(ai_user_profile.id),
+        )
+
+    def put(self, ai_user_profile: ai_user_profile.AIUserProfile) -> None:
+        """Puts a AI User Profile into the DynamoDB table (upsert)."""
+        self.put_generic_item(
+            item=ai_user_profile,
+            key=self.generate_ai_user_profile_key(ai_user_profile.id),
+        )
+
+    def update(self, ai_user_profile: ai_user_profile.AIUserProfile) -> None:
+        """Updates an existing AI User Profile in the DynamoDB table."""
+        update_fields = {
+            k: v
+            for k, v in ai_user_profile.model_dump(exclude_unset=True).items()
+            if k not in {"id"}
+        }
+
+        update_expression_setters = [f"#{k}=:{k}" for k in update_fields.keys()]
+        expression_attribute_names = {f"#{k}": k for k in update_fields.keys()}
+        update_values = {f":{k}": v for k, v in update_fields.items()}
+
+        self.update_generic_item(
+            expression={
+                "UpdateExpression": f"set {', '.join(update_expression_setters)}",
+                "ExpressionAttributeValues": update_values,
+                "ExpressionAttributeNames": expression_attribute_names,
+                "ConditionExpression": "attribute_exists(id)",
+            },
+            key=self.generate_ai_user_profile_key(ai_user_profile.id),
+        )
+
+    def get(self, profile_id: str) -> typing.Optional[ai_user_profile.AIUserProfile]:
+        """Gets a AI User Profile from the DynamoDB table."""
+        key = self.generate_ai_user_profile_key(profile_id)
+        request = self._create_get_request(key)
+        user_dict = self._context.get_generic_item(request)
+        return (
+            ai_user_profile.AIUserProfile.parse_obj(user_dict)
+            if user_dict is not None
+            else None
+        )
+
+    @staticmethod
+    def generate_ai_user_profile_key(id: str) -> dict:
+        """Generates primary key for AI User Profile entity."""
+        return {
+            "id": id,
+        }
+
+
 class DynamoDBUnitOfWork(unit_of_work.UnitOfWork):
     """Repository provider and unit of work for DynamoDB."""
 
     line_users: DynamoDBLINEUsersRepository
     line_message_processors: DynamoDBLINEMessageProcessorsRepository
+    ai_user_profile: DynamoDBAIUserProfileRepository
 
     def __init__(
         self,
         line_table_name: str,
         line_user_table_name: str,
+        ai_user_profile_table_name: str,
         dynamodb_client: client.DynamoDBClient,
     ):
         self._dynamo_db_client = dynamodb_client
         self._line_table_name = line_table_name
         self._line_user_table_name = line_user_table_name
+        self.ai_user_profile_table_name = ai_user_profile_table_name
         self._context: typing.Optional[dynamodb_base.DynamoDBContext] = None
 
     def commit(self) -> None:
@@ -165,3 +231,4 @@ class DynamoDBUnitOfWork(unit_of_work.UnitOfWork):
         self._context = None
         self.line_users = None  # type: ignore
         self.line_message_processors = None  # type: ignore
+        self.ai_user_profile = None  # type: ignore

@@ -6,8 +6,10 @@ from app.tests.support import install_test_stubs
 install_test_stubs()
 
 from app.application.line import reply_message
-from app.domain.model.line.line_message_processor import LINEMessageProcessor
-from app.domain.model.line.line_message_processor import MessageStatus
+from app.domain.model.line.line_message_processor import (
+    LINEMessageProcessor,
+    MessageStatus,
+)
 from app.domain.model.line.line_user import LINEUser
 
 

@@ -4,7 +4,7 @@ from typing import Any, Dict
 
 import boto3
 import requests
-from aws_lambda_powertools import Logger, Tracer
+from aws_lambda_powertools import Logger
 
 from app import config
 from app.adapters import aws_clients, dynamodb_query_service, dynamodb_unit_of_work
@@ -31,6 +31,7 @@ ai_user_profiles_query_service = (
 unit_of_work = dynamodb_unit_of_work.DynamoDBUnitOfWork(
     config.AppConfig.get_table_name_line(),
     config.AppConfig.get_table_name_line_user(),
+    config.AppConfig.get_table_name_ai_user_profile(),
     dynamodb_client,
 )
 
