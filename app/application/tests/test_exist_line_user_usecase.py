@@ -12,10 +12,15 @@ from app.application.user.exist_line_user_usecase import ExistLineUserUseCase
 
 class ExistLineUserUseCaseTests(unittest.TestCase):
     def setUp(self):
-        self.query_service = SimpleNamespace(
+        self.line_user_query_service = SimpleNamespace(
+            get_line_user_by_line_id=lambda _user_id: None
+        )
+        self.ai_user_query_service = SimpleNamespace(
             get_ai_user_profile_by_line_user_id=lambda _user_id: None
         )
-        self.usecase = ExistLineUserUseCase(self.query_service)
+        self.usecase = ExistLineUserUseCase(
+            self.line_user_query_service, self.ai_user_query_service
+        )
 
     def test_extract_access_token_returns_token(self):
         body = json.dumps({"accessToken": "token-123"})
@@ -31,6 +36,10 @@ class ExistLineUserUseCaseTests(unittest.TestCase):
         self.assertIsNone(result)
 
     def test_execute_returns_not_exist_result_when_profile_is_missing(self):
+        self.line_user_query_service.get_line_user_by_line_id = (
+            lambda _user_id: SimpleNamespace(id="line-user-record-1")
+        )
+
         with patch.object(self.usecase, "extract_user_id", return_value="line-user-1"):
             result = self.usecase.execute(json.dumps({"accessToken": "token-123"}))
 
@@ -39,7 +48,11 @@ class ExistLineUserUseCaseTests(unittest.TestCase):
         self.assertIsNone(result.name)
 
     def test_execute_returns_existing_profile_result(self):
-        self.query_service.get_ai_user_profile_by_line_user_id = lambda _user_id: {
+        self.line_user_query_service.get_line_user_by_line_id = (
+            lambda _user_id: SimpleNamespace(id="line-user-record-1")
+        )
+        self.ai_user_query_service.get_ai_user_profile_by_line_user_id = (
+            lambda _user_id: {
             "id": "profile-1",
             "name": "Taro",
             "gender": "male",
@@ -49,6 +62,7 @@ class ExistLineUserUseCaseTests(unittest.TestCase):
             "lines": ["1", "2"],
             "interest_topics": ["10", "20"],
         }
+        )
 
         with patch.object(self.usecase, "extract_user_id", return_value="line-user-1"):
             result = self.usecase.execute(json.dumps({"accessToken": "token-123"}))
@@ -63,7 +77,10 @@ class ExistLineUserUseCaseTests(unittest.TestCase):
         def raise_error(_user_id):
             raise RuntimeError("dynamodb failed")
 
-        self.query_service.get_ai_user_profile_by_line_user_id = raise_error
+        self.line_user_query_service.get_line_user_by_line_id = (
+            lambda _user_id: SimpleNamespace(id="line-user-record-1")
+        )
+        self.ai_user_query_service.get_ai_user_profile_by_line_user_id = raise_error
 
         with patch.object(self.usecase, "extract_user_id", return_value="line-user-1"):
             result = self.usecase.execute(json.dumps({"accessToken": "token-123"}))

@@ -1,13 +1,12 @@
 import base64
 import json
-from dataclasses import asdict
 from typing import Optional
 
 from aws_lambda_powertools import Logger, Tracer
 from aws_lambda_powertools.event_handler import api_gateway
 
 from app import config
-from app.adapters import aws_clients
+from app.adapters import aws_clients, dynamodb_query_service
 from app.adapters.dynamodb_query_service import DynamoDBAIUserProfilesQueryService
 from app.application.user.exist_line_user_usecase import ExistLineUserUseCase
 from app.domain.model.user.exist_user_result import ExistUserResult
@@ -19,12 +18,17 @@ tracer = Tracer()
 
 def exist_line_user(req_body: str) -> Optional[ExistUserResult]:
     dynamodb_client = aws_clients.get_dynamodb_client()
+    line_users_query_service = dynamodb_query_service.DynamoDBLINEUsersQueryService(
+        config.AppConfig.get_table_name_line_user(), dynamodb_client
+    )
     ai_user_profiles_query_service = DynamoDBAIUserProfilesQueryService(
         config.AppConfig.get_table_name_ai_user_profile(),
         dynamodb_client,
     )
 
-    usecase = ExistLineUserUseCase(ai_user_profiles_query_service)
+    usecase = ExistLineUserUseCase(
+        line_users_query_service, ai_user_profiles_query_service
+    )
     return usecase.execute(req_body)
 
 

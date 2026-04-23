@@ -11,7 +11,8 @@ from app.domain.model.user.exist_user_result import ExistUserResult
 class ExistLineUserUseCase:
     logger = Logger()
 
-    def __init__(self, ai_user_profiles_query_service):
+    def __init__(self, line_users_query_service, ai_user_profiles_query_service):
+        self.line_users_query_service = line_users_query_service
         self.ai_user_profiles_query_service = ai_user_profiles_query_service
 
     def extract_access_token(self, body: str) -> Optional[str]:
@@ -67,14 +68,19 @@ class ExistLineUserUseCase:
                 self.logger.warning("useridの取得に失敗しました。")
                 return None
 
+            line_user = self.line_users_query_service.get_line_user_by_line_id(user_id)
+            if not line_user:
+                self.logger.info(f"LINEUser:{user_id} は存在しません。")
+
             ai_user_profile = (
                 self.ai_user_profiles_query_service.get_ai_user_profile_by_line_user_id(
-                    user_id
+                    line_user.id
                 )
             )
 
             # 存在しない場合
             if not ai_user_profile:
+                self.logger.info(f"AIUserProfile:{line_user.id} は存在しません。")
                 return ExistUserResult(
                     is_exist=False,
                     user_profile_id=None,
