@@ -19,7 +19,8 @@ class UpdateAIProfileUseCase:
                 self.logger.error(f"AIUserProfileId:{req.id} が存在しません。")
                 raise ValueError("idは必須です")
 
-            ai_user_profile = AIUserProfile(**req.model_dump())
+            data = req.model_dump(exclude_none=True, exclude={"id"})
+            ai_user_profile = AIUserProfile(id=req.id, **data)
 
             with self.unit_of_work:
                 self.unit_of_work.ai_user_profile.update(ai_user_profile)
