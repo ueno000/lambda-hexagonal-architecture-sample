@@ -72,18 +72,20 @@ class ExistLineUserUseCase:
             if not line_user:
                 self.logger.info(f"LINEUser:{user_id} は存在しません。")
 
+            self.logger.info(f"LINEUser:{user_id} 取得成功 {line_user}")
+
             ai_user_profile = (
                 self.ai_user_profiles_query_service.get_ai_user_profile_by_line_user_id(
                     line_user.id
                 )
             )
 
-            # 存在しない場合
+            # AIUserProfileが存在しない場合
             if not ai_user_profile:
                 self.logger.info(f"AIUserProfile:{line_user.id} は存在しません。")
                 return ExistUserResult(
                     is_exist=False,
-                    line_user_id=None,
+                    line_user_id=line_user.id,
                     user_profile_id=None,
                     name=None,
                     gender=None,
@@ -94,7 +96,7 @@ class ExistLineUserUseCase:
                     interest_topics=None,
                 )
 
-            # 存在する場合
+            # AIUserProfileが存在する場合
             return ExistUserResult(
                 is_exist=True,
                 line_user_id=line_user.id,
