@@ -104,8 +104,8 @@ def exist_user():
             body=json.dumps(result.model_dump(), ensure_ascii=False),
         )
 
-    except Exception as e:
-        logger.exception(e, "Error occurred while processing Exist LINE User")
+    except Exception:
+        logger.exception("Error occurred while processing Exist LINE User")
 
         return Response(
             status_code=500,
@@ -158,8 +158,8 @@ def create_ai_profile():
                 body=json.dumps({"error": "Request validation error."}),
             )
 
-    except Exception as e:
-        logger.exception(e, "Error occurred while processing Create AI User Profile")
+    except Exception:
+        logger.exception("Error occurred while processing Create AI User Profile")
 
         return Response(
             status_code=500,
@@ -212,8 +212,8 @@ def update_ai_profile():
                 body=json.dumps({"error": "Request validation error."}),
             )
 
-    except Exception as e:
-        logger.exception(e, "Error occurred while processing Update AI User Profile")
+    except Exception:
+        logger.exception("Error occurred while processing Update AI User Profile")
 
         return Response(
             status_code=500,

@@ -43,8 +43,15 @@ def _install_pydantic_stub() -> None:
             return default_factory
         return default
 
+    def field_validator(*args, **kwargs):
+        def decorator(func):
+            return func
+
+        return decorator
+
     module.BaseModel = BaseModel
     module.Field = Field
+    module.field_validator = field_validator
     sys.modules["pydantic"] = module
 
 
