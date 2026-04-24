@@ -183,7 +183,7 @@ def update_ai_profile():
 
         req_body = _normalize_request_body(event)
 
-        result = get_body(req_body, AIUserProfileRequestCreate)
+        result = get_body(req_body, AIUserProfileRequestUpdate)
 
         if result.is_valid:
             updated = update_ai_user_profile(result.value)
