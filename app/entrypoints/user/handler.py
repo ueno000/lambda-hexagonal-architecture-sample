@@ -143,7 +143,7 @@ def create_ai_profile():
                     "Access-Control-Allow-Headers": "*",
                     "Access-Control-Allow-Methods": "OPTIONS,POST,",
                 },
-                body=json.dumps({"error": "Internal server error"}),
+                body=json.dumps({"error": "Request validation error."}),
             )
 
     except Exception as e:

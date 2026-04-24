@@ -1,9 +1,12 @@
 import json
 from typing import Generic, List, Optional, Type, TypeVar
 
+from aws_lambda_powertools import Logger
 from pydantic import BaseModel, ValidationError
 
 T = TypeVar("T", bound=BaseModel)
+
+logger = Logger()
 
 
 class HttpResponseBody(Generic[T]):
@@ -25,6 +28,7 @@ def get_body(request_body: str, model: Type[T]) -> HttpResponseBody[T]:
     """
 
     body = HttpResponseBody[T]()
+    logger.info(f"request_utils request_body:{request_body}")
 
     try:
         data = json.loads(request_body)
@@ -36,9 +40,17 @@ def get_body(request_body: str, model: Type[T]) -> HttpResponseBody[T]:
     except ValidationError as e:
         body.is_valid = False
         body.validation_errors = e.errors()
+        logger.error(
+            e,
+            f"request_utils ValidationError request_body:{body} e.errors():{e.errors()}",
+        )
 
     except Exception as e:
         body.is_valid = False
         body.validation_errors = [{"error": str(e)}]
+        logger.exception(
+            e,
+            f"request_utils Exception request_body:{body}e.errors():{e.errors()}",
+        )
 
     return body
