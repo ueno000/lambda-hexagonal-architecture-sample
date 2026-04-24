@@ -73,12 +73,22 @@ def exist_user():
             return Response(
                 status_code=500,
                 content_type="application/json",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,",
+                },
                 body=json.dumps({"error": "Internal server error"}),
             )
 
         return Response(
             status_code=200,
             content_type="application/json",
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,",
+            },
             body=json.dumps(result.model_dump(), ensure_ascii=False),
         )
 
@@ -88,6 +98,11 @@ def exist_user():
         return Response(
             status_code=500,
             content_type="application/json",
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,",
+            },
             body=json.dumps({"error": "Internal server error"}),
         )
 
@@ -110,6 +125,11 @@ def create_ai_profile():
             return Response(
                 status_code=201,
                 content_type="application/json",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,",
+                },
                 body=json.dumps({"id": created.id}, ensure_ascii=False),
             )
 
@@ -118,6 +138,11 @@ def create_ai_profile():
             return Response(
                 status_code=400,
                 content_type="application/json",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,",
+                },
                 body=json.dumps({"error": "Internal server error"}),
             )
 
@@ -127,6 +152,11 @@ def create_ai_profile():
         return Response(
             status_code=500,
             content_type="application/json",
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,",
+            },
             body=json.dumps({"error": "Internal server error"}),
         )
 
