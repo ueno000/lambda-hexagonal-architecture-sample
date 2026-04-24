@@ -19,8 +19,16 @@ class UpdateAIProfileUseCase:
                 self.logger.error(f"AIUserProfileId:{req.id} が存在しません。")
                 raise ValueError("idは必須です")
 
-            data = req.model_dump(exclude_none=True, exclude={"id"})
-            ai_user_profile = AIUserProfile(id=req.id, **data)
+            data = self.ai_user_profiles_query_service.get_by_id(req.id)
+
+            if not data:
+                raise ValueError("対象データが存在しません")
+
+            req_data = req.model_dump(exclude_none=True, exclude={"id"})
+
+            ai_user_profile = AIUserProfile(
+                id=req.id, line_user_id=data.line_user_id, **req_data
+            )
 
             with self.unit_of_work:
                 self.unit_of_work.ai_user_profile.update(ai_user_profile)
