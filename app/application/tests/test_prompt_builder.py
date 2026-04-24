@@ -1,8 +1,8 @@
-import unittest
-import types
 import sys
-from unittest.mock import patch
+import types
+import unittest
 from dataclasses import dataclass
+from unittest.mock import patch
 
 
 @dataclass
@@ -17,6 +17,7 @@ class AIUserProfile:
     lines: list | None = None
     interest_topics: list | None = None
 
+
 sys.modules["app.application.ai_chat.get_wether"] = types.SimpleNamespace(
     get_wether=lambda region_code: ""
 )
@@ -27,9 +28,7 @@ fake_ai_user_profile_module = types.ModuleType(
 fake_ai_chat_package.AIUserProfile = AIUserProfile
 fake_ai_user_profile_module.AIUserProfile = AIUserProfile
 sys.modules["app.domain.model.ai_chat"] = fake_ai_chat_package
-sys.modules["app.domain.model.ai_chat.ai_user_profile"] = (
-    fake_ai_user_profile_module
-)
+sys.modules["app.domain.model.ai_chat.ai_user_profile"] = fake_ai_user_profile_module
 
 from app.application.ai_chat.prompt_builder import (
     _build_line_queries,
@@ -154,62 +153,30 @@ class PromptBuilderTests(unittest.TestCase):
 
     def test_build_line_queries_with_single_line(self):
         """1件の路線"""
-        result = _build_line_queries(["山手線"])
-        self.assertEqual(result, "「山手線 運行情報」")
+        result = _build_line_queries(["11302"])
+        self.assertEqual(result, "「JR東日本 JR山手線 運行情報」")
 
     def test_build_line_queries_with_multiple_lines(self):
         """複数の路線"""
-        result = _build_line_queries(["山手線", "中央線", "丸ノ内線"])
-        self.assertEqual(
-            result, "「山手線 運行情報」「中央線 運行情報」「丸ノ内線 運行情報」"
-        )
-
-    def test_build_line_queries_with_max_5_lines(self):
-        """5件を超える路線は5件まで"""
-        lines = ["線1", "線2", "線3", "線4", "線5", "線6"]
-        result = _build_line_queries(lines)
+        result = _build_line_queries(["1004", "11302"])
         self.assertEqual(
             result,
-            "「線1 運行情報」「線2 運行情報」「線3 運行情報」「線4 運行情報」「線5 運行情報」",
+            "「JR東日本 東北新幹線 運行情報」「JR東日本 JR山手線 運行情報」",
         )
 
     def test_build_topic_queries_with_empty_list(self):
-        """トピックリストが空の場合"""
+        """トピックリストが空の場合、ランダムに3件設定"""
         result = _build_topic_queries([])
-        self.assertEqual(result, "「未設定」")
+        self.assertEqual(result.count("「"), 3)
 
     def test_build_topic_queries_with_3_topics(self):
         """3件のトピック"""
-        topics = ["グルメ", "イベント", "映画"]
+        topics = ["1001", "1002", "1003"]
         result = _build_topic_queries(topics)
         # 3件以下なので全件が含まれる
         self.assertIn("グルメ", result)
-        self.assertIn("イベント", result)
-        self.assertIn("映画", result)
-        self.assertEqual(result.count("「"), 3)
-
-    @patch("app.application.ai_chat.prompt_builder.random.sample")
-    def test_build_topic_queries_with_4_topics(self, mock_sample):
-        """4件のトピックはランダムに3件を抽出"""
-        topics = ["グルメ", "イベント", "映画", "スポーツ"]
-        mock_sample.return_value = ["グルメ", "映画", "イベント"]
-
-        result = _build_topic_queries(topics)
-
-        # ランダム抽出が呼ばれたことを確認
-        mock_sample.assert_called_once_with(topics, 3)
-        self.assertEqual(result.count("「"), 3)
-
-    @patch("app.application.ai_chat.prompt_builder.random.sample")
-    def test_build_topic_queries_with_5_topics(self, mock_sample):
-        """5件のトピックはランダムに3件を抽出"""
-        topics = ["グルメ", "イベント", "映画", "スポーツ", "音楽"]
-        mock_sample.return_value = ["グルメ", "スポーツ", "音楽"]
-
-        result = _build_topic_queries(topics)
-
-        # ランダム抽出が呼ばれたことを確認
-        mock_sample.assert_called_once_with(topics, 3)
+        self.assertIn("料理", result)
+        self.assertIn("カフェ", result)
         self.assertEqual(result.count("「"), 3)
 
     def test_format_list_with_empty_list(self):

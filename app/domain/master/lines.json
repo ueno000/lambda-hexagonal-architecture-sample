@@ -1,0 +1,3740 @@
+[
+    {
+        "line_cd": "1002",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "東海道新幹線"
+    },
+    {
+        "line_cd": "1003",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "山陽新幹線"
+    },
+    {
+        "line_cd": "1004",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "東北新幹線"
+    },
+    {
+        "line_cd": "1005",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "上越新幹線"
+    },
+    {
+        "line_cd": "1006",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "上越新幹線(ガーラ湯沢支線)"
+    },
+    {
+        "line_cd": "1007",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "山形新幹線"
+    },
+    {
+        "line_cd": "1008",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "秋田新幹線"
+    },
+    {
+        "line_cd": "1009",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "北陸新幹線"
+    },
+    {
+        "line_cd": "1010",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "九州新幹線"
+    },
+    {
+        "line_cd": "1011",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "北海道新幹線"
+    },
+    {
+        "line_cd": "1012",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "西九州新幹線"
+    },
+    {
+        "line_cd": "11101",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR函館本線(函館～長万部)"
+    },
+    {
+        "line_cd": "11102",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR函館本線(長万部～小樽)"
+    },
+    {
+        "line_cd": "11103",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR函館本線(小樽～旭川)"
+    },
+    {
+        "line_cd": "11104",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR室蘭本線(長万部・室蘭～苫小牧)"
+    },
+    {
+        "line_cd": "11105",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR室蘭本線(苫小牧～岩見沢)"
+    },
+    {
+        "line_cd": "11106",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR根室本線(滝川～富良野)"
+    },
+    {
+        "line_cd": "11107",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR根室本線(新得～釧路)"
+    },
+    {
+        "line_cd": "11108",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "花咲線"
+    },
+    {
+        "line_cd": "11109",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR千歳線"
+    },
+    {
+        "line_cd": "11110",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR石勝線"
+    },
+    {
+        "line_cd": "11111",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR日高本線"
+    },
+    {
+        "line_cd": "11112",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR札沼線"
+    },
+    {
+        "line_cd": "11113",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR留萌本線"
+    },
+    {
+        "line_cd": "11114",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR富良野線"
+    },
+    {
+        "line_cd": "11115",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR宗谷本線"
+    },
+    {
+        "line_cd": "11116",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR石北本線"
+    },
+    {
+        "line_cd": "11117",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR釧網本線"
+    },
+    {
+        "line_cd": "11118",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR海峡線"
+    },
+    {
+        "line_cd": "11119",
+        "company_cd": "1",
+        "company_name": "JR北海道",
+        "line_name": "JR江差線"
+    },
+    {
+        "line_cd": "11201",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR東北本線(八戸～青森)"
+    },
+    {
+        "line_cd": "11202",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR奥羽本線(新庄～青森)"
+    },
+    {
+        "line_cd": "11203",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "はまなすベイライン大湊線"
+    },
+    {
+        "line_cd": "11204",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR五能線"
+    },
+    {
+        "line_cd": "11205",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR津軽線"
+    },
+    {
+        "line_cd": "11206",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR八戸線"
+    },
+    {
+        "line_cd": "11207",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR岩泉線"
+    },
+    {
+        "line_cd": "11208",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "ドラゴンレール大船渡線"
+    },
+    {
+        "line_cd": "11209",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "銀河ドリームライン釜石線"
+    },
+    {
+        "line_cd": "11210",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR北上線"
+    },
+    {
+        "line_cd": "11211",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR田沢湖線"
+    },
+    {
+        "line_cd": "11212",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "十和田八幡平四季彩ライン"
+    },
+    {
+        "line_cd": "11213",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR山田線"
+    },
+    {
+        "line_cd": "11214",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR羽越本線"
+    },
+    {
+        "line_cd": "11215",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR男鹿線"
+    },
+    {
+        "line_cd": "11216",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "山形線"
+    },
+    {
+        "line_cd": "11217",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR仙山線"
+    },
+    {
+        "line_cd": "11218",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "フルーツライン左沢線"
+    },
+    {
+        "line_cd": "11219",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR米坂線"
+    },
+    {
+        "line_cd": "11220",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "奥の細道最上川ライン"
+    },
+    {
+        "line_cd": "11221",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "奥の細道湯けむりライン"
+    },
+    {
+        "line_cd": "11222",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR仙石線"
+    },
+    {
+        "line_cd": "11223",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR石巻線"
+    },
+    {
+        "line_cd": "11224",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR気仙沼線"
+    },
+    {
+        "line_cd": "11225",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR磐越西線(郡山～会津若松)"
+    },
+    {
+        "line_cd": "11226",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "森と水とロマンの鉄道"
+    },
+    {
+        "line_cd": "11227",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR只見線"
+    },
+    {
+        "line_cd": "11228",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "ゆうゆうあぶくまライン"
+    },
+    {
+        "line_cd": "11229",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR常磐線(取手～いわき)"
+    },
+    {
+        "line_cd": "11230",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR常磐線(いわき～仙台)"
+    },
+    {
+        "line_cd": "11231",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR東北本線(黒磯～利府・盛岡)"
+    },
+    {
+        "line_cd": "11301",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR東海道本線(東京～熱海)"
+    },
+    {
+        "line_cd": "11302",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR山手線"
+    },
+    {
+        "line_cd": "11303",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR南武線"
+    },
+    {
+        "line_cd": "11304",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR鶴見線"
+    },
+    {
+        "line_cd": "11305",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR武蔵野線"
+    },
+    {
+        "line_cd": "11306",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR横浜線"
+    },
+    {
+        "line_cd": "11307",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR根岸線"
+    },
+    {
+        "line_cd": "11308",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR横須賀線"
+    },
+    {
+        "line_cd": "11309",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR相模線"
+    },
+    {
+        "line_cd": "11311",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR中央本線(東京～塩尻)"
+    },
+    {
+        "line_cd": "11312",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR中央線(快速)"
+    },
+    {
+        "line_cd": "11313",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR中央・総武線"
+    },
+    {
+        "line_cd": "11314",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR総武本線"
+    },
+    {
+        "line_cd": "11315",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR青梅線"
+    },
+    {
+        "line_cd": "11316",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR五日市線"
+    },
+    {
+        "line_cd": "11317",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR八高線(八王子～高麗川)"
+    },
+    {
+        "line_cd": "11318",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR八高線(高麗川～高崎)"
+    },
+    {
+        "line_cd": "11319",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "宇都宮線"
+    },
+    {
+        "line_cd": "11320",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR常磐線(上野～取手)"
+    },
+    {
+        "line_cd": "11321",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR埼京線"
+    },
+    {
+        "line_cd": "11322",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR川越線"
+    },
+    {
+        "line_cd": "11323",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR高崎線"
+    },
+    {
+        "line_cd": "11324",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR外房線"
+    },
+    {
+        "line_cd": "11325",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR内房線"
+    },
+    {
+        "line_cd": "11326",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR京葉線"
+    },
+    {
+        "line_cd": "11327",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR成田線"
+    },
+    {
+        "line_cd": "11328",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR成田エクスプレス"
+    },
+    {
+        "line_cd": "11329",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR鹿島線"
+    },
+    {
+        "line_cd": "11330",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR久留里線"
+    },
+    {
+        "line_cd": "11331",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR東金線"
+    },
+    {
+        "line_cd": "11332",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR京浜東北線"
+    },
+    {
+        "line_cd": "11333",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR湘南新宿ライン"
+    },
+    {
+        "line_cd": "11334",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR烏山線"
+    },
+    {
+        "line_cd": "11335",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR吾妻線"
+    },
+    {
+        "line_cd": "11337",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR信越本線"
+    },
+    {
+        "line_cd": "11338",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR水郡線"
+    },
+    {
+        "line_cd": "11339",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR水戸線"
+    },
+    {
+        "line_cd": "11340",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR日光線"
+    },
+    {
+        "line_cd": "11341",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR両毛線"
+    },
+    {
+        "line_cd": "11342",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR上越線"
+    },
+    {
+        "line_cd": "11343",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "上野東京ライン"
+    },
+    {
+        "line_cd": "11344",
+        "company_cd": "100",
+        "company_name": "舞浜リゾートライン",
+        "line_name": "ディズニーリゾートライン"
+    },
+    {
+        "line_cd": "11401",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "小海線"
+    },
+    {
+        "line_cd": "11402",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR身延線"
+    },
+    {
+        "line_cd": "11403",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR信越本線(篠ノ井～長野)"
+    },
+    {
+        "line_cd": "11404",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR信越本線(直江津～新潟)"
+    },
+    {
+        "line_cd": "11405",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR北陸本線(富山～直江津)"
+    },
+    {
+        "line_cd": "11406",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR白新線"
+    },
+    {
+        "line_cd": "11407",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR飯山線"
+    },
+    {
+        "line_cd": "11408",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR越後線"
+    },
+    {
+        "line_cd": "11409",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "北アルプス線"
+    },
+    {
+        "line_cd": "11410",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR弥彦線"
+    },
+    {
+        "line_cd": "11411",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR中央本線(名古屋～塩尻)"
+    },
+    {
+        "line_cd": "11412",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR篠ノ井線"
+    },
+    {
+        "line_cd": "11413",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR飯田線(豊橋～天竜峡)"
+    },
+    {
+        "line_cd": "11414",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR飯田線(天竜峡～辰野)"
+    },
+    {
+        "line_cd": "11415",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR北陸本線(米原～敦賀)"
+    },
+    {
+        "line_cd": "11416",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR高山本線"
+    },
+    {
+        "line_cd": "11417",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR城端線"
+    },
+    {
+        "line_cd": "11418",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR氷見線"
+    },
+    {
+        "line_cd": "11419",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR七尾線"
+    },
+    {
+        "line_cd": "11420",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "敦賀港線"
+    },
+    {
+        "line_cd": "11421",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "九頭竜線"
+    },
+    {
+        "line_cd": "11422",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR小浜線"
+    },
+    {
+        "line_cd": "11501",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR東海道本線(熱海～浜松)"
+    },
+    {
+        "line_cd": "11502",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR東海道本線(浜松～岐阜)"
+    },
+    {
+        "line_cd": "11503",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR東海道本線(岐阜～美濃赤坂・米原)"
+    },
+    {
+        "line_cd": "11504",
+        "company_cd": "2",
+        "company_name": "JR東日本",
+        "line_name": "JR伊東線"
+    },
+    {
+        "line_cd": "11505",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR御殿場線"
+    },
+    {
+        "line_cd": "11506",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR武豊線"
+    },
+    {
+        "line_cd": "11507",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR太多線"
+    },
+    {
+        "line_cd": "11508",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR関西本線(名古屋～亀山)"
+    },
+    {
+        "line_cd": "11509",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR関西本線(亀山～加茂)"
+    },
+    {
+        "line_cd": "11510",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR紀勢本線"
+    },
+    {
+        "line_cd": "11511",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR草津線"
+    },
+    {
+        "line_cd": "11512",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR参宮線"
+    },
+    {
+        "line_cd": "11513",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "JR名松線"
+    },
+    {
+        "line_cd": "11601",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "琵琶湖線"
+    },
+    {
+        "line_cd": "11602",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR京都線"
+    },
+    {
+        "line_cd": "11603",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR神戸線(大阪～神戸)"
+    },
+    {
+        "line_cd": "11605",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR湖西線"
+    },
+    {
+        "line_cd": "11607",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "大和路線"
+    },
+    {
+        "line_cd": "11608",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR神戸線(神戸～姫路)"
+    },
+    {
+        "line_cd": "11609",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陽本線(姫路～岡山)"
+    },
+    {
+        "line_cd": "11610",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陽本線(岡山～三原)"
+    },
+    {
+        "line_cd": "11611",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陽本線(三原～岩国)"
+    },
+    {
+        "line_cd": "11612",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陽本線(岩国～門司)"
+    },
+    {
+        "line_cd": "11613",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陽本線(兵庫～和田岬)"
+    },
+    {
+        "line_cd": "11614",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "嵯峨野線"
+    },
+    {
+        "line_cd": "11615",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陰本線(園部～豊岡)"
+    },
+    {
+        "line_cd": "11616",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陰本線(豊岡～米子)"
+    },
+    {
+        "line_cd": "11617",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "学研都市線"
+    },
+    {
+        "line_cd": "11618",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "奈良線"
+    },
+    {
+        "line_cd": "11622",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR舞鶴線"
+    },
+    {
+        "line_cd": "11623",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "大阪環状線"
+    },
+    {
+        "line_cd": "11624",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JRゆめ咲線"
+    },
+    {
+        "line_cd": "11625",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR東西線"
+    },
+    {
+        "line_cd": "11626",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "阪和線(天王寺～和歌山)"
+    },
+    {
+        "line_cd": "11627",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "羽衣線"
+    },
+    {
+        "line_cd": "11628",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR関西空港線"
+    },
+    {
+        "line_cd": "11629",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR宝塚線"
+    },
+    {
+        "line_cd": "11630",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "福知山線(篠山口～福知山)"
+    },
+    {
+        "line_cd": "11631",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR赤穂線"
+    },
+    {
+        "line_cd": "11632",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR加古川線"
+    },
+    {
+        "line_cd": "11633",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR姫新線(姫路～佐用)"
+    },
+    {
+        "line_cd": "11634",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR姫新線(佐用～新見)"
+    },
+    {
+        "line_cd": "11635",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR播但線"
+    },
+    {
+        "line_cd": "11636",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR和歌山線"
+    },
+    {
+        "line_cd": "11637",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "万葉まほろば線"
+    },
+    {
+        "line_cd": "11639",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "きのくに線"
+    },
+    {
+        "line_cd": "11640",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "紀勢本線(和歌山～和歌山市)"
+    },
+    {
+        "line_cd": "11641",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "おおさか東線"
+    },
+    {
+        "line_cd": "11701",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陰本線(米子～益田)"
+    },
+    {
+        "line_cd": "11702",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山陰本線(益田～下関)"
+    },
+    {
+        "line_cd": "11703",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR伯備線"
+    },
+    {
+        "line_cd": "11704",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR因美線"
+    },
+    {
+        "line_cd": "11705",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR境線"
+    },
+    {
+        "line_cd": "11706",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR木次線"
+    },
+    {
+        "line_cd": "11707",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR三江線"
+    },
+    {
+        "line_cd": "11708",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR山口線"
+    },
+    {
+        "line_cd": "11709",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR宇野線"
+    },
+    {
+        "line_cd": "11710",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "瀬戸大橋線"
+    },
+    {
+        "line_cd": "11713",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR吉備線"
+    },
+    {
+        "line_cd": "11714",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR芸備線"
+    },
+    {
+        "line_cd": "11715",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR津山線"
+    },
+    {
+        "line_cd": "11716",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR呉線"
+    },
+    {
+        "line_cd": "11717",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR可部線"
+    },
+    {
+        "line_cd": "11720",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR福塩線"
+    },
+    {
+        "line_cd": "11721",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR宇部線"
+    },
+    {
+        "line_cd": "11722",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR美祢線"
+    },
+    {
+        "line_cd": "11723",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR小野田線"
+    },
+    {
+        "line_cd": "11724",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR岩徳線"
+    },
+    {
+        "line_cd": "11801",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "JR土讃線"
+    },
+    {
+        "line_cd": "11802",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "JR高徳線"
+    },
+    {
+        "line_cd": "11803",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "よしの川ブルーライン"
+    },
+    {
+        "line_cd": "11804",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "JR牟岐線"
+    },
+    {
+        "line_cd": "11805",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "JR鳴門線"
+    },
+    {
+        "line_cd": "11806",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "JR予讃線"
+    },
+    {
+        "line_cd": "11807",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "JR予讃・内子線"
+    },
+    {
+        "line_cd": "11808",
+        "company_cd": "5",
+        "company_name": "JR四国",
+        "line_name": "しまんとグリーンライン"
+    },
+    {
+        "line_cd": "11901",
+        "company_cd": "4",
+        "company_name": "JR西日本",
+        "line_name": "JR博多南線"
+    },
+    {
+        "line_cd": "11902",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR鹿児島本線(下関・門司港～博多)"
+    },
+    {
+        "line_cd": "11903",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR鹿児島本線(博多～八代)"
+    },
+    {
+        "line_cd": "11904",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR鹿児島本線(川内～鹿児島)"
+    },
+    {
+        "line_cd": "11905",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR長崎本線(鳥栖～長崎)"
+    },
+    {
+        "line_cd": "11906",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR日豊本線(門司港～佐伯)"
+    },
+    {
+        "line_cd": "11907",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR日豊本線(佐伯～鹿児島中央)"
+    },
+    {
+        "line_cd": "11908",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "福北ゆたか線"
+    },
+    {
+        "line_cd": "11909",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR筑肥線(姪浜～西唐津)"
+    },
+    {
+        "line_cd": "11910",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "若松線"
+    },
+    {
+        "line_cd": "11911",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "福北ゆたか線(折尾～桂川)"
+    },
+    {
+        "line_cd": "11912",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "原田線"
+    },
+    {
+        "line_cd": "11913",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "ゆふ高原線"
+    },
+    {
+        "line_cd": "11914",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR日田彦山線"
+    },
+    {
+        "line_cd": "11915",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR後藤寺線"
+    },
+    {
+        "line_cd": "11916",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "海の中道線"
+    },
+    {
+        "line_cd": "11917",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR香椎線(香椎～宇美)"
+    },
+    {
+        "line_cd": "11918",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR佐世保線"
+    },
+    {
+        "line_cd": "11920",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR筑肥線(西唐津～伊万里)"
+    },
+    {
+        "line_cd": "11921",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR唐津線"
+    },
+    {
+        "line_cd": "11922",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR大村線"
+    },
+    {
+        "line_cd": "11923",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "豊肥本線"
+    },
+    {
+        "line_cd": "11924",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "三角線（あまくさみすみ線）"
+    },
+    {
+        "line_cd": "11925",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "えびの高原線(八代～吉松)"
+    },
+    {
+        "line_cd": "11926",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR肥薩線(吉松～隼人)"
+    },
+    {
+        "line_cd": "11927",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR宮崎空港線"
+    },
+    {
+        "line_cd": "11928",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR日南線"
+    },
+    {
+        "line_cd": "11929",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "えびの高原線"
+    },
+    {
+        "line_cd": "11930",
+        "company_cd": "6",
+        "company_name": "JR九州",
+        "line_name": "JR指宿枕崎線"
+    },
+    {
+        "line_cd": "21001",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武東上線"
+    },
+    {
+        "line_cd": "21002",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武伊勢崎線"
+    },
+    {
+        "line_cd": "21003",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武日光線"
+    },
+    {
+        "line_cd": "21004",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武アーバンパークライン（東武野田線）"
+    },
+    {
+        "line_cd": "21005",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武亀戸線"
+    },
+    {
+        "line_cd": "21006",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武大師線"
+    },
+    {
+        "line_cd": "21007",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武越生線"
+    },
+    {
+        "line_cd": "21008",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武宇都宮線"
+    },
+    {
+        "line_cd": "21009",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武鬼怒川線"
+    },
+    {
+        "line_cd": "21010",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武佐野線"
+    },
+    {
+        "line_cd": "21011",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武桐生線"
+    },
+    {
+        "line_cd": "21012",
+        "company_cd": "11",
+        "company_name": "東武鉄道",
+        "line_name": "東武小泉線"
+    },
+    {
+        "line_cd": "22001",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武池袋線"
+    },
+    {
+        "line_cd": "22002",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武秩父線"
+    },
+    {
+        "line_cd": "22003",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武有楽町線"
+    },
+    {
+        "line_cd": "22004",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武豊島線"
+    },
+    {
+        "line_cd": "22005",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武狭山線"
+    },
+    {
+        "line_cd": "22006",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "レオライナー"
+    },
+    {
+        "line_cd": "22007",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武新宿線"
+    },
+    {
+        "line_cd": "22008",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武拝島線"
+    },
+    {
+        "line_cd": "22009",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武西武園線"
+    },
+    {
+        "line_cd": "22010",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武国分寺線"
+    },
+    {
+        "line_cd": "22011",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武多摩湖線"
+    },
+    {
+        "line_cd": "22012",
+        "company_cd": "12",
+        "company_name": "西武鉄道",
+        "line_name": "西武多摩川線"
+    },
+    {
+        "line_cd": "23001",
+        "company_cd": "13",
+        "company_name": "京成電鉄",
+        "line_name": "京成本線"
+    },
+    {
+        "line_cd": "23002",
+        "company_cd": "13",
+        "company_name": "京成電鉄",
+        "line_name": "京成押上線"
+    },
+    {
+        "line_cd": "23003",
+        "company_cd": "13",
+        "company_name": "京成電鉄",
+        "line_name": "京成金町線"
+    },
+    {
+        "line_cd": "23004",
+        "company_cd": "13",
+        "company_name": "京成電鉄",
+        "line_name": "京成千葉線"
+    },
+    {
+        "line_cd": "23005",
+        "company_cd": "13",
+        "company_name": "京成電鉄",
+        "line_name": "京成千原線"
+    },
+    {
+        "line_cd": "23006",
+        "company_cd": "13",
+        "company_name": "京成電鉄",
+        "line_name": "成田スカイアクセス"
+    },
+    {
+        "line_cd": "24001",
+        "company_cd": "14",
+        "company_name": "京王電鉄",
+        "line_name": "京王線"
+    },
+    {
+        "line_cd": "24002",
+        "company_cd": "14",
+        "company_name": "京王電鉄",
+        "line_name": "京王相模原線"
+    },
+    {
+        "line_cd": "24003",
+        "company_cd": "14",
+        "company_name": "京王電鉄",
+        "line_name": "京王高尾線"
+    },
+    {
+        "line_cd": "24004",
+        "company_cd": "14",
+        "company_name": "京王電鉄",
+        "line_name": "京王競馬場線"
+    },
+    {
+        "line_cd": "24005",
+        "company_cd": "14",
+        "company_name": "京王電鉄",
+        "line_name": "京王動物園線"
+    },
+    {
+        "line_cd": "24006",
+        "company_cd": "14",
+        "company_name": "京王電鉄",
+        "line_name": "京王井の頭線"
+    },
+    {
+        "line_cd": "24007",
+        "company_cd": "14",
+        "company_name": "京王電鉄",
+        "line_name": "京王新線"
+    },
+    {
+        "line_cd": "25001",
+        "company_cd": "15",
+        "company_name": "小田急電鉄",
+        "line_name": "小田急線"
+    },
+    {
+        "line_cd": "25002",
+        "company_cd": "15",
+        "company_name": "小田急電鉄",
+        "line_name": "小田急江ノ島線"
+    },
+    {
+        "line_cd": "25003",
+        "company_cd": "15",
+        "company_name": "小田急電鉄",
+        "line_name": "小田急多摩線"
+    },
+    {
+        "line_cd": "26001",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急東横線"
+    },
+    {
+        "line_cd": "26002",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急目黒線"
+    },
+    {
+        "line_cd": "26003",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急田園都市線"
+    },
+    {
+        "line_cd": "26004",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急大井町線"
+    },
+    {
+        "line_cd": "26005",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急池上線"
+    },
+    {
+        "line_cd": "26006",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急多摩川線"
+    },
+    {
+        "line_cd": "26007",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急世田谷線"
+    },
+    {
+        "line_cd": "26008",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急こどもの国線"
+    },
+    {
+        "line_cd": "26009",
+        "company_cd": "16",
+        "company_name": "東急電鉄",
+        "line_name": "東急新横浜線"
+    },
+    {
+        "line_cd": "27001",
+        "company_cd": "17",
+        "company_name": "京急電鉄",
+        "line_name": "京急本線"
+    },
+    {
+        "line_cd": "27002",
+        "company_cd": "17",
+        "company_name": "京急電鉄",
+        "line_name": "京急空港線"
+    },
+    {
+        "line_cd": "27003",
+        "company_cd": "17",
+        "company_name": "京急電鉄",
+        "line_name": "京急大師線"
+    },
+    {
+        "line_cd": "27004",
+        "company_cd": "17",
+        "company_name": "京急電鉄",
+        "line_name": "京急逗子線"
+    },
+    {
+        "line_cd": "27005",
+        "company_cd": "17",
+        "company_name": "京急電鉄",
+        "line_name": "京急久里浜線"
+    },
+    {
+        "line_cd": "28001",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ銀座線"
+    },
+    {
+        "line_cd": "28002",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ丸ノ内線"
+    },
+    {
+        "line_cd": "28003",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ日比谷線"
+    },
+    {
+        "line_cd": "28004",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ東西線"
+    },
+    {
+        "line_cd": "28005",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ千代田線"
+    },
+    {
+        "line_cd": "28006",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ有楽町線"
+    },
+    {
+        "line_cd": "28008",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ半蔵門線"
+    },
+    {
+        "line_cd": "28009",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ南北線"
+    },
+    {
+        "line_cd": "28010",
+        "company_cd": "18",
+        "company_name": "東京メトロ",
+        "line_name": "東京メトロ副都心線"
+    },
+    {
+        "line_cd": "29001",
+        "company_cd": "19",
+        "company_name": "相模鉄道",
+        "line_name": "相鉄本線"
+    },
+    {
+        "line_cd": "29002",
+        "company_cd": "19",
+        "company_name": "相模鉄道",
+        "line_name": "相鉄いずみ野線"
+    },
+    {
+        "line_cd": "29003",
+        "company_cd": "19",
+        "company_name": "相模鉄道",
+        "line_name": "相鉄・JR直通線"
+    },
+    {
+        "line_cd": "29004",
+        "company_cd": "19",
+        "company_name": "相模鉄道",
+        "line_name": "相鉄新横浜線"
+    },
+    {
+        "line_cd": "30001",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄名古屋本線"
+    },
+    {
+        "line_cd": "30002",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄豊川線"
+    },
+    {
+        "line_cd": "30003",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄西尾線"
+    },
+    {
+        "line_cd": "30004",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄蒲郡線"
+    },
+    {
+        "line_cd": "30005",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄三河線"
+    },
+    {
+        "line_cd": "30006",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄豊田線"
+    },
+    {
+        "line_cd": "30007",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄常滑・空港線"
+    },
+    {
+        "line_cd": "30008",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄常滑線"
+    },
+    {
+        "line_cd": "30009",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄河和線"
+    },
+    {
+        "line_cd": "30010",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄知多新線"
+    },
+    {
+        "line_cd": "30011",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄築港線"
+    },
+    {
+        "line_cd": "30012",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄瀬戸線"
+    },
+    {
+        "line_cd": "30013",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄津島線"
+    },
+    {
+        "line_cd": "30014",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄尾西線"
+    },
+    {
+        "line_cd": "30015",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄犬山線"
+    },
+    {
+        "line_cd": "30016",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄各務原線"
+    },
+    {
+        "line_cd": "30017",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄広見線"
+    },
+    {
+        "line_cd": "30018",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄小牧線"
+    },
+    {
+        "line_cd": "30019",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "犬山モノレール"
+    },
+    {
+        "line_cd": "30020",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄竹鼻線"
+    },
+    {
+        "line_cd": "30021",
+        "company_cd": "20",
+        "company_name": "名古屋鉄道",
+        "line_name": "名鉄羽島線"
+    },
+    {
+        "line_cd": "31001",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄難波線"
+    },
+    {
+        "line_cd": "31002",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄橿原線"
+    },
+    {
+        "line_cd": "31003",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄南大阪線"
+    },
+    {
+        "line_cd": "31004",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄養老線"
+    },
+    {
+        "line_cd": "31005",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄大阪線"
+    },
+    {
+        "line_cd": "31006",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄伊賀線"
+    },
+    {
+        "line_cd": "31007",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄吉野線"
+    },
+    {
+        "line_cd": "31008",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄湯の山線"
+    },
+    {
+        "line_cd": "31009",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄山田線"
+    },
+    {
+        "line_cd": "31010",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄鳥羽線"
+    },
+    {
+        "line_cd": "31011",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄天理線"
+    },
+    {
+        "line_cd": "31012",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄道明寺線"
+    },
+    {
+        "line_cd": "31013",
+        "company_cd": "247",
+        "company_name": "四日市あすなろう鉄道",
+        "line_name": "内部線"
+    },
+    {
+        "line_cd": "31014",
+        "company_cd": "247",
+        "company_name": "四日市あすなろう鉄道",
+        "line_name": "八王子線"
+    },
+    {
+        "line_cd": "31015",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄志摩線"
+    },
+    {
+        "line_cd": "31016",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄生駒線"
+    },
+    {
+        "line_cd": "31017",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄田原本線"
+    },
+    {
+        "line_cd": "31018",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄御所線"
+    },
+    {
+        "line_cd": "31019",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄鈴鹿線"
+    },
+    {
+        "line_cd": "31020",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄奈良線"
+    },
+    {
+        "line_cd": "31021",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄信貴線"
+    },
+    {
+        "line_cd": "31022",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄長野線"
+    },
+    {
+        "line_cd": "31023",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄けいはんな線"
+    },
+    {
+        "line_cd": "31024",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "西信貴ケーブル"
+    },
+    {
+        "line_cd": "31025",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄京都線"
+    },
+    {
+        "line_cd": "31026",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "生駒ケーブル"
+    },
+    {
+        "line_cd": "31027",
+        "company_cd": "21",
+        "company_name": "近畿日本鉄道",
+        "line_name": "近鉄名古屋線"
+    },
+    {
+        "line_cd": "32001",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海本線"
+    },
+    {
+        "line_cd": "32002",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海空港線"
+    },
+    {
+        "line_cd": "32003",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海和歌山港線"
+    },
+    {
+        "line_cd": "32004",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海高師浜線"
+    },
+    {
+        "line_cd": "32005",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海加太線"
+    },
+    {
+        "line_cd": "32006",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海多奈川線"
+    },
+    {
+        "line_cd": "32007",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海高野線"
+    },
+    {
+        "line_cd": "32008",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海高野山ケーブル"
+    },
+    {
+        "line_cd": "32009",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "南海汐見橋線"
+    },
+    {
+        "line_cd": "33001",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "京阪本線"
+    },
+    {
+        "line_cd": "33002",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "京阪宇治線"
+    },
+    {
+        "line_cd": "33003",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "京阪交野線"
+    },
+    {
+        "line_cd": "33004",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "京阪鴨東線"
+    },
+    {
+        "line_cd": "33005",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "石清水八幡宮参道ケーブル"
+    },
+    {
+        "line_cd": "33006",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "京阪石山坂本線"
+    },
+    {
+        "line_cd": "33007",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "京阪京津線"
+    },
+    {
+        "line_cd": "33008",
+        "company_cd": "23",
+        "company_name": "京阪電鉄",
+        "line_name": "京阪中之島線"
+    },
+    {
+        "line_cd": "34001",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急神戸本線"
+    },
+    {
+        "line_cd": "34002",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急宝塚本線"
+    },
+    {
+        "line_cd": "34003",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急京都本線"
+    },
+    {
+        "line_cd": "34004",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急今津線"
+    },
+    {
+        "line_cd": "34005",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急甲陽線"
+    },
+    {
+        "line_cd": "34006",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急伊丹線"
+    },
+    {
+        "line_cd": "34007",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急箕面線"
+    },
+    {
+        "line_cd": "34008",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急千里線"
+    },
+    {
+        "line_cd": "34009",
+        "company_cd": "24",
+        "company_name": "阪急電鉄",
+        "line_name": "阪急嵐山線"
+    },
+    {
+        "line_cd": "35001",
+        "company_cd": "25",
+        "company_name": "阪神電鉄",
+        "line_name": "阪神本線"
+    },
+    {
+        "line_cd": "35002",
+        "company_cd": "25",
+        "company_name": "阪神電鉄",
+        "line_name": "阪神なんば線"
+    },
+    {
+        "line_cd": "35003",
+        "company_cd": "25",
+        "company_name": "阪神電鉄",
+        "line_name": "阪神武庫川線"
+    },
+    {
+        "line_cd": "36001",
+        "company_cd": "26",
+        "company_name": "西日本鉄道",
+        "line_name": "西鉄天神大牟田線"
+    },
+    {
+        "line_cd": "36002",
+        "company_cd": "26",
+        "company_name": "西日本鉄道",
+        "line_name": "西鉄太宰府線"
+    },
+    {
+        "line_cd": "36003",
+        "company_cd": "26",
+        "company_name": "西日本鉄道",
+        "line_name": "西鉄甘木線"
+    },
+    {
+        "line_cd": "36004",
+        "company_cd": "26",
+        "company_name": "西日本鉄道",
+        "line_name": "西鉄貝塚線"
+    },
+    {
+        "line_cd": "99101",
+        "company_cd": "101",
+        "company_name": "札幌市交通局",
+        "line_name": "札幌市営地下鉄東西線"
+    },
+    {
+        "line_cd": "99102",
+        "company_cd": "101",
+        "company_name": "札幌市交通局",
+        "line_name": "札幌市営地下鉄南北線"
+    },
+    {
+        "line_cd": "99103",
+        "company_cd": "101",
+        "company_name": "札幌市交通局",
+        "line_name": "札幌市営地下鉄東豊線"
+    },
+    {
+        "line_cd": "99104",
+        "company_cd": "3",
+        "company_name": "JR東海",
+        "line_name": "中央新幹線"
+    },
+    {
+        "line_cd": "99104",
+        "company_cd": "252",
+        "company_name": "札幌市交通事業振興公社",
+        "line_name": "札幌市電"
+    },
+    {
+        "line_cd": "99105",
+        "company_cd": "102",
+        "company_name": "函館市交通局",
+        "line_name": "函館市電２系統"
+    },
+    {
+        "line_cd": "99106",
+        "company_cd": "102",
+        "company_name": "函館市交通局",
+        "line_name": "函館市電５系統"
+    },
+    {
+        "line_cd": "99107",
+        "company_cd": "103",
+        "company_name": "北海道ちほく高原鉄道",
+        "line_name": "ふるさと銀河線"
+    },
+    {
+        "line_cd": "99108",
+        "company_cd": "248",
+        "company_name": "道南いさりび鉄道",
+        "line_name": "道南いさりび鉄道線"
+    },
+    {
+        "line_cd": "99201",
+        "company_cd": "104",
+        "company_name": "津軽鉄道",
+        "line_name": "津軽鉄道線"
+    },
+    {
+        "line_cd": "99202",
+        "company_cd": "105",
+        "company_name": "弘南鉄道",
+        "line_name": "弘南鉄道弘南線"
+    },
+    {
+        "line_cd": "99203",
+        "company_cd": "105",
+        "company_name": "弘南鉄道",
+        "line_name": "弘南鉄道大鰐線"
+    },
+    {
+        "line_cd": "99204",
+        "company_cd": "106",
+        "company_name": "十和田観光電鉄",
+        "line_name": "十和田観光電鉄"
+    },
+    {
+        "line_cd": "99205",
+        "company_cd": "107",
+        "company_name": "IGRいわて銀河鉄道",
+        "line_name": "いわて銀河鉄道線"
+    },
+    {
+        "line_cd": "99206",
+        "company_cd": "108",
+        "company_name": "青い森鉄道",
+        "line_name": "青い森鉄道線"
+    },
+    {
+        "line_cd": "99207",
+        "company_cd": "109",
+        "company_name": "三陸鉄道",
+        "line_name": "三陸鉄道北リアス線"
+    },
+    {
+        "line_cd": "99208",
+        "company_cd": "109",
+        "company_name": "三陸鉄道",
+        "line_name": "三陸鉄道リアス線"
+    },
+    {
+        "line_cd": "99209",
+        "company_cd": "110",
+        "company_name": "秋田内陸縦貫鉄道",
+        "line_name": "秋田内陸線"
+    },
+    {
+        "line_cd": "99210",
+        "company_cd": "111",
+        "company_name": "由利高原鉄道",
+        "line_name": "鳥海山ろく線"
+    },
+    {
+        "line_cd": "99211",
+        "company_cd": "112",
+        "company_name": "山形鉄道",
+        "line_name": "フラワー長井線"
+    },
+    {
+        "line_cd": "99212",
+        "company_cd": "113",
+        "company_name": "くりはら田園鉄道",
+        "line_name": "くりはら田園鉄道線"
+    },
+    {
+        "line_cd": "99213",
+        "company_cd": "114",
+        "company_name": "阿武隈急行",
+        "line_name": "阿武隈急行線"
+    },
+    {
+        "line_cd": "99214",
+        "company_cd": "115",
+        "company_name": "仙台市交通局",
+        "line_name": "仙台市営地下鉄南北線"
+    },
+    {
+        "line_cd": "99215",
+        "company_cd": "116",
+        "company_name": "福島交通",
+        "line_name": "福島交通飯坂線"
+    },
+    {
+        "line_cd": "99216",
+        "company_cd": "117",
+        "company_name": "会津鉄道",
+        "line_name": "会津鉄道会津線"
+    },
+    {
+        "line_cd": "99217",
+        "company_cd": "118",
+        "company_name": "仙台空港鉄道",
+        "line_name": "仙台空港線"
+    },
+    {
+        "line_cd": "99218",
+        "company_cd": "115",
+        "company_name": "仙台市交通局",
+        "line_name": "仙台市営地下鉄東西線"
+    },
+    {
+        "line_cd": "99301",
+        "company_cd": "119",
+        "company_name": "東京都交通局",
+        "line_name": "都営大江戸線"
+    },
+    {
+        "line_cd": "99302",
+        "company_cd": "119",
+        "company_name": "東京都交通局",
+        "line_name": "都営浅草線"
+    },
+    {
+        "line_cd": "99303",
+        "company_cd": "119",
+        "company_name": "東京都交通局",
+        "line_name": "都営三田線"
+    },
+    {
+        "line_cd": "99304",
+        "company_cd": "119",
+        "company_name": "東京都交通局",
+        "line_name": "都営新宿線"
+    },
+    {
+        "line_cd": "99305",
+        "company_cd": "119",
+        "company_name": "東京都交通局",
+        "line_name": "東京さくらトラム（都電荒川線）"
+    },
+    {
+        "line_cd": "99306",
+        "company_cd": "120",
+        "company_name": "秩父鉄道",
+        "line_name": "秩父鉄道秩父本線"
+    },
+    {
+        "line_cd": "99307",
+        "company_cd": "121",
+        "company_name": "埼玉高速鉄道",
+        "line_name": "埼玉高速鉄道線"
+    },
+    {
+        "line_cd": "99308",
+        "company_cd": "122",
+        "company_name": "いすみ鉄道",
+        "line_name": "いすみ線"
+    },
+    {
+        "line_cd": "99309",
+        "company_cd": "123",
+        "company_name": "首都圏新都市鉄道",
+        "line_name": "つくばエクスプレス"
+    },
+    {
+        "line_cd": "99310",
+        "company_cd": "124",
+        "company_name": "横浜高速鉄道",
+        "line_name": "みなとみらい線"
+    },
+    {
+        "line_cd": "99311",
+        "company_cd": "125",
+        "company_name": "ゆりかもめ",
+        "line_name": "ゆりかもめ"
+    },
+    {
+        "line_cd": "99312",
+        "company_cd": "126",
+        "company_name": "わたらせ渓谷鐵道",
+        "line_name": "わたらせ渓谷線"
+    },
+    {
+        "line_cd": "99313",
+        "company_cd": "127",
+        "company_name": "山万",
+        "line_name": "ユーカリが丘線"
+    },
+    {
+        "line_cd": "99314",
+        "company_cd": "128",
+        "company_name": "伊豆箱根鉄道",
+        "line_name": "伊豆箱根鉄道大雄山線"
+    },
+    {
+        "line_cd": "99315",
+        "company_cd": "129",
+        "company_name": "ひたちなか海浜鉄道",
+        "line_name": "ひたちなか海浜鉄道湊線"
+    },
+    {
+        "line_cd": "99316",
+        "company_cd": "130",
+        "company_name": "横浜市交通局",
+        "line_name": "ブルーライン"
+    },
+    {
+        "line_cd": "99317",
+        "company_cd": "131",
+        "company_name": "横浜シーサイドライン",
+        "line_name": "金沢シーサイドライン"
+    },
+    {
+        "line_cd": "99318",
+        "company_cd": "132",
+        "company_name": "関東鉄道",
+        "line_name": "関東鉄道常総線"
+    },
+    {
+        "line_cd": "99319",
+        "company_cd": "132",
+        "company_name": "関東鉄道",
+        "line_name": "関東鉄道竜ヶ崎線"
+    },
+    {
+        "line_cd": "99320",
+        "company_cd": "133",
+        "company_name": "江ノ島電鉄",
+        "line_name": "江ノ島電鉄線"
+    },
+    {
+        "line_cd": "99321",
+        "company_cd": "134",
+        "company_name": "埼玉新都市交通",
+        "line_name": "ニューシャトル"
+    },
+    {
+        "line_cd": "99322",
+        "company_cd": "135",
+        "company_name": "鹿島鉄道",
+        "line_name": "鹿島鉄道線"
+    },
+    {
+        "line_cd": "99323",
+        "company_cd": "136",
+        "company_name": "鹿島臨海鉄道",
+        "line_name": "鹿島臨海鉄道大洗鹿島線"
+    },
+    {
+        "line_cd": "99324",
+        "company_cd": "137",
+        "company_name": "芝山鉄道",
+        "line_name": "芝山鉄道線"
+    },
+    {
+        "line_cd": "99325",
+        "company_cd": "138",
+        "company_name": "小湊鐵道",
+        "line_name": "小湊鉄道線"
+    },
+    {
+        "line_cd": "99326",
+        "company_cd": "139",
+        "company_name": "湘南モノレール",
+        "line_name": "湘南モノレール"
+    },
+    {
+        "line_cd": "99327",
+        "company_cd": "140",
+        "company_name": "上信電鉄",
+        "line_name": "上信電鉄"
+    },
+    {
+        "line_cd": "99328",
+        "company_cd": "141",
+        "company_name": "上毛電気鉄道",
+        "line_name": "上毛電気鉄道上毛線"
+    },
+    {
+        "line_cd": "99329",
+        "company_cd": "13",
+        "company_name": "京成電鉄",
+        "line_name": "京成松戸線"
+    },
+    {
+        "line_cd": "99330",
+        "company_cd": "143",
+        "company_name": "真岡鐵道",
+        "line_name": "真岡鐵道真岡線"
+    },
+    {
+        "line_cd": "99331",
+        "company_cd": "144",
+        "company_name": "千葉都市モノレール",
+        "line_name": "千葉都市モノレール１号線"
+    },
+    {
+        "line_cd": "99332",
+        "company_cd": "144",
+        "company_name": "千葉都市モノレール",
+        "line_name": "千葉都市モノレール２号線"
+    },
+    {
+        "line_cd": "99333",
+        "company_cd": "145",
+        "company_name": "流鉄",
+        "line_name": "流鉄流山線"
+    },
+    {
+        "line_cd": "99334",
+        "company_cd": "146",
+        "company_name": "多摩都市モノレール",
+        "line_name": "多摩モノレール"
+    },
+    {
+        "line_cd": "99335",
+        "company_cd": "147",
+        "company_name": "銚子電気鉄道",
+        "line_name": "銚子電鉄線"
+    },
+    {
+        "line_cd": "99336",
+        "company_cd": "148",
+        "company_name": "東京モノレール",
+        "line_name": "東京モノレール"
+    },
+    {
+        "line_cd": "99337",
+        "company_cd": "149",
+        "company_name": "東京臨海高速鉄道",
+        "line_name": "りんかい線"
+    },
+    {
+        "line_cd": "99338",
+        "company_cd": "150",
+        "company_name": "東葉高速鉄道",
+        "line_name": "東葉高速線"
+    },
+    {
+        "line_cd": "99339",
+        "company_cd": "151",
+        "company_name": "小田急箱根",
+        "line_name": "箱根登山鉄道鉄道線"
+    },
+    {
+        "line_cd": "99340",
+        "company_cd": "152",
+        "company_name": "北総鉄道",
+        "line_name": "北総鉄道北総線"
+    },
+    {
+        "line_cd": "99341",
+        "company_cd": "153",
+        "company_name": "野岩鉄道",
+        "line_name": "ほっとスパ・ライン"
+    },
+    {
+        "line_cd": "99342",
+        "company_cd": "119",
+        "company_name": "東京都交通局",
+        "line_name": "日暮里・舎人ライナー"
+    },
+    {
+        "line_cd": "99343",
+        "company_cd": "130",
+        "company_name": "横浜市交通局",
+        "line_name": "グリーンライン"
+    },
+    {
+        "line_cd": "99344",
+        "company_cd": "151",
+        "company_name": "小田急箱根",
+        "line_name": "箱根登山ケーブルカー"
+    },
+    {
+        "line_cd": "99345",
+        "company_cd": "250",
+        "company_name": "宇都宮ライトレール",
+        "line_name": "芳賀・宇都宮LRT"
+    },
+    {
+        "line_cd": "99401",
+        "company_cd": "154",
+        "company_name": "富士山麓電気鉄道",
+        "line_name": "富士急行線"
+    },
+    {
+        "line_cd": "99402",
+        "company_cd": "155",
+        "company_name": "北越急行",
+        "line_name": "北越急行ほくほく線"
+    },
+    {
+        "line_cd": "99403",
+        "company_cd": "156",
+        "company_name": "しなの鉄道",
+        "line_name": "しなの鉄道線"
+    },
+    {
+        "line_cd": "99404",
+        "company_cd": "157",
+        "company_name": "上田交通",
+        "line_name": "上田電鉄別所線"
+    },
+    {
+        "line_cd": "99405",
+        "company_cd": "158",
+        "company_name": "長野電鉄",
+        "line_name": "長野電鉄長野線"
+    },
+    {
+        "line_cd": "99406",
+        "company_cd": "158",
+        "company_name": "長野電鉄",
+        "line_name": "長野電鉄屋代線"
+    },
+    {
+        "line_cd": "99407",
+        "company_cd": "159",
+        "company_name": "アルピコ交通",
+        "line_name": "上高地線"
+    },
+    {
+        "line_cd": "99408",
+        "company_cd": "160",
+        "company_name": "富山地方鉄道",
+        "line_name": "富山地鉄本線"
+    },
+    {
+        "line_cd": "99409",
+        "company_cd": "160",
+        "company_name": "富山地方鉄道",
+        "line_name": "富山地鉄立山線"
+    },
+    {
+        "line_cd": "99410",
+        "company_cd": "160",
+        "company_name": "富山地方鉄道",
+        "line_name": "富山地鉄不二越・上滝線"
+    },
+    {
+        "line_cd": "99411",
+        "company_cd": "161",
+        "company_name": "神岡鉄道",
+        "line_name": "神岡鉄道神岡線"
+    },
+    {
+        "line_cd": "99412",
+        "company_cd": "162",
+        "company_name": "黒部峡谷鉄道",
+        "line_name": "黒部峡谷鉄道本線"
+    },
+    {
+        "line_cd": "99413",
+        "company_cd": "160",
+        "company_name": "富山地方鉄道",
+        "line_name": "富山地鉄市内線【１・２系統】"
+    },
+    {
+        "line_cd": "99414",
+        "company_cd": "163",
+        "company_name": "万葉線",
+        "line_name": "万葉線"
+    },
+    {
+        "line_cd": "99415",
+        "company_cd": "160",
+        "company_name": "富山地方鉄道",
+        "line_name": "富山港線"
+    },
+    {
+        "line_cd": "99416",
+        "company_cd": "165",
+        "company_name": "北陸鉄道",
+        "line_name": "北陸鉄道石川線"
+    },
+    {
+        "line_cd": "99417",
+        "company_cd": "165",
+        "company_name": "北陸鉄道",
+        "line_name": "北陸鉄道浅野川線"
+    },
+    {
+        "line_cd": "99418",
+        "company_cd": "166",
+        "company_name": "のと鉄道",
+        "line_name": "のと鉄道七尾線"
+    },
+    {
+        "line_cd": "99419",
+        "company_cd": "167",
+        "company_name": "えちぜん鉄道",
+        "line_name": "えちぜん鉄道勝山永平寺線"
+    },
+    {
+        "line_cd": "99420",
+        "company_cd": "167",
+        "company_name": "えちぜん鉄道",
+        "line_name": "えちぜん鉄道三国芦原線"
+    },
+    {
+        "line_cd": "99421",
+        "company_cd": "168",
+        "company_name": "福井鉄道",
+        "line_name": "福井鉄道福武線"
+    },
+    {
+        "line_cd": "99422",
+        "company_cd": "160",
+        "company_name": "富山地方鉄道",
+        "line_name": "富山地鉄富山都心線【３系統(環状線)】"
+    },
+    {
+        "line_cd": "99423",
+        "company_cd": "244",
+        "company_name": "えちごトキめき鉄道",
+        "line_name": "日本海ひすいライン"
+    },
+    {
+        "line_cd": "99424",
+        "company_cd": "244",
+        "company_name": "えちごトキめき鉄道",
+        "line_name": "妙高はねうまライン"
+    },
+    {
+        "line_cd": "99425",
+        "company_cd": "245",
+        "company_name": "あいの風とやま鉄道",
+        "line_name": "あいの風とやま鉄道線"
+    },
+    {
+        "line_cd": "99426",
+        "company_cd": "246",
+        "company_name": "IRいしかわ鉄道",
+        "line_name": "IRいしかわ鉄道線"
+    },
+    {
+        "line_cd": "99427",
+        "company_cd": "156",
+        "company_name": "しなの鉄道",
+        "line_name": "北しなの線"
+    },
+    {
+        "line_cd": "99428",
+        "company_cd": "251",
+        "company_name": "ハピラインふくい",
+        "line_name": "ハピラインふくい線"
+    },
+    {
+        "line_cd": "99501",
+        "company_cd": "169",
+        "company_name": "伊豆急行",
+        "line_name": "伊豆急行線"
+    },
+    {
+        "line_cd": "99502",
+        "company_cd": "128",
+        "company_name": "伊豆箱根鉄道",
+        "line_name": "伊豆箱根鉄道駿豆線"
+    },
+    {
+        "line_cd": "99503",
+        "company_cd": "170",
+        "company_name": "岳南鉄道",
+        "line_name": "岳南鉄道線"
+    },
+    {
+        "line_cd": "99504",
+        "company_cd": "171",
+        "company_name": "静岡鉄道",
+        "line_name": "静岡鉄道静岡清水線"
+    },
+    {
+        "line_cd": "99505",
+        "company_cd": "172",
+        "company_name": "天竜浜名湖鉄道",
+        "line_name": "天竜浜名湖線"
+    },
+    {
+        "line_cd": "99506",
+        "company_cd": "173",
+        "company_name": "遠州鉄道",
+        "line_name": "遠州鉄道鉄道線"
+    },
+    {
+        "line_cd": "99507",
+        "company_cd": "174",
+        "company_name": "大井川鐵道",
+        "line_name": "大井川鐵道大井川本線"
+    },
+    {
+        "line_cd": "99508",
+        "company_cd": "174",
+        "company_name": "大井川鐵道",
+        "line_name": "南アルプスあぷとライン"
+    },
+    {
+        "line_cd": "99509",
+        "company_cd": "175",
+        "company_name": "名古屋臨海高速鉄道",
+        "line_name": "あおなみ線"
+    },
+    {
+        "line_cd": "99510",
+        "company_cd": "176",
+        "company_name": "東海交通事業",
+        "line_name": "東海交通事業城北線"
+    },
+    {
+        "line_cd": "99511",
+        "company_cd": "177",
+        "company_name": "愛知環状鉄道",
+        "line_name": "愛知環状鉄道線"
+    },
+    {
+        "line_cd": "99512",
+        "company_cd": "178",
+        "company_name": "愛知高速交通",
+        "line_name": "リニモ"
+    },
+    {
+        "line_cd": "99513",
+        "company_cd": "179",
+        "company_name": "名古屋市交通局",
+        "line_name": "名古屋市営地下鉄東山線"
+    },
+    {
+        "line_cd": "99514",
+        "company_cd": "179",
+        "company_name": "名古屋市交通局",
+        "line_name": "名古屋市営地下鉄名城線"
+    },
+    {
+        "line_cd": "99515",
+        "company_cd": "179",
+        "company_name": "名古屋市交通局",
+        "line_name": "名古屋市営地下鉄名港線"
+    },
+    {
+        "line_cd": "99516",
+        "company_cd": "179",
+        "company_name": "名古屋市交通局",
+        "line_name": "名古屋市営地下鉄鶴舞線"
+    },
+    {
+        "line_cd": "99517",
+        "company_cd": "179",
+        "company_name": "名古屋市交通局",
+        "line_name": "名古屋市営地下鉄桜通線"
+    },
+    {
+        "line_cd": "99518",
+        "company_cd": "179",
+        "company_name": "名古屋市交通局",
+        "line_name": "名古屋市営地下鉄上飯田線"
+    },
+    {
+        "line_cd": "99519",
+        "company_cd": "180",
+        "company_name": "桃花台新交通",
+        "line_name": "ピーチライナー"
+    },
+    {
+        "line_cd": "99520",
+        "company_cd": "181",
+        "company_name": "豊橋鉄道",
+        "line_name": "豊橋鉄道渥美線"
+    },
+    {
+        "line_cd": "99521",
+        "company_cd": "181",
+        "company_name": "豊橋鉄道",
+        "line_name": "豊橋鉄道東田本線"
+    },
+    {
+        "line_cd": "99522",
+        "company_cd": "181",
+        "company_name": "豊橋鉄道",
+        "line_name": "豊橋鉄道運動公園前線"
+    },
+    {
+        "line_cd": "99523",
+        "company_cd": "182",
+        "company_name": "名古屋ガイドウェイバス",
+        "line_name": "ゆとりーとライン"
+    },
+    {
+        "line_cd": "99524",
+        "company_cd": "183",
+        "company_name": "明知鉄道",
+        "line_name": "明知鉄道明知線"
+    },
+    {
+        "line_cd": "99525",
+        "company_cd": "184",
+        "company_name": "長良川鉄道",
+        "line_name": "長良川鉄道越美南線"
+    },
+    {
+        "line_cd": "99526",
+        "company_cd": "185",
+        "company_name": "樽見鉄道",
+        "line_name": "樽見鉄道樽見線"
+    },
+    {
+        "line_cd": "99528",
+        "company_cd": "186",
+        "company_name": "三岐鉄道",
+        "line_name": "三岐鉄道三岐線"
+    },
+    {
+        "line_cd": "99529",
+        "company_cd": "186",
+        "company_name": "三岐鉄道",
+        "line_name": "三岐鉄道北勢線"
+    },
+    {
+        "line_cd": "99530",
+        "company_cd": "187",
+        "company_name": "伊勢鉄道",
+        "line_name": "伊勢鉄道伊勢線"
+    },
+    {
+        "line_cd": "99531",
+        "company_cd": "188",
+        "company_name": "伊賀鉄道",
+        "line_name": "伊賀鉄道伊賀線"
+    },
+    {
+        "line_cd": "99532",
+        "company_cd": "189",
+        "company_name": "養老鉄道",
+        "line_name": "養老鉄道養老線"
+    },
+    {
+        "line_cd": "99601",
+        "company_cd": "190",
+        "company_name": "近江鉄道",
+        "line_name": "近江鉄道本線"
+    },
+    {
+        "line_cd": "99602",
+        "company_cd": "190",
+        "company_name": "近江鉄道",
+        "line_name": "近江鉄道多賀線"
+    },
+    {
+        "line_cd": "99603",
+        "company_cd": "190",
+        "company_name": "近江鉄道",
+        "line_name": "近江鉄道八日市線"
+    },
+    {
+        "line_cd": "99604",
+        "company_cd": "191",
+        "company_name": "信楽高原鐵道",
+        "line_name": "信楽高原鐵道信楽線"
+    },
+    {
+        "line_cd": "99605",
+        "company_cd": "192",
+        "company_name": "嵯峨野観光鉄道",
+        "line_name": "嵯峨野観光線"
+    },
+    {
+        "line_cd": "99606",
+        "company_cd": "193",
+        "company_name": "叡山電鉄",
+        "line_name": "叡山電鉄叡山本線"
+    },
+    {
+        "line_cd": "99607",
+        "company_cd": "193",
+        "company_name": "叡山電鉄",
+        "line_name": "叡山電鉄鞍馬線"
+    },
+    {
+        "line_cd": "99608",
+        "company_cd": "194",
+        "company_name": "京都丹後鉄道",
+        "line_name": "宮福線"
+    },
+    {
+        "line_cd": "99609",
+        "company_cd": "194",
+        "company_name": "京都丹後鉄道",
+        "line_name": "宮豊線"
+    },
+    {
+        "line_cd": "99610",
+        "company_cd": "195",
+        "company_name": "京都市交通局",
+        "line_name": "京都市営地下鉄烏丸線"
+    },
+    {
+        "line_cd": "99611",
+        "company_cd": "195",
+        "company_name": "京都市交通局",
+        "line_name": "京都市営地下鉄東西線"
+    },
+    {
+        "line_cd": "99612",
+        "company_cd": "196",
+        "company_name": "京福電気鉄道",
+        "line_name": "京福電鉄嵐山本線"
+    },
+    {
+        "line_cd": "99613",
+        "company_cd": "196",
+        "company_name": "京福電気鉄道",
+        "line_name": "京福電鉄北野線"
+    },
+    {
+        "line_cd": "99614",
+        "company_cd": "197",
+        "company_name": "北大阪急行電鉄",
+        "line_name": "北大阪急行電鉄"
+    },
+    {
+        "line_cd": "99615",
+        "company_cd": "207",
+        "company_name": "能勢電鉄",
+        "line_name": "能勢電鉄妙見線"
+    },
+    {
+        "line_cd": "99616",
+        "company_cd": "22",
+        "company_name": "南海電鉄",
+        "line_name": "泉北線"
+    },
+    {
+        "line_cd": "99617",
+        "company_cd": "199",
+        "company_name": "水間鉄道",
+        "line_name": "水間鉄道水間線"
+    },
+    {
+        "line_cd": "99618",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ御堂筋線"
+    },
+    {
+        "line_cd": "99619",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ谷町線"
+    },
+    {
+        "line_cd": "99620",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ四つ橋線"
+    },
+    {
+        "line_cd": "99621",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ中央線"
+    },
+    {
+        "line_cd": "99622",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ千日前線"
+    },
+    {
+        "line_cd": "99623",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ堺筋線"
+    },
+    {
+        "line_cd": "99624",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ長堀鶴見緑地線"
+    },
+    {
+        "line_cd": "99625",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ南港ポートタウン線"
+    },
+    {
+        "line_cd": "99626",
+        "company_cd": "201",
+        "company_name": "大阪モノレール株式会社",
+        "line_name": "大阪モノレール線"
+    },
+    {
+        "line_cd": "99627",
+        "company_cd": "201",
+        "company_name": "大阪モノレール株式会社",
+        "line_name": "大阪モノレール彩都線"
+    },
+    {
+        "line_cd": "99628",
+        "company_cd": "202",
+        "company_name": "阪堺電気軌道",
+        "line_name": "阪堺電軌上町線"
+    },
+    {
+        "line_cd": "99629",
+        "company_cd": "202",
+        "company_name": "阪堺電気軌道",
+        "line_name": "阪堺電軌阪堺線"
+    },
+    {
+        "line_cd": "99630",
+        "company_cd": "203",
+        "company_name": "神戸高速鉄道",
+        "line_name": "神戸高速東西線"
+    },
+    {
+        "line_cd": "99631",
+        "company_cd": "203",
+        "company_name": "神戸高速鉄道",
+        "line_name": "神戸高速南北線"
+    },
+    {
+        "line_cd": "99632",
+        "company_cd": "204",
+        "company_name": "神戸電鉄",
+        "line_name": "有馬線"
+    },
+    {
+        "line_cd": "99633",
+        "company_cd": "204",
+        "company_name": "神戸電鉄",
+        "line_name": "三田線"
+    },
+    {
+        "line_cd": "99634",
+        "company_cd": "204",
+        "company_name": "神戸電鉄",
+        "line_name": "公園都市線"
+    },
+    {
+        "line_cd": "99635",
+        "company_cd": "204",
+        "company_name": "神戸電鉄",
+        "line_name": "粟生線"
+    },
+    {
+        "line_cd": "99636",
+        "company_cd": "211",
+        "company_name": "神戸市交通局",
+        "line_name": "北神線"
+    },
+    {
+        "line_cd": "99637",
+        "company_cd": "206",
+        "company_name": "山陽電気鉄道",
+        "line_name": "山陽電鉄本線"
+    },
+    {
+        "line_cd": "99638",
+        "company_cd": "206",
+        "company_name": "山陽電気鉄道",
+        "line_name": "山陽電鉄網干線"
+    },
+    {
+        "line_cd": "99640",
+        "company_cd": "207",
+        "company_name": "能勢電鉄",
+        "line_name": "能勢電鉄日生線"
+    },
+    {
+        "line_cd": "99642",
+        "company_cd": "208",
+        "company_name": "三木鉄道",
+        "line_name": "三木鉄道三木線"
+    },
+    {
+        "line_cd": "99643",
+        "company_cd": "209",
+        "company_name": "北条鉄道",
+        "line_name": "北条鉄道北条線"
+    },
+    {
+        "line_cd": "99644",
+        "company_cd": "210",
+        "company_name": "智頭急行",
+        "line_name": "智頭急行智頭線"
+    },
+    {
+        "line_cd": "99645",
+        "company_cd": "211",
+        "company_name": "神戸市交通局",
+        "line_name": "神戸市営地下鉄西神線"
+    },
+    {
+        "line_cd": "99646",
+        "company_cd": "211",
+        "company_name": "神戸市交通局",
+        "line_name": "神戸市営地下鉄山手線"
+    },
+    {
+        "line_cd": "99647",
+        "company_cd": "211",
+        "company_name": "神戸市交通局",
+        "line_name": "夢かもめ"
+    },
+    {
+        "line_cd": "99648",
+        "company_cd": "212",
+        "company_name": "神戸新交通",
+        "line_name": "ポートライナー"
+    },
+    {
+        "line_cd": "99649",
+        "company_cd": "212",
+        "company_name": "神戸新交通",
+        "line_name": "六甲ライナー"
+    },
+    {
+        "line_cd": "99650",
+        "company_cd": "213",
+        "company_name": "紀州鉄道",
+        "line_name": "紀州鉄道線"
+    },
+    {
+        "line_cd": "99651",
+        "company_cd": "214",
+        "company_name": "和歌山電鐵",
+        "line_name": "貴志川線"
+    },
+    {
+        "line_cd": "99652",
+        "company_cd": "249",
+        "company_name": "Osaka Metro",
+        "line_name": "大阪メトロ今里筋線"
+    },
+    {
+        "line_cd": "99653",
+        "company_cd": "194",
+        "company_name": "京都丹後鉄道",
+        "line_name": "宮舞線"
+    },
+    {
+        "line_cd": "99701",
+        "company_cd": "215",
+        "company_name": "若桜鉄道",
+        "line_name": "若桜線"
+    },
+    {
+        "line_cd": "99702",
+        "company_cd": "216",
+        "company_name": "一畑電車",
+        "line_name": "北松江線"
+    },
+    {
+        "line_cd": "99703",
+        "company_cd": "216",
+        "company_name": "一畑電車",
+        "line_name": "大社線"
+    },
+    {
+        "line_cd": "99704",
+        "company_cd": "217",
+        "company_name": "水島臨海鉄道",
+        "line_name": "水島本線"
+    },
+    {
+        "line_cd": "99705",
+        "company_cd": "218",
+        "company_name": "井原鉄道",
+        "line_name": "井原線"
+    },
+    {
+        "line_cd": "99706",
+        "company_cd": "219",
+        "company_name": "岡山電気軌道",
+        "line_name": "東山線"
+    },
+    {
+        "line_cd": "99707",
+        "company_cd": "219",
+        "company_name": "岡山電気軌道",
+        "line_name": "清輝橋線"
+    },
+    {
+        "line_cd": "99708",
+        "company_cd": "220",
+        "company_name": "スカイレールサービス",
+        "line_name": "スカイレールみどり坂線"
+    },
+    {
+        "line_cd": "99709",
+        "company_cd": "221",
+        "company_name": "広島高速交通",
+        "line_name": "アストラムライン"
+    },
+    {
+        "line_cd": "99710",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電１号線(宇品線)"
+    },
+    {
+        "line_cd": "99711",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電２号線(宮島線)"
+    },
+    {
+        "line_cd": "99712",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電３号線"
+    },
+    {
+        "line_cd": "99713",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電５号線(皆実線)"
+    },
+    {
+        "line_cd": "99714",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電６号線(江波線)"
+    },
+    {
+        "line_cd": "99715",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電７号線"
+    },
+    {
+        "line_cd": "99716",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電８号線(横川線)"
+    },
+    {
+        "line_cd": "99717",
+        "company_cd": "222",
+        "company_name": "広島電鉄",
+        "line_name": "広電９号線(白島線)"
+    },
+    {
+        "line_cd": "99718",
+        "company_cd": "223",
+        "company_name": "錦川鉄道",
+        "line_name": "錦川清流線"
+    },
+    {
+        "line_cd": "99801",
+        "company_cd": "224",
+        "company_name": "阿佐海岸鉄道",
+        "line_name": "阿波室戸シーサイドライン"
+    },
+    {
+        "line_cd": "99802",
+        "company_cd": "225",
+        "company_name": "高松琴平電気鉄道",
+        "line_name": "琴電琴平線"
+    },
+    {
+        "line_cd": "99803",
+        "company_cd": "225",
+        "company_name": "高松琴平電気鉄道",
+        "line_name": "琴電長尾線"
+    },
+    {
+        "line_cd": "99804",
+        "company_cd": "225",
+        "company_name": "高松琴平電気鉄道",
+        "line_name": "琴電志度線"
+    },
+    {
+        "line_cd": "99805",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道郡中線"
+    },
+    {
+        "line_cd": "99806",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道高浜線"
+    },
+    {
+        "line_cd": "99807",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道横河原線"
+    },
+    {
+        "line_cd": "99808",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道環状線（１系統）"
+    },
+    {
+        "line_cd": "99809",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道環状線（２系統）"
+    },
+    {
+        "line_cd": "99810",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道市駅線（３系統）"
+    },
+    {
+        "line_cd": "99811",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道松山駅前線（５系統）"
+    },
+    {
+        "line_cd": "99812",
+        "company_cd": "226",
+        "company_name": "伊予鉄道",
+        "line_name": "伊予鉄道本町線（６系統）"
+    },
+    {
+        "line_cd": "99814",
+        "company_cd": "227",
+        "company_name": "土佐くろしお鉄道",
+        "line_name": "中村線"
+    },
+    {
+        "line_cd": "99815",
+        "company_cd": "227",
+        "company_name": "土佐くろしお鉄道",
+        "line_name": "宿毛線"
+    },
+    {
+        "line_cd": "99816",
+        "company_cd": "227",
+        "company_name": "土佐くろしお鉄道",
+        "line_name": "ごめん・なはり線"
+    },
+    {
+        "line_cd": "99817",
+        "company_cd": "228",
+        "company_name": "土佐電気鉄道",
+        "line_name": "ごめん線"
+    },
+    {
+        "line_cd": "99818",
+        "company_cd": "228",
+        "company_name": "土佐電気鉄道",
+        "line_name": "伊野線"
+    },
+    {
+        "line_cd": "99819",
+        "company_cd": "228",
+        "company_name": "土佐電気鉄道",
+        "line_name": "桟橋線"
+    },
+    {
+        "line_cd": "99901",
+        "company_cd": "229",
+        "company_name": "甘木鉄道",
+        "line_name": "甘木鉄道甘木線"
+    },
+    {
+        "line_cd": "99902",
+        "company_cd": "230",
+        "company_name": "平成筑豊鉄道",
+        "line_name": "伊田線"
+    },
+    {
+        "line_cd": "99903",
+        "company_cd": "230",
+        "company_name": "平成筑豊鉄道",
+        "line_name": "糸田線"
+    },
+    {
+        "line_cd": "99904",
+        "company_cd": "230",
+        "company_name": "平成筑豊鉄道",
+        "line_name": "田川線"
+    },
+    {
+        "line_cd": "99905",
+        "company_cd": "231",
+        "company_name": "福岡市交通局",
+        "line_name": "福岡市営地下鉄空港線"
+    },
+    {
+        "line_cd": "99906",
+        "company_cd": "231",
+        "company_name": "福岡市交通局",
+        "line_name": "福岡市営地下鉄箱崎線"
+    },
+    {
+        "line_cd": "99907",
+        "company_cd": "231",
+        "company_name": "福岡市交通局",
+        "line_name": "福岡市営地下鉄七隈線"
+    },
+    {
+        "line_cd": "99908",
+        "company_cd": "232",
+        "company_name": "北九州高速鉄道",
+        "line_name": "北九州モノレール"
+    },
+    {
+        "line_cd": "99909",
+        "company_cd": "233",
+        "company_name": "筑豊電気鉄道",
+        "line_name": "筑豊電気鉄道線"
+    },
+    {
+        "line_cd": "99910",
+        "company_cd": "234",
+        "company_name": "松浦鉄道",
+        "line_name": "西九州線(有田～伊万里)"
+    },
+    {
+        "line_cd": "99911",
+        "company_cd": "234",
+        "company_name": "松浦鉄道",
+        "line_name": "西九州線(伊万里～佐世保)"
+    },
+    {
+        "line_cd": "99912",
+        "company_cd": "235",
+        "company_name": "島原鉄道",
+        "line_name": "島原鉄道線"
+    },
+    {
+        "line_cd": "99913",
+        "company_cd": "236",
+        "company_name": "長崎電気軌道",
+        "line_name": "長崎電軌１系統"
+    },
+    {
+        "line_cd": "99914",
+        "company_cd": "236",
+        "company_name": "長崎電気軌道",
+        "line_name": "長崎電軌３系統"
+    },
+    {
+        "line_cd": "99915",
+        "company_cd": "236",
+        "company_name": "長崎電気軌道",
+        "line_name": "長崎電軌４系統"
+    },
+    {
+        "line_cd": "99916",
+        "company_cd": "236",
+        "company_name": "長崎電気軌道",
+        "line_name": "長崎電軌５系統"
+    },
+    {
+        "line_cd": "99917",
+        "company_cd": "237",
+        "company_name": "熊本電気鉄道",
+        "line_name": "熊本電鉄本線"
+    },
+    {
+        "line_cd": "99918",
+        "company_cd": "237",
+        "company_name": "熊本電気鉄道",
+        "line_name": "熊本電鉄上熊本線"
+    },
+    {
+        "line_cd": "99919",
+        "company_cd": "238",
+        "company_name": "南阿蘇鉄道",
+        "line_name": "高森線"
+    },
+    {
+        "line_cd": "99920",
+        "company_cd": "239",
+        "company_name": "くま川鉄道",
+        "line_name": "湯前線"
+    },
+    {
+        "line_cd": "99921",
+        "company_cd": "240",
+        "company_name": "肥薩おれんじ鉄道",
+        "line_name": "肥薩おれんじ鉄道線"
+    },
+    {
+        "line_cd": "99922",
+        "company_cd": "241",
+        "company_name": "熊本市交通局",
+        "line_name": "熊本市電Ａ系統"
+    },
+    {
+        "line_cd": "99923",
+        "company_cd": "241",
+        "company_name": "熊本市交通局",
+        "line_name": "熊本市電Ｂ系統"
+    },
+    {
+        "line_cd": "99925",
+        "company_cd": "242",
+        "company_name": "鹿児島市交通局",
+        "line_name": "鹿児島市電１系統"
+    },
+    {
+        "line_cd": "99926",
+        "company_cd": "242",
+        "company_name": "鹿児島市交通局",
+        "line_name": "鹿児島市電２系統"
+    },
+    {
+        "line_cd": "99927",
+        "company_cd": "243",
+        "company_name": "沖縄都市モノレール",
+        "line_name": "ゆいレール"
+    },
+    {
+        "line_cd": "99928",
+        "company_cd": "230",
+        "company_name": "平成筑豊鉄道",
+        "line_name": "門司港レトロ観光線"
+    }
+]

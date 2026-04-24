@@ -1,5 +1,7 @@
+import json
 import random
 from datetime import datetime
+from pathlib import Path
 from typing import Any
 
 from app.application.ai_chat.get_wether import get_wether
@@ -87,8 +89,8 @@ MESSAGE_RULES = (
 CHARACTER = (
     "# Character\n"
     "- 高校2年生の女の子\n"
-    "- ギャル\n"
-    "- 明るく元気\n"
+    "- ゆるふわ系\n"
+    "- のんびりとした性格\n"
     "- ちょっとおせっかい\n"
     "- 情報通で好奇心旺盛\n"
     "- 友達思いで優しい\n"
@@ -159,24 +161,44 @@ def _build_line_queries(lines_list: list[str]) -> str:
     """
     if not lines_list:
         return "「路線未設定の為、検索不要」"
-    return "".join(f"「{line} 運行情報」" for line in lines_list[:5])
+
+    APP_ROOT = Path(__file__).resolve().parents[2]
+    json_path = APP_ROOT / "domain/master/lines.json"
+
+    with open(json_path, encoding="utf-8") as f:
+        lines = json.load(f)
+
+    line_dict = {
+        item["line_cd"]: f"{item['company_name']} {item['line_name']} 運行情報"
+        for item in lines
+    }
+    result = [line_dict[i] for i in lines_list if i in line_dict]
+    return "".join(f"「{r}」" for r in result)
 
 
 def _build_topic_queries(topics_list: list[str]) -> str:
-    """トピックは3件までを検索クエリに含めます。4件以上ある場合はランダムに3件を抽出します。
+    """トピックは3件まで。topicが設定されていない場合は、ランダムに3件セットします。"""
+    APP_ROOT = Path(__file__).resolve().parents[2]
+    json_path = APP_ROOT / "domain/master/topics.json"
 
-    Args:
-        topics_list: トピックリスト（3〜5件）
+    # topics.json の読み込み
+    with open(json_path, encoding="utf-8") as f:
+        topics = json.load(f)
 
-    Returns:
-        フォーマットされた検索クエリ文字列
-    """
+    # id → name の辞書
+    topic_dict = {item["topic_id"]: item["topic_name"] for item in topics}
+
+    # topics_list が空ならランダムに3件選ぶ
     if not topics_list:
-        return "「未設定」"
+        topics_list = random.sample(list(topic_dict.keys()), k=3)
 
-    # 4件以上の場合はランダムに3件を抽出、3件以下の場合はそのまま使用
-    selected_topics = random.sample(topics_list, min(3, len(topics_list)))
-    return "".join(f"「{topic} 最新」" for topic in selected_topics)
+    # 最大3件に制限
+    topics_list = topics_list[:3]
+
+    # name に変換（存在しないIDは除外）
+    names = [topic_dict[tid] for tid in topics_list if tid in topic_dict]
+
+    return "".join(f"「{topic} 最新」" for topic in names)
 
 
 def _format_list(value: list[str]) -> str:
