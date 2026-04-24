@@ -251,6 +251,13 @@ Resources:
             Path: /user/create-ai-profile
             Method: post
 
+        UpdateAIProfile:
+          Type: Api
+          Properties:
+            Path: /user/update-ai-profile
+            Method: put
+
+
 
 Outputs:
   ReceivedMessageFunctionArn:

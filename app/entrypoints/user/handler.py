@@ -11,9 +11,11 @@ from app.adapters import aws_clients, dynamodb_query_service, dynamodb_unit_of_w
 from app.adapters.dynamodb_query_service import DynamoDBAIUserProfilesQueryService
 from app.application.user.creat_ai_profile_usecase import CreateAIProfileUseCase
 from app.application.user.exist_line_user_usecase import ExistLineUserUseCase
+from app.application.user.update_ai_profile_usecase import UpdateAIProfileUseCase
 from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 from app.domain.model.user.ai_profile_request import (
     AIUserProfileRequestCreate,
+    AIUserProfileRequestUpdate,
 )
 from app.domain.model.user.exist_user_result import ExistUserResult
 from app.entrypoints.shared.request_utils import get_body
@@ -53,6 +55,16 @@ def create_ai_user_profile(req: AIUserProfileRequestCreate) -> AIUserProfile:
     usecase = CreateAIProfileUseCase(
         unit_of_work,
     )
+    return usecase.execute(req)
+
+
+def update_ai_user_profile(req: AIUserProfileRequestUpdate) -> AIUserProfile:
+    ai_user_profiles_query_service = DynamoDBAIUserProfilesQueryService(
+        config.AppConfig.get_table_name_ai_user_profile(),
+        dynamodb_client,
+    )
+
+    usecase = UpdateAIProfileUseCase(unit_of_work, ai_user_profiles_query_service)
     return usecase.execute(req)
 
 
@@ -156,6 +168,60 @@ def create_ai_profile():
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
                 "Access-Control-Allow-Methods": "OPTIONS,POST,",
+            },
+            body=json.dumps({"error": "Internal server error"}),
+        )
+
+
+@app.put("/user/update-ai-profile")
+def update_ai_profile():
+    """
+    既存AIProfileを更新する
+    """
+    try:
+        event = app.current_event
+
+        req_body = _normalize_request_body(event)
+
+        result = get_body(req_body, AIUserProfileRequestCreate)
+
+        if result.is_valid:
+            updated = update_ai_user_profile(result.value)
+
+            return Response(
+                status_code=204,
+                content_type="application/json",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,PUT,",
+                },
+                body=json.dumps({"id": updated.id}, ensure_ascii=False),
+            )
+
+        else:
+            logger.error("Request validation error.")
+            return Response(
+                status_code=400,
+                content_type="application/json",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,PUT",
+                },
+                body=json.dumps({"error": "Request validation error."}),
+            )
+
+    except Exception as e:
+        logger.exception(e, "Error occurred while processing Update AI User Profile")
+
+        return Response(
+            status_code=500,
+            content_type="application/json",
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,PUT",
             },
             body=json.dumps({"error": "Internal server error"}),
         )
