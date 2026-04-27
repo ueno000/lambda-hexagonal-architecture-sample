@@ -114,7 +114,7 @@ def request_chat(prompt: str) -> str:
         )
         if payload:
             logger.error(f"Error payload: {_stringify_error_payload(payload)}")
-        raise
+        return f"Error requesting chat from Gemini API: {type(e).__name__}: {str(e)}"
 
 
 def response_chat(line_message_processor, chat_response_text: str):
