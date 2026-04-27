@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime, timezone
 
 import boto3
+import requests
 from aws_lambda_powertools import Logger, Tracer
 
 from app import config
@@ -19,6 +20,9 @@ from app.domain.model.line.line_user import LINEUser
 app_config = config.AppConfig(**config.config)
 logger = Logger()
 tracer = Tracer()
+
+LOADING_URL = "https://api.line.me/v2/bot/chat/loading/start"
+LOADING_SECONDS = 60
 
 dynamodb_client = aws_clients.get_dynamodb_client()
 
@@ -74,6 +78,8 @@ def assign_received_message(
         first_event = messaging_webhook_event.events[0]
         user_id = first_event["source"]["userId"]
         logger.info(f"Processing message for user: {user_id}")
+
+        loading(user_id, config.AppConfig.get_line_channel_access_token)
 
         # Find or create LINE user
         line_user = line_users_query_service.get_line_user_by_line_id(user_id)
@@ -262,3 +268,25 @@ def enqueue_reply_request(line_message_processor_id: str) -> None:
         raise RuntimeError(
             f"Failed to enqueue reply request for processor_id: {line_message_processor_id}"
         ) from e
+
+
+def loading(user_id: str, channel_access_token: str):
+    payload = {"chatId": user_id, "loadingSeconds": LOADING_SECONDS}
+
+    headers = {
+        "Authorization": f"Bearer {channel_access_token}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        response = requests.post(LOADING_URL, headers=headers, data=json.dumps(payload))
+
+        # 成功・失敗に関わらずログだけ出す
+        logger.info(f"[Loading] Status: {response.status_code}")
+        logger.info(f"[Loading] Response: {response.text}")
+
+    except Exception as e:
+        # 例外が起きても続行
+        logger.warning(f"[Loading] Request failed: {e}")
+
+    logger.info("[Loading] End")
