@@ -97,6 +97,12 @@ Resources:
             RestApiId: !Ref SharedApi
             Path: /user/update-ai-profile
             Method: put
+        UpdateAIProfileCharacterType:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SharedApi
+            Path: /user/update-ai-profile-character-type
+            Method: post
 
 Outputs:
   ApiId:
