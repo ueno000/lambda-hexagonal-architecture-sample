@@ -2,6 +2,7 @@ import sys
 import types
 import unittest
 from dataclasses import dataclass
+from enum import Enum
 from unittest.mock import patch
 
 
@@ -35,6 +36,7 @@ from app.application.ai_chat.prompt_builder import (
     _build_line_queries,
     _build_topic_queries,
     _format_list,
+    _normalize_character_type,
     _normalize_list,
     _resolve_topic_names,
     build_daily_guide_prompt,
@@ -253,6 +255,13 @@ class PromptBuilderTests(unittest.TestCase):
         """混合型のリスト"""
         result = _normalize_list([1, "東京", 3])
         self.assertEqual(result, ["1", "東京", "3"])
+
+    def test_normalize_character_type_with_enum(self):
+        class DummyCharacterType(Enum):
+            Butler = 2
+
+        result = _normalize_character_type(DummyCharacterType.Butler)
+        self.assertEqual(2, result)
 
 
 if __name__ == "__main__":

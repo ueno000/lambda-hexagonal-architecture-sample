@@ -1,5 +1,6 @@
 import json
 import random
+from enum import Enum
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -111,7 +112,7 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
     gender = ai_user_profile.gender
     region = ai_user_profile.region or "東京都"
     region_cd = ai_user_profile.region_cd or "130000"
-    character_type = ai_user_profile.character_type
+    character_type = _normalize_character_type(ai_user_profile.character_type)
 
     # リスト形式のデータを正規化
     interest_topics_list = _normalize_list(ai_user_profile.interest_topics)
@@ -246,3 +247,9 @@ def _normalize_list(value: Any) -> list[str]:
         return [str(item) for item in value if item]
 
     return [str(value)]
+
+
+def _normalize_character_type(value: Any) -> int:
+    if isinstance(value, Enum):
+        return int(value.value)
+    return int(value)
