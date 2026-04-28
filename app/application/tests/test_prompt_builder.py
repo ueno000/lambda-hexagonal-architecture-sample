@@ -34,6 +34,7 @@ from app.application.ai_chat.prompt_builder import (
     _build_line_queries,
     _build_topic_queries,
     _format_list,
+    _resolve_topic_names,
     _normalize_list,
     build_daily_guide_prompt,
 )
@@ -91,6 +92,23 @@ class PromptBuilderTests(unittest.TestCase):
         self.assertIn("東京都", prompt)
         self.assertIn("山手線", prompt)
         self.assertIn("天気:130000", prompt)
+        mock_get_wether.assert_called_once_with("130000")
+
+    @patch(
+        "app.application.ai_chat.prompt_builder.get_wether",
+        return_value="天気:130000",
+    )
+    def test_build_daily_guide_prompt_converts_topic_codes_for_display(
+        self, mock_get_wether
+    ):
+        profile = self._make_ai_user_profile(
+            interest_topics=["1001", "1027"],
+        )
+
+        prompt = build_daily_guide_prompt(profile)
+
+        self.assertIn("- 関心トピック: グルメ、生成AI", prompt)
+        self.assertNotIn("- 関心トピック: 1001、1027", prompt)
         mock_get_wether.assert_called_once_with("130000")
 
     @patch(
@@ -178,6 +196,14 @@ class PromptBuilderTests(unittest.TestCase):
         self.assertIn("料理", result)
         self.assertIn("カフェ", result)
         self.assertEqual(result.count("「"), 3)
+
+    def test_resolve_topic_names_converts_codes_to_names(self):
+        result = _resolve_topic_names(["1001", "1027"])
+        self.assertEqual(result, ["グルメ", "生成AI"])
+
+    def test_resolve_topic_names_keeps_display_names(self):
+        result = _resolve_topic_names(["グルメ", "イベント"])
+        self.assertEqual(result, ["グルメ", "イベント"])
 
     def test_format_list_with_empty_list(self):
         """空のリスト"""

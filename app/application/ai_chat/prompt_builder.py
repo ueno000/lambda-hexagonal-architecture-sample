@@ -117,8 +117,10 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
     interest_topics_list = _normalize_list(ai_user_profile.interest_topics)
     lines_list = _normalize_list(ai_user_profile.lines)
 
+    interest_topics_display_list = _resolve_topic_names(interest_topics_list)
+
     # 表示用フォーマット
-    interest_topics = _format_list(interest_topics_list)
+    interest_topics = _format_list(interest_topics_display_list)
     lines = _format_list(lines_list)
 
     # 天気の情報は先に取得してプロンプトに組み込む
@@ -178,15 +180,7 @@ def _build_line_queries(lines_list: list[str]) -> str:
 
 def _build_topic_queries(topics_list: list[str]) -> str:
     """トピックは3件まで。topicが設定されていない場合は、ランダムに3件セットします。"""
-    APP_ROOT = Path(__file__).resolve().parents[2]
-    json_path = APP_ROOT / "domain/master/topics.json"
-
-    # topics.json の読み込み
-    with open(json_path, encoding="utf-8") as f:
-        topics = json.load(f)
-
-    # id → name の辞書
-    topic_dict = {item["topic_id"]: item["topic_name"] for item in topics}
+    topic_dict = _load_topic_dict()
 
     # topics_list が空ならランダムに3件選ぶ
     if not topics_list:
@@ -199,6 +193,24 @@ def _build_topic_queries(topics_list: list[str]) -> str:
     names = [topic_dict[tid] for tid in topics_list if tid in topic_dict]
 
     return "".join(f"「{topic} 最新」" for topic in names)
+
+
+def _resolve_topic_names(topics_list: list[str]) -> list[str]:
+    if not topics_list:
+        return []
+
+    topic_dict = _load_topic_dict()
+    return [topic_dict.get(topic, topic) for topic in topics_list]
+
+
+def _load_topic_dict() -> dict[str, str]:
+    app_root = Path(__file__).resolve().parents[2]
+    json_path = app_root / "domain/master/topics.json"
+
+    with open(json_path, encoding="utf-8") as f:
+        topics = json.load(f)
+
+    return {item["topic_id"]: item["topic_name"] for item in topics}
 
 
 def _format_list(value: list[str]) -> str:
