@@ -1,0 +1,68 @@
+name: Deploy Infra Stack
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "template.yml"
+      - "infrastructure/infra.yml"
+      - "app/adapters/**"
+      - ".github/workflows/deploy-cloud-formation-infra.yaml"
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: prototype
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::176355978867:role/github-deploy-role
+          aws-region: ap-northeast-1
+
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install assertpy moto pytest
+
+      - name: Run tests
+        run: |
+          python -m unittest discover -s app -p "test_*.py" -v
+
+      - name: Setup SAM CLI
+        run: |
+          pip install aws-sam-cli
+
+      - name: Build infrastructure template
+        run: |
+          sam build --template-file infrastructure/infra.yml --use-container
+
+      - name: Deploy infrastructure stack
+        run: |
+          sam deploy \
+            --template-file .aws-sam/build/template.yaml \
+            --stack-name lambda-hexagonal-architecture-sample-infra \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --parameter-overrides \
+              LINEChannelSecret=${{ secrets.LINE_CHANNEL_SECRET }} \
+              LINEChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
+              GeminiAPIKey=${{ secrets.GEMINI_API_KEY }} \
+            --resolve-s3 \
+            --region ap-northeast-1 \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset
