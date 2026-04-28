@@ -57,7 +57,7 @@ jobs:
           sam deploy \
             --template-file .aws-sam/build/template.yaml \
             --stack-name lambda-hexagonal-architecture-sample-infra \
-            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM \
+            --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND \
             --parameter-overrides \
               LINEChannelSecret=${{ secrets.LINE_CHANNEL_SECRET }} \
               LINEChannelAccessToken=${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }} \
