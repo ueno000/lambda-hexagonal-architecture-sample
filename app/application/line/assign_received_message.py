@@ -116,7 +116,7 @@ def assign_received_message(
             if not ai_user_profile:
                 send_message(
                     reply_token=first_event["replyToken"],
-                    message="設定からプロフィール設定をしてください",
+                    message="メニューの『マイページ』からプロフィール設定をしてください",
                 )
                 logger.info(
                     "AI user profile not found. Sent profile setup guidance. line_user_id=%s",

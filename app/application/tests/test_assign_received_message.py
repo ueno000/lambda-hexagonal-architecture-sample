@@ -231,7 +231,7 @@ class AssignReceivedMessageTests(unittest.TestCase):
         self.assertEqual("processor-1", processor_id)
         mock_send_message.assert_called_once_with(
             reply_token="reply-token",
-            message="設定からプロフィール設定をしてください",
+            message="メニューの『マイページ』からプロフィール設定をしてください",
         )
         mock_enqueue_ai_chat_request.assert_not_called()
         mock_enqueue_reply_request.assert_not_called()
