@@ -1,0 +1,174 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  LINEChannelSecret:
+    Type: String
+    NoEcho: true
+
+  LINEChannelAccessToken:
+    Type: String
+    NoEcho: true
+
+  GeminiAPIKey:
+    Type: String
+    NoEcho: true
+
+Resources:
+  LINEMessageProcessorDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: LINEMessageProcessor
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+
+  LINEUserDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: LINEUser
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: line_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: line_id-index
+          KeySchema:
+            - AttributeName: line_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+
+  AIUserProfileDB:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: AIUserProfile
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: line_user_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: line_user_id-index
+          KeySchema:
+            - AttributeName: line_user_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      BillingMode: PAY_PER_REQUEST
+
+  AIChatQueueSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: AIChatQueueSQS
+
+  ReplyQueueSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: ReplyQueueSQS
+
+  LINESecrets:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: line/app
+      Description: LINE credentials
+      KmsKeyId: alias/aws/secretsmanager
+      SecretString: !Sub |
+        {
+          "LINE_CHANNEL_SECRET": "${LINEChannelSecret}",
+          "LINE_CHANNEL_ACCESS_TOKEN": "${LINEChannelAccessToken}",
+          "GEMINI_API_KEY": "${GeminiAPIKey}"
+        }
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: LambdaDynamoDBPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                Resource:
+                  - !GetAtt LINEMessageProcessorDB.Arn
+                  - !GetAtt LINEUserDB.Arn
+                  - !Sub ${LINEUserDB.Arn}/index/line_id-index
+                  - !GetAtt AIUserProfileDB.Arn
+                  - !Sub ${AIUserProfileDB.Arn}/index/line_user_id-index
+        - PolicyName: LambdaSecretsManagerPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref LINESecrets
+        - PolicyName: LambdaSQSPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:SendMessage
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource:
+                  - !GetAtt AIChatQueueSQS.Arn
+                  - !GetAtt ReplyQueueSQS.Arn
+
+Outputs:
+  LINEMessageProcessorTableName:
+    Value: !Ref LINEMessageProcessorDB
+
+  LINEUserTableName:
+    Value: !Ref LINEUserDB
+
+  AIUserProfileTableName:
+    Value: !Ref AIUserProfileDB
+
+  AIChatQueueArn:
+    Value: !GetAtt AIChatQueueSQS.Arn
+
+  AIChatQueueUrl:
+    Value: !Ref AIChatQueueSQS
+
+  ReplyQueueArn:
+    Value: !GetAtt ReplyQueueSQS.Arn
+
+  ReplyQueueUrl:
+    Value: !Ref ReplyQueueSQS
+
+  LINESecretArn:
+    Value: !Ref LINESecrets
+
+  LambdaExecutionRoleArn:
+    Value: !GetAtt LambdaExecutionRole.Arn

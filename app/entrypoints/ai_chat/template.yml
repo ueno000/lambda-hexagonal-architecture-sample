@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  LambdaExecutionRoleArn:
+    Type: String
+  LINEMessageProcessorTableName:
+    Type: String
+  LINEUserTableName:
+    Type: String
+  AIUserProfileTableName:
+    Type: String
+  LINESecretArn:
+    Type: String
+  AIChatQueueArn:
+    Type: String
+  AIChatQueueUrl:
+    Type: String
+  ReplyQueueUrl:
+    Type: String
+
+Resources:
+  AIChatFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: ai-chat
+      CodeUri: ../../../
+      Handler: app.entrypoints.ai_chat.handler.handler
+      Runtime: python3.14
+      Timeout: 30
+      MemorySize: 256
+      Tracing: Active
+      Role: !Ref LambdaExecutionRoleArn
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME_LINE: !Ref LINEMessageProcessorTableName
+          TABLE_NAME_LINE_USER: !Ref LINEUserTableName
+          TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileTableName
+          LINE_SECRET_ARN: !Ref LINESecretArn
+          AI_CHAT_QUEUE_URL: !Ref AIChatQueueUrl
+          REPLY_QUEUE_URL: !Ref ReplyQueueUrl
+          DYNAMODB_ENDPOINT_URL: ""
+          ENV: ""
+      Events:
+        AIChatQueueEvent:
+          Type: SQS
+          Properties:
+            Queue: !Ref AIChatQueueArn
+            BatchSize: 1
+
+Outputs:
+  FunctionArn:
+    Value: !GetAtt AIChatFunction.Arn
