@@ -1,7 +1,7 @@
 from aws_lambda_powertools import Logger
 
 from app.adapters.data_save_exception import DataSaveException
-from app.domain.model.ai_chat.ai_user_profile import AIUserProfile, CharacterType
+from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 from app.domain.model.user.ai_profile_request import AIUserProfileRequestUpdate
 
 
@@ -27,9 +27,7 @@ class UpdateAIProfileUseCase:
             req_data = req.model_dump(exclude_none=True, exclude={"id"})
             current_data = data if isinstance(data, dict) else data.model_dump()
             merged_data = {**current_data, **req_data, "id": req.id}
-            merged_data.setdefault(
-                "character_type", CharacterType.Student_Female.value
-            )
+            merged_data.setdefault("character_type", 0)
 
             ai_user_profile = AIUserProfile(**merged_data)
 
