@@ -11,7 +11,7 @@ from app.adapters.dynamodb_unit_of_work import (
     DynamoDBLINEMessageProcessorsRepository,
     DynamoDBLINEUsersRepository,
 )
-from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
+from app.domain.model.ai_chat.ai_user_profile import AIUserProfile, CharacterType
 
 
 class DynamoDBUnitOfWorkTests(unittest.TestCase):
@@ -56,6 +56,22 @@ class DynamoDBUnitOfWorkTests(unittest.TestCase):
         self.assertEqual(
             {"S": "line-user-1"}, enqueued_item["Put"]["Item"]["line_user_id"]
         )
+        self.assertEqual({"N": "0"}, enqueued_item["Put"]["Item"]["character_type"])
+
+    def test_ai_user_profile_repository_update_serializes_enum_character_type(self):
+        context = Mock()
+        repository = DynamoDBAIUserProfileRepository("ai-user-profile-table", context)
+        profile = AIUserProfile(
+            id="profile-1",
+            line_user_id="line-user-1",
+            character_type=CharacterType.Butler,
+        )
+
+        repository.update(profile)
+
+        enqueued_item = context.add_generic_item.call_args.kwargs["item"]
+        values = enqueued_item["Update"]["ExpressionAttributeValues"]
+        self.assertEqual({"N": str(CharacterType.Butler.value)}, values[":character_type"])
 
 
 if __name__ == "__main__":

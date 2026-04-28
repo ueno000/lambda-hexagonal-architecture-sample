@@ -1,3 +1,4 @@
+import enum
 from decimal import Decimal
 from typing import Any, List
 
@@ -143,6 +144,8 @@ def _serialize_dynamodb_map(values: dict) -> dict:
 
 
 def _serialize_dynamodb_value(value: Any) -> dict:
+    if isinstance(value, enum.Enum):
+        value = value.value
     if value is None:
         return {"NULL": True}
     if isinstance(value, bool):
