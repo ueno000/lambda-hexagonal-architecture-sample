@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  LambdaExecutionRoleArn:
+    Type: String
+  LINEMessageProcessorTableName:
+    Type: String
+  LINEUserTableName:
+    Type: String
+  AIUserProfileTableName:
+    Type: String
+  LINESecretArn:
+    Type: String
+  AIChatQueueUrl:
+    Type: String
+  ReplyQueueUrl:
+    Type: String
+
+Resources:
+  SharedApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors:
+        AllowMethods: "'POST,PUT,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'*'"
+
+  ReceivedMessageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: received-message
+      CodeUri: ../
+      Handler: app.entrypoints.line.handler.handler
+      Runtime: python3.14
+      Timeout: 30
+      MemorySize: 256
+      Tracing: Active
+      Role: !Ref LambdaExecutionRoleArn
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME_LINE: !Ref LINEMessageProcessorTableName
+          TABLE_NAME_LINE_USER: !Ref LINEUserTableName
+          TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileTableName
+          LINE_SECRET_ARN: !Ref LINESecretArn
+          AI_CHAT_QUEUE_URL: !Ref AIChatQueueUrl
+          REPLY_QUEUE_URL: !Ref ReplyQueueUrl
+          DYNAMODB_ENDPOINT_URL: ""
+          ENV: ""
+      Events:
+        Webhook:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SharedApi
+            Path: /line/receive-message
+            Method: post
+
+  LINEUserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: line-user
+      CodeUri: ../
+      Handler: app.entrypoints.user.handler.handler
+      Runtime: python3.14
+      Timeout: 30
+      MemorySize: 256
+      Tracing: Active
+      Role: !Ref LambdaExecutionRoleArn
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME_LINE: !Ref LINEMessageProcessorTableName
+          TABLE_NAME_LINE_USER: !Ref LINEUserTableName
+          TABLE_NAME_AI_USER_PROFILE: !Ref AIUserProfileTableName
+          DYNAMODB_ENDPOINT_URL: ""
+          ENV: ""
+      Events:
+        ExistLineUser:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SharedApi
+            Path: /user/exist-line-user
+            Method: post
+        CreateAIProfile:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SharedApi
+            Path: /user/create-ai-profile
+            Method: post
+        UpdateAIProfile:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SharedApi
+            Path: /user/update-ai-profile
+            Method: put
+
+Outputs:
+  ApiId:
+    Value: !Ref SharedApi
+
+  ReceivedMessageFunctionArn:
+    Value: !GetAtt ReceivedMessageFunction.Arn
+
+  LINEUserFunctionArn:
+    Value: !GetAtt LINEUserFunction.Arn
