@@ -17,6 +17,28 @@ spec.loader.exec_module(handler)
 
 
 class UserHandlerTests(unittest.TestCase):
+    def test_exist_user_returns_character_type_in_response(self):
+        handler.app.current_event = SimpleNamespace(
+            body='{"accessToken":"token-123"}',
+            is_base64_encoded=False,
+            raw_event={},
+        )
+        exist_result = SimpleNamespace(
+            model_dump=lambda: {
+                "is_exist": True,
+                "line_user_id": "line-user-1",
+                "user_profile_id": "profile-1",
+                "character_type": 2,
+                "name": "Taro",
+            }
+        )
+
+        with patch.object(handler, "exist_line_user", return_value=exist_result):
+            response = handler.exist_user()
+
+        self.assertEqual(200, response["statusCode"])
+        self.assertEqual(2, json.loads(response["body"])["character_type"])
+
     def test_update_ai_profile_character_type_returns_200(self):
         handler.app.current_event = SimpleNamespace(
             body='{"id":"profile-1","character_type":2}',

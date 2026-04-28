@@ -45,6 +45,7 @@ class ExistLineUserUseCaseTests(unittest.TestCase):
 
         self.assertFalse(result.is_exist)
         self.assertIsNone(result.user_profile_id)
+        self.assertIsNone(result.character_type)
         self.assertIsNone(result.name)
 
     def test_execute_returns_existing_profile_result(self):
@@ -54,6 +55,7 @@ class ExistLineUserUseCaseTests(unittest.TestCase):
         self.ai_user_query_service.get_ai_user_profile_by_line_user_id = (
             lambda _user_id: {
             "id": "profile-1",
+            "character_type": 2,
             "name": "Taro",
             "gender": "male",
             "age": "30",
@@ -69,6 +71,7 @@ class ExistLineUserUseCaseTests(unittest.TestCase):
 
         self.assertTrue(result.is_exist)
         self.assertEqual("profile-1", result.user_profile_id)
+        self.assertEqual(2, result.character_type)
         self.assertEqual("Taro", result.name)
         self.assertEqual(["1", "2"], result.lines)
         self.assertEqual(["10", "20"], result.interest_topics)
