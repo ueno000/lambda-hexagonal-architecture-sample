@@ -1,13 +1,7 @@
-name: Deploy CloudFormation
+name: Legacy Root Deploy
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "template.yml"
-      - "app/**"
-      - ".github/workflows/deploy-cloud-formation.yaml"
+  workflow_dispatch:
 
 permissions:
   id-token: write
