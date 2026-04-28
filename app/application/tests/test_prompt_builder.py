@@ -9,6 +9,7 @@ from unittest.mock import patch
 class AIUserProfile:
     id: str
     line_user_id: str
+    character_type: int
     name: str = None
     gender: str = None
     age: str = None
@@ -34,8 +35,8 @@ from app.application.ai_chat.prompt_builder import (
     _build_line_queries,
     _build_topic_queries,
     _format_list,
-    _resolve_topic_names,
     _normalize_list,
+    _resolve_topic_names,
     build_daily_guide_prompt,
 )
 
@@ -52,6 +53,7 @@ class PromptBuilderTests(unittest.TestCase):
         region="東京都",
         region_code="130000",
         lines=None,
+        character_type=0,
     ):
         """テスト用の AIUserProfile を生成"""
         return AIUserProfile(
@@ -64,6 +66,7 @@ class PromptBuilderTests(unittest.TestCase):
             region=region,
             region_cd=region_code,
             lines=lines or [],
+            character_type=0,
         )
 
     @patch(
@@ -80,6 +83,7 @@ class PromptBuilderTests(unittest.TestCase):
             region="東京都",
             region_code="130000",
             lines=["山手線", "中央線"],
+            character_type=0,
         )
 
         prompt = build_daily_guide_prompt(profile)

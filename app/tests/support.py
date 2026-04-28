@@ -38,6 +38,9 @@ def _install_pydantic_stub() -> None:
         def dict(self, *args, **kwargs):
             return dict(self.__dict__)
 
+        def model_dump(self, *args, **kwargs):
+            return dict(self.__dict__)
+
     def Field(default=None, default_factory=None, **kwargs):
         if default_factory is not None:
             return default_factory
@@ -49,9 +52,14 @@ def _install_pydantic_stub() -> None:
 
         return decorator
 
+    class ValidationError(Exception):
+        def errors(self):
+            return []
+
     module.BaseModel = BaseModel
     module.Field = Field
     module.field_validator = field_validator
+    module.ValidationError = ValidationError
     sys.modules["pydantic"] = module
 
 
@@ -156,10 +164,32 @@ def _install_powertools_stub() -> None:
 
             return decorator
 
+        def put(self, _path):
+            def decorator(func):
+                return func
+
+            return decorator
+
         def resolve(self, event, context):
             return {"event": event, "context": context}
 
+    class Response(dict):
+        def __init__(
+            self,
+            status_code=200,
+            content_type="application/json",
+            headers=None,
+            body="",
+        ):
+            super().__init__(
+                statusCode=status_code,
+                headers=headers or {},
+                body=body,
+                multiValueHeaders={"Content-Type": [content_type]},
+            )
+
     api_gateway_module.ApiGatewayResolver = ApiGatewayResolver
+    api_gateway_module.Response = Response
     event_handler_module.api_gateway = api_gateway_module
     sys.modules["aws_lambda_powertools.event_handler"] = event_handler_module
     sys.modules[

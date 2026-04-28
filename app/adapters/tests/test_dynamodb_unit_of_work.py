@@ -21,8 +21,10 @@ class DynamoDBUnitOfWorkTests(unittest.TestCase):
         self.assertEqual({"id": "user-1"}, key)
 
     def test_generate_line_message_processor_key_uses_pk_prefix(self):
-        key = DynamoDBLINEMessageProcessorsRepository.generate_line_message_processor_key(
-            "processor-1"
+        key = (
+            DynamoDBLINEMessageProcessorsRepository.generate_line_message_processor_key(
+                "processor-1"
+            )
         )
 
         self.assertEqual(
@@ -43,6 +45,7 @@ class DynamoDBUnitOfWorkTests(unittest.TestCase):
             region_cd="13",
             lines=["Yamanote"],
             interest_topics=["weather"],
+            character_type=0,
         )
 
         repository.add(profile)

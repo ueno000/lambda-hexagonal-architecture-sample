@@ -25,6 +25,7 @@ class CreateAIProfileUseCase:
             region_cd=req.region_cd,
             lines=req.lines,
             interest_topics=req.interest_topics,
+            character_type=0,
         )
 
         try:

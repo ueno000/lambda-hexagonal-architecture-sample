@@ -53,6 +53,29 @@ class UpdateAIProfileUseCaseTests(unittest.TestCase):
         self.assertIs(unit_of_work.updated_profile, result)
         self.assertTrue(unit_of_work.committed)
 
+    def test_execute_updates_character_type(self):
+        unit_of_work = DummyUnitOfWork()
+        query_service = SimpleNamespace(
+            get_ai_user_profile_by_id=lambda _id: {
+                "id": "profile-1",
+                "line_user_id": "line-user-1",
+            }
+        )
+        req = SimpleNamespace(
+            id="profile-1",
+            model_dump=lambda **_kwargs: {
+                "character_type": 2,
+            },
+        )
+
+        result = UpdateAIProfileUseCase(unit_of_work, query_service).execute(req)
+
+        self.assertEqual("profile-1", result.id)
+        self.assertEqual("line-user-1", result.line_user_id)
+        self.assertEqual(2, result.character_type)
+        self.assertIs(unit_of_work.updated_profile, result)
+        self.assertTrue(unit_of_work.committed)
+
 
 if __name__ == "__main__":
     unittest.main()

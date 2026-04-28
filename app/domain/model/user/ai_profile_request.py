@@ -2,6 +2,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+from app.domain.model.ai_chat.ai_user_profile import CharacterType
+
 
 class AIUserProfileRequestBase(BaseModel):
     id: Optional[str] = None
@@ -31,3 +33,21 @@ class AIUserProfileRequestCreate(AIUserProfileRequestBase):
 class AIUserProfileRequestUpdate(AIUserProfileRequestBase):
     class Config:
         extra = "forbid"
+
+
+class AIUserProfileCharacterTypeUpdateRequest(BaseModel):
+    id: str = Field(..., min_length=1)
+    character_type: int = Field(...)
+
+    @field_validator("character_type", mode="before")
+    def validate_character_type_is_int(cls, v):
+        if isinstance(v, bool) or not isinstance(v, int):
+            raise ValueError("character_typeは数値で指定してください。")
+        return v
+
+    @field_validator("character_type")
+    def validate_character_type_range(cls, v):
+        valid_values = {character_type.value for character_type in CharacterType}
+        if v not in valid_values:
+            raise ValueError("character_typeが不正です。")
+        return v

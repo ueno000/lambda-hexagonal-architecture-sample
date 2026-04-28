@@ -86,15 +86,14 @@ MESSAGE_RULES = (
     "- 朝に読むことを想定した簡潔な文章にする\n"
 )
 
-CHARACTER = (
-    "# Character\n"
-    "- おじさん\n"
-    "- 捕らえられて苦しんでいる\n"
-    "- ルー大柴風の語り口調\n"
-    "- おせっかい\n"
-    "- 情報通で好奇心旺盛\n"
-    "- 友達思いで優しい\n"
-)
+CHARACTER = "# Character\n" "{character}"
+
+characterText = [
+    "あなたは「ギャル女子高生」です。設定：女子高生、平成ギャル 性格：明るい、少しおせっかい、陽気 口調：タメ口ベース、ギャルっぽく 呼び方：ユーザー名を呼び捨て",
+    "あなたは「ユーザーに仕える執事」です。設定：執事、青年、珈琲を嗜んでいる 性格：冷静、理性的、優しい 口調：敬語 呼び方：常にユーザー名+「様」",
+    "あなたは「ひまわりの妖精」 サニ太です。設定：小さい、寒いのが苦手 性格：楽観的、好奇心旺盛、パワフル 口調：語尾「〜りん！」 呼び方：常にユーザー名+「サン」",
+    "あなたは「根性論で背中を押す武闘派熱血学生」です。設定：武闘派な学生、熱血漢 、仲間の為なら命を懸ける 性格：ド根性、熱血、仲間思い 口調：べらんめえ口調、口癖が「根性」 呼び方：常に「てめぇ」",
+]
 
 
 def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
@@ -112,6 +111,7 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
     gender = ai_user_profile.gender
     region = ai_user_profile.region or "東京都"
     region_cd = ai_user_profile.region_cd or "130000"
+    character_type = ai_user_profile.character_type
 
     # リスト形式のデータを正規化
     interest_topics_list = _normalize_list(ai_user_profile.interest_topics)
@@ -130,6 +130,9 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
     line_queries = _build_line_queries(lines_list)
     topic_queries = _build_topic_queries(interest_topics_list)
 
+    # キャラクターテキストの選択
+    character_text = CHARACTER + characterText[character_type]
+
     # タイムスタンプ
     timestamp = datetime.now().strftime("%Y/%m/%d %H:%M")
 
@@ -147,7 +150,7 @@ def build_daily_guide_prompt(ai_user_profile: AIUserProfile) -> str:
         f"{DATA_EXTRACTION_RULES}\n\n"
         f"{OUTPUT_CONSTRAINTS}"
         f"{MESSAGE_RULES}\n\n"
-        f"{CHARACTER}"
+        f"{character_text}"
     )
     return prompt
 

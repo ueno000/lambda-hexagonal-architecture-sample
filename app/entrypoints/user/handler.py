@@ -14,6 +14,7 @@ from app.application.user.exist_line_user_usecase import ExistLineUserUseCase
 from app.application.user.update_ai_profile_usecase import UpdateAIProfileUseCase
 from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
 from app.domain.model.user.ai_profile_request import (
+    AIUserProfileCharacterTypeUpdateRequest,
     AIUserProfileRequestCreate,
     AIUserProfileRequestUpdate,
 )
@@ -59,6 +60,18 @@ def create_ai_user_profile(req: AIUserProfileRequestCreate) -> AIUserProfile:
 
 
 def update_ai_user_profile(req: AIUserProfileRequestUpdate) -> AIUserProfile:
+    ai_user_profiles_query_service = DynamoDBAIUserProfilesQueryService(
+        config.AppConfig.get_table_name_ai_user_profile(),
+        dynamodb_client,
+    )
+
+    usecase = UpdateAIProfileUseCase(unit_of_work, ai_user_profiles_query_service)
+    return usecase.execute(req)
+
+
+def update_ai_user_profile_character_type(
+    req: AIUserProfileCharacterTypeUpdateRequest,
+) -> AIUserProfile:
     ai_user_profiles_query_service = DynamoDBAIUserProfilesQueryService(
         config.AppConfig.get_table_name_ai_user_profile(),
         dynamodb_client,
@@ -222,6 +235,59 @@ def update_ai_profile():
                 "Access-Control-Allow-Origin": "*",
                 "Access-Control-Allow-Headers": "*",
                 "Access-Control-Allow-Methods": "OPTIONS,PUT",
+            },
+            body=json.dumps({"error": "Internal server error"}),
+        )
+
+
+@app.post("/user/update-ai-profile-character-type")
+def update_ai_profile_character_type():
+    """
+    既存AIProfileのcharacter_typeのみ更新する
+    """
+    try:
+        event = app.current_event
+
+        req_body = _normalize_request_body(event)
+
+        result = get_body(req_body, AIUserProfileCharacterTypeUpdateRequest)
+
+        if result.is_valid:
+            updated = update_ai_user_profile_character_type(result.value)
+
+            return Response(
+                status_code=200,
+                content_type="application/json",
+                headers={
+                    "Access-Control-Allow-Origin": "*",
+                    "Access-Control-Allow-Headers": "*",
+                    "Access-Control-Allow-Methods": "OPTIONS,POST,",
+                },
+                body=json.dumps({"id": updated.id}, ensure_ascii=False),
+            )
+
+        logger.error("Request validation error.")
+        return Response(
+            status_code=400,
+            content_type="application/json",
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,",
+            },
+            body=json.dumps({"error": "Request validation error."}),
+        )
+
+    except Exception:
+        logger.exception("Error occurred while processing Update AI User Profile Character Type")
+
+        return Response(
+            status_code=500,
+            content_type="application/json",
+            headers={
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Headers": "*",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,",
             },
             body=json.dumps({"error": "Internal server error"}),
         )

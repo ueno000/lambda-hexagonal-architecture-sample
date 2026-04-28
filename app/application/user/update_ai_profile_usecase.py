@@ -1,7 +1,7 @@
 from aws_lambda_powertools import Logger
 
 from app.adapters.data_save_exception import DataSaveException
-from app.domain.model.ai_chat.ai_user_profile import AIUserProfile
+from app.domain.model.ai_chat.ai_user_profile import AIUserProfile, CharacterType
 from app.domain.model.user.ai_profile_request import AIUserProfileRequestUpdate
 
 
@@ -25,14 +25,13 @@ class UpdateAIProfileUseCase:
                 raise ValueError("対象データが存在しません")
 
             req_data = req.model_dump(exclude_none=True, exclude={"id"})
-
-            line_user_id = (
-                data.get("line_user_id") if isinstance(data, dict) else data.line_user_id
+            current_data = data if isinstance(data, dict) else data.model_dump()
+            merged_data = {**current_data, **req_data, "id": req.id}
+            merged_data.setdefault(
+                "character_type", CharacterType.Student_Female.value
             )
 
-            ai_user_profile = AIUserProfile(
-                id=req.id, line_user_id=line_user_id, **req_data
-            )
+            ai_user_profile = AIUserProfile(**merged_data)
 
             with self.unit_of_work:
                 self.unit_of_work.ai_user_profile.update(ai_user_profile)
